@@ -1,0 +1,165 @@
+.fab{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    outline: none;
+    border: none;
+    box-shadow: var(--md-elevation-shadow-3);
+    transition: all 0.2s ease-in-out;
+}
+nav.collapsed .fab p{
+    display: none;
+}
+nav.collapsed.expandible:hover .fab p{
+    display: block;
+}
+.fab.plain{
+    box-shadow: none;
+}
+.fab:hover{
+    cursor: pointer;
+    box-shadow: var(--md-elevation-shadow-4);
+}
+.fab:active{
+    box-shadow: var(--md-elevation-shadow-3);
+}
+.fab .stateLayer{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.fab.baseline{
+    width: 56px;
+    height: 56px;
+    font-size: 16pt;
+    font-weight: 500;
+    border-radius: var(--md-sys-corner-size-large);
+}
+.fab.baseline.extended{
+    padding: 0 16px;
+    gap: 8px;
+}
+.fab.baseline .material-symbols-outlined{
+    font-size: 24px;
+    z-index: 1;
+}
+
+.fab.medium{
+    width: 80px;
+    height: 80px;
+    font-size: 22pt;
+    border-radius: var(--md-sys-corner-size-large-increased);
+}
+.fab.medium.extended{
+    padding: 0 26px;
+    gap: 12px;
+}
+.fab.medium .material-symbols-outlined{
+    font-size: 28px;
+    z-index: 1;
+}
+
+.fab.large{
+    width: 96px;
+    height: 96px;
+    font-size: 24pt;
+    border-radius: var(--md-sys-corner-size-extra-large);
+}
+.fab.large.extended{
+    padding: 0 28px;
+    gap: 16px;
+}
+.fab.large .material-symbols-outlined{
+    font-size: 36px;
+    z-index: 1;
+}
+
+.fab.extended{
+    width: fit-content;
+}
+
+.fab.primary{
+    background-color: rgb(var(--md-sys-color-primary));
+    color: rgb(var(--md-sys-color-on-primary));
+}
+.fab.primary:hover .stateLayer{
+    background-color: rgb(var(--md-sys-color-on-primary));
+    opacity: var(--md-state-alpha-opacity-08);
+}
+.fab.primary:active .stateLayer{
+    background-color: rgb(var(--md-sys-color-on-primary));
+    opacity: var(--md-state-alpha-opacity-10);
+}
+
+.fab.secondary{
+    background-color: rgb(var(--md-sys-color-secondary));
+    color: rgb(var(--md-sys-color-on-secondary));
+}
+.fab.secondary:hover .stateLayer{
+    background-color: rgb(var(--md-sys-color-on-secondary));
+    opacity: var(--md-state-alpha-opacity-08);
+}
+.fab.secondary:active .stateLayer{
+    background-color: rgb(var(--md-sys-color-on-secondary));
+    opacity: var(--md-state-alpha-opacity-10);
+}
+
+.fab.tertiary{
+    background-color: rgb(var(--md-sys-color-tertiary));
+    color: rgb(var(--md-sys-color-on-tertiary));
+}
+.fab.tertiary:hover .stateLayer{
+    background-color: rgb(var(--md-sys-color-on-tertiary));
+    opacity: var(--md-state-alpha-opacity-08);
+}
+.fab.tertiary:active .stateLayer{
+    background-color: rgb(var(--md-sys-color-on-tertiary));
+    opacity: var(--md-state-alpha-opacity-10);
+}
+
+
+.fab.tonalPrimary{
+    background-color: rgb(var(--md-sys-color-primary-container));
+    color: rgb(var(--md-sys-color-on-primary-container));
+}
+.fab.tonalPrimary:hover .stateLayer{
+    background-color: rgb(var(--md-sys-color-on-primary-container));
+    opacity: var(--md-state-alpha-opacity-08);
+}
+.fab.tonalPrimary:active .stateLayer{
+    background-color: rgb(var(--md-sys-color-on-primary-container));
+    opacity: var(--md-state-alpha-opacity-10);
+}
+
+.fab.tonalSecondary{
+    background-color: rgb(var(--md-sys-color-secondary-container));
+    color: rgb(var(--md-sys-color-on-secondary-container));
+}
+.fab.tonalSecondary:hover .stateLayer{
+    background-color: rgb(var(--md-sys-color-on-secondary-container));
+    opacity: var(--md-state-alpha-opacity-08);
+}
+.fab.tonalSecondary:active .stateLayer{
+    background-color: rgb(var(--md-sys-color-on-secondary-container));
+    opacity: var(--md-state-alpha-opacity-10);
+}
+
+.fab.tonalTertiary{
+    background-color: rgb(var(--md-sys-color-tertiary-container));
+    color: rgb(var(--md-sys-color-on-tertiary-container));
+}
+.fab.tonalTertiary:hover .stateLayer{
+    background-color: rgb(var(--md-sys-color-on-tertiary-container));
+    opacity: var(--md-state-alpha-opacity-08);
+}
+.fab.tonalTertiary:active .stateLayer{
+    background-color: rgb(var(--md-sys-color-on-tertiary-container));
+    opacity: var(--md-state-alpha-opacity-10);
+}

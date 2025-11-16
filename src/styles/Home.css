@@ -1,0 +1,12 @@
+main{
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+}
+main section {
+    width: 100%;
+    background-color: rgb(var(--md-sys-color-surface-container-lowest));
+    border-radius: 28px;
+    padding: 13px 16px;
+    box-sizing: border-box;
+}

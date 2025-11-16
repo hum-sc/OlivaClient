@@ -1,0 +1,187 @@
+button{
+    position: relative;
+    border:none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
+}
+button:hover{
+    cursor: pointer;
+}
+button .stateLayer{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+}
+button.rounded{
+    border-radius: var(--md-sys-corner-size-full);
+}
+
+button.extra-small{
+    font-size: 14pt;
+    height: 32px;
+    padding: 0 12px;
+}
+button.small{
+    font-size: 14pt;
+    height: 40px;
+    padding: 0 16px;
+}
+button.medium{
+    font-size: 16pt;
+    height: 56px;
+    padding: 0 24px;
+}
+button.large{
+    font-size: 24pt;
+    height: 96px;
+    padding: 0 48px;
+}
+button.extra-large{
+    font-size: 32pt;
+    height: 136px;
+    padding: 0 64px;
+}
+
+button.squared.extra-small{
+    border-radius: var(--md-sys-corner-size-medium);
+}
+button.squared.small{
+    border-radius: var(--md-sys-corner-size-medium);
+}
+
+button.squared.medium{
+    border-radius: var(--md-sys-corner-size-large);
+}
+
+button.squared.large{
+    border-radius: var(--md-sys-corner-size-extra-large);
+}
+button.squared.extra-large{
+    border-radius: var(--md-sys-corner-size-extra-large);
+    
+}
+button.extra-small:active{
+    border-radius: var(--md-sys-corner-size-small);
+}
+button.small:active{
+    border-radius: var(--md-sys-corner-size-small);
+}
+button.medium:active{
+    border-radius: var(--md-sys-corner-size-medium);
+}
+button.large:active{
+    border-radius: var(--md-sys-corner-size-large);
+}
+button.extra-large:active{
+    border-radius: var(--md-sys-corner-size-large);
+}
+
+
+.filled.default {
+    background-color: rgb(var(--md-sys-color-primary));
+    color: rgb(var(--md-sys-color-on-primary));
+}
+
+.filled.toggle.unselected{
+    background-color: rgb(var(--md-sys-color-surface-container));
+    color: rgb(var(--md-sys-color-on-surface));
+}
+
+.filled.toggle.selected{
+    background-color: rgb(var(--md-sys-color-primary));
+    color: rgb(var(--md-sys-color-on-primary));
+}
+
+.elevated.default {
+    background-color: rgb(var(--md-sys-color-surface-container-low));
+    color:rgb(var(--md-sys-color-on-surface));
+}
+.elevated.toggle.unselected{
+    background-color: rgb(var(--md-sys-color-surface-container-low));
+    color: rgb(var(--md-sys-color-on-surface-variant));
+}
+.elevated.toggle.selected {
+    background-color: rgb(var(--md-sys-color-primary));
+    color: rgb(var(--md-sys-color-on-primary));
+}
+
+.tonal.default {
+    background-color: rgb(var(--md-sys-color-secondary-container));
+    color:rgb(var(--md-sys-color-on-secondary-container));
+}
+
+.tonal.toggle.unselected {
+    background-color: rgb(var(--md-sys-color-secondary-container));
+    color:rgb(var(--md-sys-color-on-secondary-container));
+}
+.tonal.toggle.selected {
+    background-color: rgb(var(--md-sys-color-secondary));
+    color: rgb(var(--md-sys-color-on-secondary));
+}
+
+.outlined{
+    background-color: transparent;
+    border: 1.5px solid rgb(var(--md-sys-color-outline-variant));
+    color: rgb(var(--md-sys-color-on-surface-variant));
+}
+.outlined.toggle.selected {
+    background-color: rgb(var(--md-sys-color-inverse-surface));
+    color: rgb(var(--md-sys-color-inverse-on-surface));
+
+}
+
+.text{
+    background-color: transparent;
+    color:rgb(var(--md-sys-color-primary));
+}
+
+.text.toggle.unselected {
+    color:rgb(var(--md-sys-color-on-secondary-container));
+}
+
+button.elevated{
+    box-shadow: var(--md-elevation-shadow-1);
+}
+button.elevated:hover{
+    box-shadow: var(--md-elevation-shadow-2);
+}
+button.tonal:hover{
+    box-shadow: var(--md-elevation-shadow-1);
+}
+button.elevated:active{
+    box-shadow: var(--md-elevation-shadow-1);
+}
+button.tonal:active{
+    box-shadow: var(--md-elevation-shadow-0);
+}
+button:hover .stateLayer{
+    background-color: rgb(var(--md-sys-color-primary));
+    opacity: var(--md-state-alpha-opacity-08);
+}
+
+button.toggle.selected:hover .stateLayer{
+    background-color: rgb(var(--md-sys-color-on-primary));
+}
+
+button:active .stateLayer{
+    background-color: rgb(var(--md-sys-color-primary));
+    opacity: var(--md-state-alpha-opacity-10);
+}
+button.toggle.selected:hover .stateLayer{
+    background-color: rgb(var(--md-sys-color-on-primary));
+}
+
+button:disabled{
+    cursor: not-allowed;
+    background-color: rgb(var(--md-state-on-surface-opacity-10));
+    
+}
+button:disabled .stateLayer{
+    display: none;
+}
+

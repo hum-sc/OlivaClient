@@ -1,0 +1,225 @@
+.light, .dark {
+	/* Material 3 state-layer variables.
+		 These variables expose channel tuples plus alpha only.
+		 Usage example: background-color: rgb(var(--md-state-primary-08)); */
+
+	/* Shared alpha tokens */
+	--md-state-alpha-opacity-01:0.01;
+	--md-state-alpha-opacity-08: 0.08;
+	--md-state-alpha-opacity-10: 0.10;
+	--md-state-alpha-opacity-16: 0.16;
+
+	/* Primary */
+	--md-state-primary-opacity-08: var(--md-sys-color-primary), var(--md-state-alpha-opacity-08);
+	--md-state-primary-opacity-10: var(--md-sys-color-primary), var(--md-state-alpha-opacity-10);
+	--md-state-primary-opacity-16: var(--md-sys-color-primary), var(--md-state-alpha-opacity-16);
+
+	/* On Primary */
+	--md-state-on-primary-opacity-08: var(--md-sys-color-on-primary), var(--md-state-alpha-opacity-08);
+	--md-state-on-primary-opacity-10: var(--md-sys-color-on-primary), var(--md-state-alpha-opacity-10);
+	--md-state-on-primary-opacity-16: var(--md-sys-color-on-primary), var(--md-state-alpha-opacity-16);
+
+	/* Primary Container */
+	--md-state-primary-container-opacity-08: var(--md-sys-color-primary-container), var(--md-state-alpha-opacity-08);
+	--md-state-primary-container-opacity-10: var(--md-sys-color-primary-container), var(--md-state-alpha-opacity-10);
+	--md-state-primary-container-opacity-16: var(--md-sys-color-primary-container), var(--md-state-alpha-opacity-16);
+
+	/* On Primary Container */
+	--md-state-on-primary-container-opacity-08: var(--md-sys-color-on-primary-container), var(--md-state-alpha-opacity-08);
+	--md-state-on-primary-container-opacity-10: var(--md-sys-color-on-primary-container), var(--md-state-alpha-opacity-10);
+	--md-state-on-primary-container-opacity-16: var(--md-sys-color-on-primary-container), var(--md-state-alpha-opacity-16);
+
+	/* Secondary */
+	--md-state-secondary-opacity-08: var(--md-sys-color-secondary), var(--md-state-alpha-opacity-08);
+	--md-state-secondary-opacity-10: var(--md-sys-color-secondary), var(--md-state-alpha-opacity-10);
+	--md-state-secondary-opacity-16: var(--md-sys-color-secondary), var(--md-state-alpha-opacity-16);
+
+	/* On Secondary */
+	--md-state-on-secondary-opacity-08: var(--md-sys-color-on-secondary), var(--md-state-alpha-opacity-08);
+	--md-state-on-secondary-opacity-10: var(--md-sys-color-on-secondary), var(--md-state-alpha-opacity-10);
+	--md-state-on-secondary-opacity-16: var(--md-sys-color-on-secondary), var(--md-state-alpha-opacity-16);
+
+	/* Secondary Container */
+	--md-state-secondary-container-opacity-08: var(--md-sys-color-secondary-container), var(--md-state-alpha-opacity-08);
+	--md-state-secondary-container-opacity-10: var(--md-sys-color-secondary-container), var(--md-state-alpha-opacity-10);
+	--md-state-secondary-container-opacity-16: var(--md-sys-color-secondary-container), var(--md-state-alpha-opacity-16);
+
+	/* On Secondary Container */
+	--md-state-on-secondary-container-opacity-08: var(--md-sys-color-on-secondary-container), var(--md-state-alpha-opacity-08);
+	--md-state-on-secondary-container-opacity-10: var(--md-sys-color-on-secondary-container), var(--md-state-alpha-opacity-10);
+	--md-state-on-secondary-container-opacity-16: var(--md-sys-color-on-secondary-container), var(--md-state-alpha-opacity-16);
+
+	/* Tertiary */
+	--md-state-tertiary-opacity-08: var(--md-sys-color-tertiary), var(--md-state-alpha-opacity-08);
+	--md-state-tertiary-opacity-10: var(--md-sys-color-tertiary), var(--md-state-alpha-opacity-10);
+	--md-state-tertiary-opacity-16: var(--md-sys-color-tertiary), var(--md-state-alpha-opacity-16);
+
+	/* On Tertiary */
+	--md-state-on-tertiary-opacity-08: var(--md-sys-color-on-tertiary), var(--md-state-alpha-opacity-08);
+	--md-state-on-tertiary-opacity-10: var(--md-sys-color-on-tertiary), var(--md-state-alpha-opacity-10);
+	--md-state-on-tertiary-opacity-16: var(--md-sys-color-on-tertiary), var(--md-state-alpha-opacity-16);
+
+	/* Tertiary Container */
+	--md-state-tertiary-container-opacity-08: var(--md-sys-color-tertiary-container), var(--md-state-alpha-opacity-08);
+	--md-state-tertiary-container-opacity-10: var(--md-sys-color-tertiary-container), var(--md-state-alpha-opacity-10);
+	--md-state-tertiary-container-opacity-16: var(--md-sys-color-tertiary-container), var(--md-state-alpha-opacity-16);
+
+	/* On Tertiary Container */
+	--md-state-on-tertiary-container-opacity-08: var(--md-sys-color-on-tertiary-container), var(--md-state-alpha-opacity-08);
+	--md-state-on-tertiary-container-opacity-10: var(--md-sys-color-on-tertiary-container), var(--md-state-alpha-opacity-10);
+	--md-state-on-tertiary-container-opacity-16: var(--md-sys-color-on-tertiary-container), var(--md-state-alpha-opacity-16);
+
+	/* Error */
+	--md-state-error-opacity-08: var(--md-sys-color-error), var(--md-state-alpha-opacity-08);
+	--md-state-error-opacity-10: var(--md-sys-color-error), var(--md-state-alpha-opacity-10);
+	--md-state-error-opacity-16: var(--md-sys-color-error), var(--md-state-alpha-opacity-16);
+
+	/* On Error */
+	--md-state-on-error-opacity-08: var(--md-sys-color-on-error), var(--md-state-alpha-opacity-08);
+	--md-state-on-error-opacity-10: var(--md-sys-color-on-error), var(--md-state-alpha-opacity-10);
+	--md-state-on-error-opacity-16: var(--md-sys-color-on-error), var(--md-state-alpha-opacity-16);
+
+	/* Error Container */
+	--md-state-error-container-opacity-08: var(--md-sys-color-error-container), var(--md-state-alpha-opacity-08);
+	--md-state-error-container-opacity-10: var(--md-sys-color-error-container), var(--md-state-alpha-opacity-10);
+	--md-state-error-container-opacity-16: var(--md-sys-color-error-container), var(--md-state-alpha-opacity-16);
+
+	/* On Error Container */
+	--md-state-on-error-container-opacity-08: var(--md-sys-color-on-error-container), var(--md-state-alpha-opacity-08);
+	--md-state-on-error-container-opacity-10: var(--md-sys-color-on-error-container), var(--md-state-alpha-opacity-10);
+	--md-state-on-error-container-opacity-16: var(--md-sys-color-on-error-container), var(--md-state-alpha-opacity-16);
+
+	/* Background and Surface */
+	--md-state-background-opacity-08: var(--md-sys-color-background), var(--md-state-alpha-opacity-08);
+	--md-state-background-opacity-10: var(--md-sys-color-background), var(--md-state-alpha-opacity-10);
+	--md-state-background-opacity-16: var(--md-sys-color-background), var(--md-state-alpha-opacity-16);
+
+	--md-state-on-background-opacity-08: var(--md-sys-color-on-background), var(--md-state-alpha-opacity-08);
+	--md-state-on-background-opacity-10: var(--md-sys-color-on-background), var(--md-state-alpha-opacity-10);
+	--md-state-on-background-opacity-16: var(--md-sys-color-on-background), var(--md-state-alpha-opacity-16);
+
+	--md-state-surface-opacity-08: var(--md-sys-color-surface), var(--md-state-alpha-opacity-08);
+	--md-state-surface-opacity-10: var(--md-sys-color-surface), var(--md-state-alpha-opacity-10);
+	--md-state-surface-opacity-16: var(--md-sys-color-surface), var(--md-state-alpha-opacity-16);
+
+	--md-state-on-surface-opacity-08: var(--md-sys-color-on-surface), var(--md-state-alpha-opacity-08);
+	--md-state-on-surface-opacity-10: var(--md-sys-color-on-surface), var(--md-state-alpha-opacity-10);
+	--md-state-on-surface-opacity-16: var(--md-sys-color-on-surface), var(--md-state-alpha-opacity-16);
+
+	--md-state-surface-variant-opacity-08: var(--md-sys-color-surface-variant), var(--md-state-alpha-opacity-08);
+	--md-state-surface-variant-opacity-10: var(--md-sys-color-surface-variant), var(--md-state-alpha-opacity-10);
+	--md-state-surface-variant-opacity-16: var(--md-sys-color-surface-variant), var(--md-state-alpha-opacity-16);
+
+	--md-state-on-surface-variant-opacity-08: var(--md-sys-color-on-surface-variant), var(--md-state-alpha-opacity-08);
+	--md-state-on-surface-variant-opacity-10: var(--md-sys-color-on-surface-variant), var(--md-state-alpha-opacity-10);
+	--md-state-on-surface-variant-opacity-16: var(--md-sys-color-on-surface-variant), var(--md-state-alpha-opacity-16);
+
+	/* Outline */
+	--md-state-outline-opacity-08: var(--md-sys-color-outline), var(--md-state-alpha-opacity-08);
+	--md-state-outline-opacity-10: var(--md-sys-color-outline), var(--md-state-alpha-opacity-10);
+	--md-state-outline-opacity-16: var(--md-sys-color-outline), var(--md-state-alpha-opacity-16);
+
+	--md-state-outline-variant-opacity-08: var(--md-sys-color-outline-variant), var(--md-state-alpha-opacity-08);
+	--md-state-outline-variant-opacity-10: var(--md-sys-color-outline-variant), var(--md-state-alpha-opacity-10);
+	--md-state-outline-variant-opacity-16: var(--md-sys-color-outline-variant), var(--md-state-alpha-opacity-16);
+
+	/* Shadows and scrims */
+	--md-state-shadow-opacity-08: var(--md-sys-color-shadow), var(--md-state-alpha-opacity-08);
+	--md-state-shadow-opacity-10: var(--md-sys-color-shadow), var(--md-state-alpha-opacity-10);
+	--md-state-shadow-opacity-16: var(--md-sys-color-shadow), var(--md-state-alpha-opacity-16);
+
+	--md-state-scrim-opacity-08: var(--md-sys-color-scrim), var(--md-state-alpha-opacity-08);
+	--md-state-scrim-opacity-10: var(--md-sys-color-scrim), var(--md-state-alpha-opacity-10);
+	--md-state-scrim-opacity-16: var(--md-sys-color-scrim), var(--md-state-alpha-opacity-16);
+
+	/* Inverse colors */
+	--md-state-inverse-surface-opacity-08: var(--md-sys-color-inverse-surface), var(--md-state-alpha-opacity-08);
+	--md-state-inverse-surface-opacity-10: var(--md-sys-color-inverse-surface), var(--md-state-alpha-opacity-10);
+	--md-state-inverse-surface-opacity-16: var(--md-sys-color-inverse-surface), var(--md-state-alpha-opacity-16);
+
+	--md-state-inverse-on-surface-opacity-08: var(--md-sys-color-inverse-on-surface), var(--md-state-alpha-opacity-08);
+	--md-state-inverse-on-surface-opacity-10: var(--md-sys-color-inverse-on-surface), var(--md-state-alpha-opacity-10);
+	--md-state-inverse-on-surface-opacity-16: var(--md-sys-color-inverse-on-surface), var(--md-state-alpha-opacity-16);
+
+	--md-state-inverse-primary-opacity-08: var(--md-sys-color-inverse-primary), var(--md-state-alpha-opacity-08);
+	--md-state-inverse-primary-opacity-10: var(--md-sys-color-inverse-primary), var(--md-state-alpha-opacity-10);
+	--md-state-inverse-primary-opacity-16: var(--md-sys-color-inverse-primary), var(--md-state-alpha-opacity-16);
+
+	/* Fixed palettes */
+	--md-state-primary-fixed-opacity-08: var(--md-sys-color-primary-fixed), var(--md-state-alpha-opacity-08);
+	--md-state-primary-fixed-opacity-10: var(--md-sys-color-primary-fixed), var(--md-state-alpha-opacity-10);
+	--md-state-primary-fixed-opacity-16: var(--md-sys-color-primary-fixed), var(--md-state-alpha-opacity-16);
+
+	--md-state-on-primary-fixed-opacity-08: var(--md-sys-color-on-primary-fixed), var(--md-state-alpha-opacity-08);
+	--md-state-on-primary-fixed-opacity-10: var(--md-sys-color-on-primary-fixed), var(--md-state-alpha-opacity-10);
+	--md-state-on-primary-fixed-opacity-16: var(--md-sys-color-on-primary-fixed), var(--md-state-alpha-opacity-16);
+
+	--md-state-primary-fixed-dim-opacity-08: var(--md-sys-color-primary-fixed-dim), var(--md-state-alpha-opacity-08);
+	--md-state-primary-fixed-dim-opacity-10: var(--md-sys-color-primary-fixed-dim), var(--md-state-alpha-opacity-10);
+	--md-state-primary-fixed-dim-opacity-16: var(--md-sys-color-primary-fixed-dim), var(--md-state-alpha-opacity-16);
+
+	--md-state-on-primary-fixed-variant-opacity-08: var(--md-sys-color-on-primary-fixed-variant), var(--md-state-alpha-opacity-08);
+	--md-state-on-primary-fixed-variant-opacity-10: var(--md-sys-color-on-primary-fixed-variant), var(--md-state-alpha-opacity-10);
+	--md-state-on-primary-fixed-variant-opacity-16: var(--md-sys-color-on-primary-fixed-variant), var(--md-state-alpha-opacity-16);
+
+	--md-state-secondary-fixed-opacity-08: var(--md-sys-color-secondary-fixed), var(--md-state-alpha-opacity-08);
+	--md-state-secondary-fixed-opacity-10: var(--md-sys-color-secondary-fixed), var(--md-state-alpha-opacity-10);
+	--md-state-secondary-fixed-opacity-16: var(--md-sys-color-secondary-fixed), var(--md-state-alpha-opacity-16);
+
+	--md-state-on-secondary-fixed-opacity-08: var(--md-sys-color-on-secondary-fixed), var(--md-state-alpha-opacity-08);
+	--md-state-on-secondary-fixed-opacity-10: var(--md-sys-color-on-secondary-fixed), var(--md-state-alpha-opacity-10);
+	--md-state-on-secondary-fixed-opacity-16: var(--md-sys-color-on-secondary-fixed), var(--md-state-alpha-opacity-16);
+
+	--md-state-secondary-fixed-dim-opacity-08: var(--md-sys-color-secondary-fixed-dim), var(--md-state-alpha-opacity-08);
+	--md-state-secondary-fixed-dim-opacity-10: var(--md-sys-color-secondary-fixed-dim), var(--md-state-alpha-opacity-10);
+	--md-state-secondary-fixed-dim-opacity-16: var(--md-sys-color-secondary-fixed-dim), var(--md-state-alpha-opacity-16);
+
+	--md-state-on-secondary-fixed-variant-opacity-08: var(--md-sys-color-on-secondary-fixed-variant), var(--md-state-alpha-opacity-08);
+	--md-state-on-secondary-fixed-variant-opacity-10: var(--md-sys-color-on-secondary-fixed-variant), var(--md-state-alpha-opacity-10);
+	--md-state-on-secondary-fixed-variant-opacity-16: var(--md-sys-color-on-secondary-fixed-variant), var(--md-state-alpha-opacity-16);
+
+	--md-state-tertiary-fixed-opacity-08: var(--md-sys-color-tertiary-fixed), var(--md-state-alpha-opacity-08);
+	--md-state-tertiary-fixed-opacity-10: var(--md-sys-color-tertiary-fixed), var(--md-state-alpha-opacity-10);
+	--md-state-tertiary-fixed-opacity-16: var(--md-sys-color-tertiary-fixed), var(--md-state-alpha-opacity-16);
+
+	--md-state-on-tertiary-fixed-opacity-08: var(--md-sys-color-on-tertiary-fixed), var(--md-state-alpha-opacity-08);
+	--md-state-on-tertiary-fixed-opacity-10: var(--md-sys-color-on-tertiary-fixed), var(--md-state-alpha-opacity-10);
+	--md-state-on-tertiary-fixed-opacity-16: var(--md-sys-color-on-tertiary-fixed), var(--md-state-alpha-opacity-16);
+
+	--md-state-tertiary-fixed-dim-opacity-08: var(--md-sys-color-tertiary-fixed-dim), var(--md-state-alpha-opacity-08);
+	--md-state-tertiary-fixed-dim-opacity-10: var(--md-sys-color-tertiary-fixed-dim), var(--md-state-alpha-opacity-10);
+	--md-state-tertiary-fixed-dim-opacity-16: var(--md-sys-color-tertiary-fixed-dim), var(--md-state-alpha-opacity-16);
+
+	--md-state-on-tertiary-fixed-variant-opacity-08: var(--md-sys-color-on-tertiary-fixed-variant), var(--md-state-alpha-opacity-08);
+	--md-state-on-tertiary-fixed-variant-opacity-10: var(--md-sys-color-on-tertiary-fixed-variant), var(--md-state-alpha-opacity-10);
+	--md-state-on-tertiary-fixed-variant-opacity-16: var(--md-sys-color-on-tertiary-fixed-variant), var(--md-state-alpha-opacity-16);
+
+	/* Surface containers */
+	--md-state-surface-dim-opacity-08: var(--md-sys-color-surface-dim), var(--md-state-alpha-opacity-08);
+	--md-state-surface-dim-opacity-10: var(--md-sys-color-surface-dim), var(--md-state-alpha-opacity-10);
+	--md-state-surface-dim-opacity-16: var(--md-sys-color-surface-dim), var(--md-state-alpha-opacity-16);
+
+	--md-state-surface-bright-opacity-08: var(--md-sys-color-surface-bright), var(--md-state-alpha-opacity-08);
+	--md-state-surface-bright-opacity-10: var(--md-sys-color-surface-bright), var(--md-state-alpha-opacity-10);
+	--md-state-surface-bright-opacity-16: var(--md-sys-color-surface-bright), var(--md-state-alpha-opacity-16);
+
+	--md-state-surface-container-lowest-opacity-08: var(--md-sys-color-surface-container-lowest), var(--md-state-alpha-opacity-08);
+	--md-state-surface-container-lowest-opacity-10: var(--md-sys-color-surface-container-lowest), var(--md-state-alpha-opacity-10);
+	--md-state-surface-container-lowest-opacity-16: var(--md-sys-color-surface-container-lowest), var(--md-state-alpha-opacity-16);
+
+	--md-state-surface-container-low-opacity-08: var(--md-sys-color-surface-container-low), var(--md-state-alpha-opacity-08);
+	--md-state-surface-container-low-opacity-10: var(--md-sys-color-surface-container-low), var(--md-state-alpha-opacity-10);
+	--md-state-surface-container-low-opacity-16: var(--md-sys-color-surface-container-low), var(--md-state-alpha-opacity-16);
+
+	--md-state-surface-container-opacity-08: var(--md-sys-color-surface-container), var(--md-state-alpha-opacity-08);
+	--md-state-surface-container-opacity-10: var(--md-sys-color-surface-container), var(--md-state-alpha-opacity-10);
+	--md-state-surface-container-opacity-16: var(--md-sys-color-surface-container), var(--md-state-alpha-opacity-16);
+
+	--md-state-surface-container-high-opacity-08: var(--md-sys-color-surface-container-high), var(--md-state-alpha-opacity-08);
+	--md-state-surface-container-high-opacity-10: var(--md-sys-color-surface-container-high), var(--md-state-alpha-opacity-10);
+	--md-state-surface-container-high-opacity-16: var(--md-sys-color-surface-container-high), var(--md-state-alpha-opacity-16);
+
+	--md-state-surface-container-highest-opacity-08: var(--md-sys-color-surface-container-highest), var(--md-state-alpha-opacity-08);
+	--md-state-surface-container-highest-opacity-10: var(--md-sys-color-surface-container-highest), var(--md-state-alpha-opacity-10);
+	--md-state-surface-container-highest-opacity-16: var(--md-sys-color-surface-container-highest), var(--md-state-alpha-opacity-16);
+}

@@ -1,0 +1,28 @@
+.avatarContainer{
+    position:relative;
+    height: 40px;
+    width: 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+.avatarContainer img{
+    border-radius: var(--md-sys-corner-size-full);
+}
+.avatarContainer .avatarTooltip{
+    position:absolute;
+    background-color: rgb(var(--md-sys-color-surface-container-lowest));
+    height: auto;
+    width: max-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    top: 40px;
+    right: 0;
+    padding: 16px 24px;
+    box-shadow: var(--md-elevation-shadow-4);
+    border-radius: var(--md-sys-corner-size-large);
+}

@@ -1,0 +1,87 @@
+import './App.css'
+import { useSelector } from 'react-redux'
+import { BrowserRouter, Route, Routes } from 'react-router'
+import Editor from './Editor.tsx'
+import Home from './Home.tsx'
+import Layout from './Layout.tsx'
+import { useEffect } from 'react'
+import { disableOfflineByUser } from './features/online/onlineSlice.ts'
+
+import PWABadge from './PWABadge.tsx'
+import type { RootState } from './store.ts'
+import { useDispatch } from 'react-redux'
+import { setConnected, setDisconnected} from './features/online/onlineSlice.ts'
+import { getUserData, loginUrl } from './hooks/useApi.ts'
+
+import { login } from './features/auth/authSlice.ts'
+import Button from './components/Button.tsx'
+
+function App() {
+  const isOnline = useSelector((state:RootState) => state.onlineStatus.isOnline);
+  const isLoggedIn = useSelector((state:RootState) => state.auth.isAuthenticated);
+  const isDarkMode = useSelector((state:RootState) => state.theme.theme);
+  const dispatch = useDispatch();
+
+
+
+  useEffect(()=>{
+    window.addEventListener('online', () => {
+      dispatch(setConnected());
+
+    });
+    window.addEventListener('offline', () => {
+      dispatch(setDisconnected());
+    });
+
+    if (isOnline && !isLoggedIn) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
+      console.log("Token from URL:", token);
+      if (token) {
+        getUserData(token).then(user => {
+          console.log("User Data:", user);
+          dispatch(login({ user, token }));
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }).catch(error => {
+          console.error("Error fetching user data:", error);
+        });
+        // Save token to local storage or state management
+      } else {
+      }
+    }
+  },[])
+    useEffect(()=>{
+    if (!isLoggedIn) {
+      dispatch(disableOfflineByUser());
+    }
+  },[isLoggedIn])
+
+  return (
+    <div className={`app ${isDarkMode === 'dark' ? 'dark' : 'light'}`}>
+    { !isLoggedIn  && <div className="loginOverlay">
+        <h2 className="displayMedium onBackground">Inicia sesión para continuar</h2>
+        <p className="bodyMedium">Debes iniciar sesión para acceder a las funciones de la aplicación.</p>
+        { isOnline ?
+            <Button onClick={()=>{
+              window.location.href = loginUrl;
+            }} text='Iniciar sesión' size='medium' />
+            :
+            <p className="bodySmall">Actualmente estás desconectado. Por favor, conéctate a Internet e inicia sesión para continuar.</p>
+        }
+    </div>
+    }
+    <BrowserRouter>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/files" element={<Editor />} />
+          <Route path='/editor/:notebookId' element={<Editor />} />
+        </Route>
+      </Routes>
+      <PWABadge />
+    </BrowserRouter>
+    </div>
+  )
+}
+
+export default App

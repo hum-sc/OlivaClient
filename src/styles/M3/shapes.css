@@ -1,0 +1,317 @@
+:root{
+    --md-sys-corner-size-none: 0px;
+    --md-sys-corner-size-extra-small: 4px;
+    --md-sys-corner-size-small: 8px;
+    --md-sys-corner-size-medium: 12px;
+    --md-sys-corner-size-large: 16px;
+    --md-sys-corner-size-large-increased: 20px;
+    --md-sys-corner-size-extra-large: 28px;
+    --md-sys-corner-size-extra-large-increased: 32px;
+    --md-sys-corner-size-extra-extra-large: 48px;
+    --md-sys-corner-size-full: 999em;
+}
+
+.fully-round {
+    border-radius: var(--md-sys-corner-size-full);
+}
+
+.extra-large-top-round {
+    border-top-left-radius: var(--md-sys-corner-size-extra-large);
+    border-top-right-radius: var(--md-sys-corner-size-extra-large);
+}
+.extra-large-round {
+    border-radius: var(--md-sys-corner-size-extra-large);
+}
+
+.large-top-round {
+    border-top-left-radius: var(--md-sys-corner-size-large);
+    border-top-right-radius: var(--md-sys-corner-size-large);
+}
+.large-end-round{
+    border-top-right-radius: var(--md-sys-corner-size-large);
+    border-bottom-right-radius: var(--md-sys-corner-size-large);
+}
+.large-start-round{
+    border-top-left-radius: var(--md-sys-corner-size-large);
+    border-bottom-left-radius: var(--md-sys-corner-size-large);
+}
+.large-round {
+    border-radius: var(--md-sys-corner-size-large);
+}
+.medium-round {
+    border-radius: var(--md-sys-corner-size-medium);
+}
+
+.small-round {
+    border-radius: var(--md-sys-corner-size-small);
+}
+.extra-small-top-round {
+    border-top-left-radius: var(--md-sys-corner-size-extra-small);
+    border-top-right-radius: var(--md-sys-corner-size-extra-small);
+}
+.extra-small-round {
+    border-radius: var(--md-sys-corner-size-extra-small);
+}
+.no-round {
+    border-radius: var(--md-sys-corner-size-none);
+}
+
+.large-increased-round{
+    border-radius: var(--md-sys-corner-size-large-increased);
+}
+.extra-large-increased-round{
+    border-radius: var(--md-sys-corner-size-extra-large-increased);
+}
+
+/*M3 expressive shapes*/
+.circle {
+    border-radius: 50%;
+}
+
+
+
+.square {
+    mask-image: url('./shapes/Shape=Square.png');
+    mask-size: 100% 100%;
+    -webkit-mask-image: url('./shapes/Shape=Square.png');
+    -webkit-mask-size: 100% 100%;
+}
+
+.slanted {
+    mask-image: url('./shapes/Shape=Slanted.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Slanted.png');
+    -webkit-mask-size: 100% 100%;
+}
+
+.arch{
+    mask-image: url('./shapes/Shape=Arch.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Arch.png');
+    -webkit-mask-size: 100% 100%;
+}
+
+.fan {
+    mask-image: url('./shapes/Shape=Fan.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Fan.png');
+    -webkit-mask-size: 100% 100%;
+}
+.arrow {
+    mask-image: url('./shapes/Shape=Arrow.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Arrow.png');
+    -webkit-mask-size: 100% 100%;
+}
+.semicircle {
+    mask-image: url('./shapes/Shape=Semicircle.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Semicircle.png');
+    -webkit-mask-size: 100% 100%;
+}
+.oval {
+    mask-image: url('./shapes/Shape=Oval.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Oval.png');
+    -webkit-mask-size: 100% 100%;
+}
+.pill {
+    mask-image: url('./shapes/Shape=Pill.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Pill.png');
+    -webkit-mask-size: 100% 100%;
+}
+
+.triangle {
+    mask-image: url('./shapes/Shape=Triangle.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Triangle.png');
+    -webkit-mask-size: 100% 100%;
+}
+.diamond {
+    mask-image: url('./shapes/Shape=Diamond.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Diamond.png');
+    -webkit-mask-size: 100% 100%;
+}
+.clamshell {
+    mask-image: url('./shapes/Shape=Hexagon.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Hexagon.png');
+    -webkit-mask-size: 100% 100%;
+}
+.pentagon {
+    mask-image: url('./shapes/Shape=Pentagon.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Pentagon.png');
+    -webkit-mask-size: 100% 100%;
+}
+
+.gem {
+    mask-image: url('./shapes/Shape=Gem.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Gem.png');
+    -webkit-mask-size: 100% 100%;
+}
+
+.very-sunny{
+    mask-image: url('./shapes/Shape=Very Sunny.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Very Sunny.png');
+    -webkit-mask-size: 100% 100%;
+}
+.sunny {
+    mask-image: url('./shapes/Shape=Sunny.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Sunny.png');
+    -webkit-mask-size: 100% 100%;
+}
+
+.four-sided-cookie{
+    mask-image: url('./shapes/Shape=4-sided cookie.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=4-sided cookie.png');
+    -webkit-mask-size: 100% 100%;
+}
+.six-sided-cookie{
+    mask-image: url('./shapes/Shape=6-sided cookie.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=6-sided cookie.png');
+    -webkit-mask-size: 100% 100%;
+}
+.seven-sided-cookie{
+    mask-image: url('./shapes/Shape=7-sided cookie.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=7-sided cookie.png');
+    -webkit-mask-size: 100% 100%;
+}
+.nine-sided-cookie{
+    mask-image: url('./shapes/Shape=9-sided cookie.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=9-sided cookie.png');
+    -webkit-mask-size: 100% 100%;
+}
+twelve-sided-cookie{
+    mask-image: url('./shapes/Shape=12-sided cookie.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=12-sided cookie.png');
+    -webkit-mask-size: 100% 100%;
+}
+.gost-ish{
+    mask-image: url('./shapes/Shape=Gost-ish.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Gost-ish.png');
+    -webkit-mask-size: 100% 100%;
+}
+.four-leaf-clover{
+    mask-image: url('./shapes/Shape=4-leaf clover.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=4-leaf clover.png');
+    -webkit-mask-size: 100% 100%;
+}
+.eight-leaf-clover{
+    mask-image: url('./shapes/Shape=8-leaf clover.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=8-leaf clover.png');
+    -webkit-mask-size: 100% 100%;
+}
+.burst{
+    mask-image: url('./shapes/Shape=Burst.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Burst.png');
+    -webkit-mask-size: 100% 100%;
+}
+
+.soft-burst{
+    mask-image: url('./shapes/Shape=Soft Burst.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Soft Burst.png');
+    -webkit-mask-size: 100% 100%;
+}
+.boom{
+    mask-image: url('./shapes/Shape=Boom.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Boom.png');
+    -webkit-mask-size: 100% 100%;
+}
+.soft-boom{
+    mask-image: url('./shapes/Shape=Soft Boom.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Soft Boom.png');
+    -webkit-mask-size: 100% 100%;
+}
+.flower {
+    mask-image: url('./shapes/Shape=Flower.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Flower.png');
+    -webkit-mask-size: 100% 100%;
+}
+.puffy{
+    mask-image: url('./shapes/Shape=Puffy.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Puffy.png');
+    -webkit-mask-size: 100% 100%;
+}
+.puffy-diamond{
+    mask-image: url('./shapes/Shape=Puffi-diamond.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Puffi-diamond.png');
+    -webkit-mask-size: 100% 100%;
+}
+.pixel-circle{
+    mask-image: url('./shapes/Shape=Pixel Circle.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Pixel Circle.png');
+    -webkit-mask-size: 100% 100%;
+}
+.pixel-triangle{
+    mask-image: url('./shapes/Shape=Pixel Triangle.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Pixel Triangle.png');
+    -webkit-mask-size: 100% 100%;
+}
+.bun{
+    mask-image: url('./shapes/Shape=Bun.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Bun.png');
+    -webkit-mask-size: 100% 100%;
+}
+.heart {
+    mask-image: url('./shapes/Shape=Heart.png');
+    mask-size:100% 100%;
+    mask-repeat: no-repeat;
+    -webkit-mask-image: url('./shapes/Shape=Heart.png');
+    -webkit-mask-size: 100% 100%;
+}
