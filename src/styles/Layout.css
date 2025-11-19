@@ -3,14 +3,16 @@
     height: 100%;
     width: 100%;
     max-width: 100%;
+    max-height: 100vh;
     background-color: rgb(var(--md-sys-color-background));
     color: rgb(var(--md-sys-color-on-background));
     overflow: hidden;
     display: grid;
-    grid-template-rows: 44px auto;
+    grid-template-rows: 44px 1fr;
     grid-template-columns: auto 1fr;
     font-size: 12pt;
     box-sizing: border-box;
+    gap: 0px;
 }
 
 header {
@@ -105,10 +107,14 @@ header .actions{
 }
 
 main {
+    height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    
     grid-column: 2;
     grid-row: 2;
     padding: 20px 20px 0px 20px;
-    overflow-y: auto;
+    overflow-y: hidden;
     overflow-x: hidden;
     box-sizing: border-box;
 }

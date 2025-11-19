@@ -1,0 +1,3 @@
+[submodule "src/OlivaFormat"]
+	path = src/OlivaFormat
+	url = https://github.com/hum-sc/OlivaFormat.git

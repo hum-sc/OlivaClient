@@ -15,14 +15,15 @@ export default function Layout() {
     const isOnline = useSelector((state: RootState) => state.onlineStatus.isOnline);
     const isDarkMode = useSelector((state: RootState) => state.theme.theme);
     const user = useSelector((state: RootState) => state.auth.user);
-    const token = useSelector((state: RootState) => state.auth.token);
     const dispatch = useDispatch();
     const navFAB = useSelector((state: RootState) => state.sidebar.navFAB);
     const navigate = useNavigate();
 
     const handleNewNotebook = async () => {
-        const notebook = await newNotebook(token!);
-        notebook && navigate(`/editor/${notebook.notebook_id}`);
+        const notebook = await newNotebook();
+        if (notebook){
+            navigate(`/editor/${notebook}`);
+        }
     }
 
     const handleFABClick = async () => {

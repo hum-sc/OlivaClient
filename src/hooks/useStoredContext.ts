@@ -33,3 +33,5 @@ export default function useStoredContext() {
     });
     return appStore;
 }
+
+export const appStore = useStoredContext();

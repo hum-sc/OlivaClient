@@ -13,8 +13,8 @@ import { useDispatch } from 'react-redux'
 import { setConnected, setDisconnected} from './features/online/onlineSlice.ts'
 import { getUserData, loginUrl } from './hooks/useApi.ts'
 
-import { login } from './features/auth/authSlice.ts'
 import Button from './components/Button.tsx'
+
 
 function App() {
   const isOnline = useSelector((state:RootState) => state.onlineStatus.isOnline);
@@ -23,8 +23,8 @@ function App() {
   const dispatch = useDispatch();
 
 
-
   useEffect(()=>{
+    let timeoutId: NodeJS.Timeout;
     window.addEventListener('online', () => {
       dispatch(setConnected());
 
@@ -32,25 +32,27 @@ function App() {
     window.addEventListener('offline', () => {
       dispatch(setDisconnected());
     });
-
     if (isOnline && !isLoggedIn) {
       const urlParams = new URLSearchParams(window.location.search);
       const token = urlParams.get('token');
-      console.log("Token from URL:", token);
       if (token) {
-        getUserData(token).then(user => {
-          console.log("User Data:", user);
-          dispatch(login({ user, token }));
-          window.history.replaceState({}, document.title, window.location.pathname);
-        }).catch(error => {
-          console.error("Error fetching user data:", error);
-        });
-        // Save token to local storage or state management
-      } else {
+        const tmp = async () => {
+          await getUserData(token).then(()=> {
+              window.history.replaceState({}, document.title, "/");
+            // Delay reload to ensure state is updated
+              timeoutId = setTimeout(() => {
+                console.log("Reloading to update state after login");
+                window.location.reload();
+              }, 5);
+          })
+        };
+        tmp();
       }
     }
+    return () => { clearTimeout(timeoutId); }
   },[])
-    useEffect(()=>{
+
+  useEffect(()=>{
     if (!isLoggedIn) {
       dispatch(disableOfflineByUser());
     }
@@ -74,8 +76,10 @@ function App() {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/files" element={<Editor />} />
-          <Route path='/editor/:notebookId' element={<Editor />} />
+          <Route path="/files" element={<Home />} />
+          <Route path='/editor/:notebookId' element={
+              <Editor />
+            } />
         </Route>
       </Routes>
       <PWABadge />
@@ -83,5 +87,6 @@ function App() {
     </div>
   )
 }
+
 
 export default App
