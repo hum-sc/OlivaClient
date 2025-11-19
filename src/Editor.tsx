@@ -41,7 +41,7 @@ export default function Editor() {
         const current = notebookRef.current;
         if (current) {
             const resizeObserver = new ResizeObserver((entries) => {
-                for (let entry of entries) {
+                for (const entry of entries) {
                     const width = entry.contentRect.width;
                     dispatch(setNotebookPixelsWidth(width));
                 }
