@@ -1,5 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { type Metadata } from "../../OlivaFormat/src/Oliva";
+
+// Helper function to find notebook index by ID
+const findNotebookIndexById = (notebooks: (Metadata | NotebookModification)[], notebookId: string | undefined): number => {
+    if (!notebookId) return -1;
+    return notebooks.findIndex(n => n.id === notebookId);
+};
+
 // extend NotebookMetadata to include typee of modifications
 export type NotebookModification =  Metadata & {
     typeOfModification: 'added' | 'updated' | 'deleted';
@@ -31,8 +38,8 @@ const dataSyncSlice = createSlice({
         addOfflineNotebookMetadata(state, action) {
             console.log("Adding offline notebook modification:", action.payload);
             const payload: NotebookModification = action.payload;
-            const existingIndex = state.offlineNotbooksModification.findIndex(n => n.id === action.payload.id);
-            const existingLocalIndex = state.localNotebooksMetadata.findIndex(n => n.id === action.payload.id);
+            const existingIndex = findNotebookIndexById(state.offlineNotbooksModification, action.payload.id);
+            const existingLocalIndex = findNotebookIndexById(state.localNotebooksMetadata, action.payload.id);
             if (existingLocalIndex >= 0) {
                 console.log("Updating local notebook metadata for notebook_id:", action.payload.id);
                 // Add only the notebook metadata without modification type
@@ -51,8 +58,8 @@ const dataSyncSlice = createSlice({
         addOnlineNotebookMetadata(state, action ) {
             const payload: Metadata[] = action.payload;
 
-            for(let metadata of payload){
-                const existingIndex = state.localNotebooksMetadata.findIndex(n => n.id === metadata.id);
+            for(const metadata of payload){
+                const existingIndex = findNotebookIndexById(state.localNotebooksMetadata, metadata.id);
                 if (existingIndex >= 0) {
                     if(state.localNotebooksMetadata[existingIndex].updated_at! < metadata.updated_at!){
                         console.log("Updating local notebook metadata for notebook_id:", metadata.id);
@@ -65,9 +72,9 @@ const dataSyncSlice = createSlice({
                 }
             }
 
-            for( let metadata of state.localNotebooksMetadata){
+            for( const metadata of state.localNotebooksMetadata){
                 if(!payload.find(n => n.id === metadata.id)){
-                    const existOfflineIndex = state.offlineNotbooksModification.findIndex(n => n.id === metadata.id);
+                    const existOfflineIndex = findNotebookIndexById(state.offlineNotbooksModification, metadata.id);
                     if(existOfflineIndex < 0){
                         state.localNotebooksMetadata = state.localNotebooksMetadata.filter(n => n.id !== metadata.id);
                     }
@@ -97,7 +104,7 @@ const dataSyncSlice = createSlice({
             state.downloadedNotebooks = state.downloadedNotebooks.filter(id => id !== action.payload);
         },
         syncedNotebookModification(state, action) {
-            const existingIndex = state.offlineNotbooksModification.findIndex(n => n.id === action.payload.id);
+            const existingIndex = findNotebookIndexById(state.offlineNotbooksModification, action.payload.id);
             if (existingIndex >= 0) {
                 // Remove from offline modifications
                 state.offlineNotbooksModification.splice(existingIndex, 1);

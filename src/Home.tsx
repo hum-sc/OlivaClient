@@ -6,7 +6,6 @@ import type { RootState } from './store.ts';
 import { useNavigate } from 'react-router';
 import { setActiveNav } from './features/sidebar/sidebarSlice.ts';
 import {type NavFab } from './features/sidebar/sidebarSlice.ts';
-import Button from './components/Button.tsx';
 import IconButton from './components/IconButton.tsx';
 export default function Home() {
     const dispatch = useDispatch();

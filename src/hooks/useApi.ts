@@ -62,6 +62,25 @@ export type File = {
     data: Blob;
     type: string;
 }
+
+// Helper function for authenticated API requests
+async function fetchWithAuth(url: string, method: string = 'GET', body?: unknown): Promise<Response> {
+    const token = getToken();
+    const options: RequestInit = {
+        method,
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    };
+    
+    if (body) {
+        options.body = JSON.stringify(body);
+    }
+    
+    return fetch(url, options);
+}
+
 export function getappStore(){
     return appStore;
 }
@@ -109,82 +128,57 @@ export function logoutUser(refreshToken: string) {
 }
 export async function getFile(fileId: string) {
     //TODO: Cache files locally using IndexedDB
-    const token = getToken();
     if(!appStore.getState().onlineStatus.isOnline){
         throw new Error("Offline mode, cannot fetch file");
     }
-    if(fileId.startsWith(apiBaseUrl))  return await fetch(`${fileId}`, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
-    }).then(async response => {
-        if (!response.ok) {
-            throw new Error('Failed to fetch file');
-        }
-        const fileData = await response.blob();
-        // Save file locally
-        return fileData;
-    });
-
-    else if (fileId.startsWith('http')) return await fetch(fileId).then(async response => {
-        if (!response.ok) {
-            throw new Error('Failed to fetch file');
-        }
-        const fileData = await response.blob();
-        return fileData;
-    })
-    else return await fetch(`${apiBaseUrl}/files/${fileId}`, {
-        method: 'GET',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-        }
-    }).then(async response => {
-        if (!response.ok) {
-            throw new Error('Failed to fetch file');
-        }
-        const fileData = await response.blob();
-        return fileData;
-    });
+    
+    let url: string;
+    let useAuth = false;
+    
+    if(fileId.startsWith(apiBaseUrl)) {
+        url = fileId;
+        useAuth = true;
+    } else if (fileId.startsWith('http')) {
+        url = fileId;
+        useAuth = false;
+    } else {
+        url = `${apiBaseUrl}/files/${fileId}`;
+        useAuth = true;
+    }
+    
+    const response = useAuth 
+        ? await fetchWithAuth(url, 'GET')
+        : await fetch(url);
+    
+    if (!response.ok) {
+        throw new Error('Failed to fetch file');
+    }
+    
+    return await response.blob();
 }
 export async function getNotebooksMetadata (){
     try{
         if(!appStore.getState().onlineStatus.isOnline) return;
-        const token = getToken();
-        const response = await fetch(`${apiBaseUrl}/notebooks/`,{
-            method: 'GET',
-            headers:{
-                'Authorization':`Bearer ${token}`,
-                'Content-Type':'application/json'
-            }
-        });
+        
+        const response = await fetchWithAuth(`${apiBaseUrl}/notebooks/`, 'GET');
         
         const newOnlineNotebooks: Metadata[] = await response.json();
         console.log("Fetched online notebooks metadata:", newOnlineNotebooks.length);
         appStore.dispatch(addOnlineNotebookMetadata(newOnlineNotebooks));
-    } catch (error){
+    } catch {
         return;
     }
 }
 export async function newNotebook(){
     const user = appStore.getState().auth.user;
     try{
-        const token = getToken();
         const isOnline = appStore.getState().onlineStatus.isOnline;
         let metadata: Metadata;
         try{
             if(!isOnline) throw new Error("Offline mode");
-            const response = await fetch(`${apiBaseUrl}/notebooks/new`,{
-                method: 'POST',
-                headers:{
-                    'Authorization':`Bearer ${token}`,
-                    'Content-Type':'application/json'
-                },
-            });
+            const response = await fetchWithAuth(`${apiBaseUrl}/notebooks/new`, 'POST');
             metadata = await response.json();
-        } catch (error){
+        } catch {
             metadata = {
                 id: crypto.randomUUID(),
                 title: "Libreta sin titulo",
@@ -218,14 +212,7 @@ export async function updateNotebook(notebook: NotebookOliva){
     const metadata: Metadata = notebook.metadata;
     if(appStore.getState().onlineStatus.isOnline){
         try{
-            const response = await fetch(`${apiBaseUrl}/notebooks/${metadata.id}`,{
-                method: 'PUT',
-                headers:{
-                    'Authorization':`Bearer ${token}`,
-                    'Content-Type':'application/json'
-                },
-                body: JSON.stringify(notebook)
-            });
+            const response = await fetchWithAuth(`${apiBaseUrl}/notebooks/${metadata.id}`, 'PUT', notebook);
             if(!response.ok){
                 throw new Error("Failed to update notebook online");
             }
@@ -247,13 +234,7 @@ export async function deleteNotebook(notebookId: string){
     }
     if(appStore.getState().onlineStatus.isOnline){
         try{
-            const response = await fetch(`${apiBaseUrl}/notebooks/${notebookId}`,{
-                method: 'DELETE',
-                headers:{
-                    'Authorization':`Bearer ${token}`,
-                    'Content-Type':'application/json'
-                },
-            });
+            const response = await fetchWithAuth(`${apiBaseUrl}/notebooks/${notebookId}`, 'DELETE');
             if(!response.ok){
                 throw new Error("Failed to delete notebook online");
             }
@@ -277,18 +258,11 @@ export async function syncOfflineNotebooks(){
         return;
     }
     const offlineModifications = appStore.getState().dataSync.offlineNotbooksModification;
-    for(let modification of offlineModifications){
+    for(const modification of offlineModifications){
         try{
             const localNotebook = await readLocalNotebook(modification.id!);
             if(modification.typeOfModification === 'added'){
-                const response = await fetch(`${apiBaseUrl}/notebooks/`,{
-                    method: 'POST',
-                    headers:{
-                        'Authorization':`Bearer ${token}`,
-                        'Content-Type':'application/json'
-                    },
-                    body: JSON.stringify(localNotebook)
-                });
+                const response = await fetchWithAuth(`${apiBaseUrl}/notebooks/`, 'POST', localNotebook);
                 if(!response.ok){
                     throw new Error("Failed to sync new notebook online");
                 }
@@ -316,21 +290,15 @@ export async function getNotebook(notebookId:string){
     let localNotebook: Oli | null = null; 
     try {
         localNotebook =await readLocalNotebook(notebookId);
-    } catch (error) {
+    } catch {
         console.log("No local notebook found:", notebookId);
     }
 
     if(appStore.getState().onlineStatus.isOnline){
         try{
-            const response = await fetch(`${apiBaseUrl}/notebooks/${notebookId}`,{
-                method: 'GET',
-                headers:{
-                    'Authorization':`Bearer ${token}`,
-                    'Content-Type':'application/json'
-                }
-            });
+            const response = await fetchWithAuth(`${apiBaseUrl}/notebooks/${notebookId}`, 'GET');
 
-            let onlineNotebook = await response.json() as Oli;
+            const onlineNotebook = await response.json() as Oli;
 
             if(localNotebook){
                 const localUpdatedAt = new Date(localNotebook.metadata.updated_at!);
@@ -349,7 +317,7 @@ export async function getNotebook(notebookId:string){
                 saveLocalNotebook(onlineNotebook);
                 return onlineNotebook;
             }
-        } catch (error){
+        } catch {
             if(localNotebook){
                 console.log("Error fetching online notebook, using local version:", notebookId);
                 return localNotebook;
