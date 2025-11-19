@@ -71,7 +71,7 @@ class ReactRenderer {
     }
 
     heading( children: ReactNode, level: HeadingLevels ): ReactElement {
-        var numberLevel = level as number;
+        let numberLevel = level as number;
         numberLevel ++;
         level = numberLevel as HeadingLevels;
         return this.#h( `h${level}`, children );

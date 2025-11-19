@@ -40,7 +40,7 @@ function openIndexedDB(): Promise<IDBDatabase> {
     });
 }
 export async function readLocalNotebook(notebookId: string): Promise<Oli> {
-    let db = await openIndexedDB();
+    const db = await openIndexedDB();
     return new Promise((resolve, reject) => {
         const transaction = db.transaction(['notebooks'], 'readonly');
         const objectStore = transaction.objectStore('notebooks');
@@ -61,7 +61,7 @@ export async function readLocalNotebook(notebookId: string): Promise<Oli> {
     });
 }
 export async function saveLocalNotebook(notebook: Oli): Promise<void> {
-    let db = await openIndexedDB();
+    const db = await openIndexedDB();
     console.log("Saving notebook locally:", notebook.metadata.id!);
     return new Promise((resolve, reject) => {
         const transaction = db.transaction(['notebooks'], 'readwrite');
@@ -78,7 +78,7 @@ export async function saveLocalNotebook(notebook: Oli): Promise<void> {
     });
 }
 export async function deleteLocalNotebook(notebookId: string): Promise<void> {
-    let db = await openIndexedDB();
+    const db = await openIndexedDB();
     return new Promise((resolve, reject) => {
         const transaction = db.transaction(['notebooks'], 'readwrite');
         const objectStore = transaction.objectStore('notebooks');
