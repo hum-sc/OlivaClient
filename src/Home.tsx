@@ -23,7 +23,7 @@ export default function Home() {
     useEffect(()=>{
         dispatch(setActiveNav(nav));
         getNotebooksMetadata();
-    },[isAuthenticated,])
+    },[]);
     return (<>
         <section className="myNotes">
             <h2 className="headlineMedium">

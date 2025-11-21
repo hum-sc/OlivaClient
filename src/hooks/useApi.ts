@@ -77,6 +77,10 @@ async function fetchWithAuth(url: string, method: string = 'GET', body?: unknown
     if (body) {
         options.body = JSON.stringify(body);
     }
+    const timeout = 300; // 1 seconds timeout
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+    options.signal = controller.signal;
     
     return fetch(url, options);
 }
@@ -91,6 +95,7 @@ export function getToken(): string {
     }
     return token;
 }
+
 export async function getUserData(token: string): Promise<void> {
     // Get to user data endpoint with the sub in the body
     const user = await fetch(`${apiBaseUrl}/api/user`, {
@@ -123,8 +128,9 @@ export async function refreshToken(refreshToken: string) {
         return response.json();
     });
 }
-export function logoutUser(refreshToken: string) {
-    window.location.href = `${apiBaseUrl}/auth/logout?refresh_token=${refreshToken}`;
+export function logoutUser() {
+    const token = getToken();
+    window.location.href = `${apiBaseUrl}/auth/logout?token=${token}`;
 }
 export async function getFile(fileId: string) {
     //TODO: Cache files locally using IndexedDB
@@ -170,15 +176,18 @@ export async function getNotebooksMetadata (){
     }
 }
 export async function newNotebook(){
+    console.log("Creating new notebook");
     const user = appStore.getState().auth.user;
     try{
         const isOnline = appStore.getState().onlineStatus.isOnline;
         let metadata: Metadata;
         try{
             if(!isOnline) throw new Error("Offline mode");
+            console.log("Creating notebook online");
             const response = await fetchWithAuth(`${apiBaseUrl}/notebooks/new`, 'POST');
             metadata = await response.json();
         } catch {
+            console.log("Offline mode, creating notebook locally");
             metadata = {
                 id: crypto.randomUUID(),
                 title: "Libreta sin titulo",
@@ -216,14 +225,14 @@ export async function updateNotebook(notebook: NotebookOliva){
             if(!response.ok){
                 throw new Error("Failed to update notebook online");
             }
-            appStore.dispatch(addOnlineNotebookMetadata([{...metadata, updated_at: metadata.updated_at, created_at: metadata.created_at}]));
+            appStore.dispatch(addOnlineNotebookMetadata([{...metadata}]));
         } catch (error){
             console.error("Error updating notebook online:", error);
-            appStore.dispatch(addOfflineNotebookMetadata({...metadata, updated_at: metadata.updated_at, created_at: metadata.created_at, typeOfModification: 'updated'}));
+            appStore.dispatch(addOfflineNotebookMetadata({...metadata, typeOfModification: 'updated'}));
         }    
     } else {
         console.log("Offline mode, saving notebook update locally");
-        appStore.dispatch(addOfflineNotebookMetadata({...metadata, updated_at: metadata.updated_at, created_at: metadata.created_at, typeOfModification: 'updated'}));
+        appStore.dispatch(addOfflineNotebookMetadata({...metadata, typeOfModification: 'updated'}));
     }
     saveLocalNotebook(notebook.oli());
 }
@@ -249,8 +258,45 @@ export async function deleteNotebook(notebookId: string){
         appStore.dispatch(deleteOfflineNotebookMetadata(notebookId));
     }
 }
+export async function uploadNotebook(notebook: NotebookOliva){
+    const token = getToken();
+    if (!token) {
+        return;
+    }
+
+    notebook.metadata.id = crypto.randomUUID();
+    notebook.metadata.author = {
+        name: appStore.getState().auth.user?.username || "Unknown",
+        id: appStore.getState().auth.user!.user_id
+    }
+    if(!notebook.metadata.created_at){
+        notebook.metadata.created_at = new Date().toISOString();
+    }
+    if(!notebook.metadata.updated_at){
+        notebook.metadata.updated_at = new Date().toISOString();
+    }
+    const metadata: Metadata = notebook.metadata;
+    
+    if(appStore.getState().onlineStatus.isOnline){
+        try{
+            const response = await fetchWithAuth(`${apiBaseUrl}/notebooks/`, 'POST', notebook.oli());
+            if(!response.ok){
+                throw new Error("Failed to upload notebook online");
+            }
+            appStore.dispatch(addOnlineNotebookMetadata([{...metadata}]));
+        } catch (error){
+            console.error("Error uploading notebook online:", error);
+            appStore.dispatch(addOfflineNotebookMetadata({...metadata, typeOfModification: 'added'}));
+        }    
+    } else {
+        console.log("Offline mode, saving notebook upload locally");
+        appStore.dispatch(addOfflineNotebookMetadata({...metadata, typeOfModification: 'added'}));
+    }
+    saveLocalNotebook(notebook.oli());
+}
 export async function syncOfflineNotebooks(){
     const token = getToken();
+    const isOnline = appStore.getState().onlineStatus.isOnline;
     if (!token) {
         return;
     }
@@ -258,26 +304,25 @@ export async function syncOfflineNotebooks(){
         return;
     }
     const offlineModifications = appStore.getState().dataSync.offlineNotbooksModification;
+    if(!isOnline) throw new Error("Went offline during sync");
     for(const modification of offlineModifications){
         try{
             const localNotebook = await readLocalNotebook(modification.id!);
             if(modification.typeOfModification === 'added'){
-                const response = await fetchWithAuth(`${apiBaseUrl}/notebooks/`, 'POST', localNotebook);
-                if(!response.ok){
-                    throw new Error("Failed to sync new notebook online");
-                }
+                await uploadNotebook(NotebookOliva.notebookFromJSON(localNotebook));
             } else if (modification.typeOfModification === 'updated'){
-                updateNotebook(NotebookOliva.notebookFromJSON(localNotebook));
+                await updateNotebook(NotebookOliva.notebookFromJSON(localNotebook));
             } else if (modification.typeOfModification === 'deleted'){
-                deleteNotebook(modification.id!);
+                await deleteNotebook(modification.id!);
             }
             appStore.dispatch(syncedNotebookModification(modification));
         } catch (error){
-            console.error("Error syncing offline notebook:", error);
+            console.error("Error syncing offline notebook:", modification.id);
         }
     }
 }
 export async function getNotebook(notebookId:string){
+    console.log("Getting notebook:", notebookId);
     const token = getToken();
     if (!token) {
         throw new Error("No token available");
@@ -290,6 +335,7 @@ export async function getNotebook(notebookId:string){
     let localNotebook: Oli | null = null; 
     try {
         localNotebook =await readLocalNotebook(notebookId);
+        console.log("Found local notebook:", notebookId);
     } catch {
         console.log("No local notebook found:", notebookId);
     }

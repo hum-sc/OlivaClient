@@ -8,7 +8,7 @@ function loadStoredState() {
             return undefined;
         }
         return JSON.parse(serializedState);
-    } catch (err) {
+    } catch {
         return undefined;
     }
 }
@@ -17,7 +17,7 @@ function saveState(state: RootState) {
     try {
         const serializedState = JSON.stringify(state);
         localStorage.setItem('olivaState', serializedState);
-    } catch (err) {
+    } catch {
         // Ignore write errors
     }
 }

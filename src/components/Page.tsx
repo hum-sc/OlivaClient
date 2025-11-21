@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 import type { Page } from "../OlivaFormat/oli";
 import '../styles/Page.css';
 import type { RootState } from "../store";
+import CellComponent from "./Cell";
 interface PageProps extends React.PropsWithChildren {
     // Define any props needed for the Page component here
     page: Page;
@@ -27,9 +28,7 @@ export default function Page(props: PageProps){
             {props.page.cue?.cells.length === 1 && <p className="cell placeholder">No cue cells</p>}
             {
                 props.page.cue?.cells.map((cell, index) => (
-                    <div key={index} className="cell">
-                        {cell.source}
-                    </div>
+                    <CellComponent key={index} className="cell" cell={cell}/>
                 ))
             }
         </section>
@@ -41,9 +40,7 @@ export default function Page(props: PageProps){
         >
             {
                 props.page.content?.cells.map((cell, index) => (
-                    <div key={index} className="cell">
-                        {cell.source}
-                    </div>
+                    <CellComponent key={index} className="cell" cell={cell} />
                 ))
             }
         </section>
@@ -55,9 +52,7 @@ export default function Page(props: PageProps){
         >
             {
                 props.page.summary?.cells.map((cell, index) => (
-                   <div key={index} className="cell">
-                        {cell.source}
-                    </div>
+                   <CellComponent key={index} className="cell" cell={cell} />
                 ))
             }
         </section>

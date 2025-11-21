@@ -1,0 +1,18 @@
+.toolbar {
+    position: fixed;
+    bottom: 4em;
+    left: auto;
+    right: auto;
+    display: flex;
+    flex-direction: row;
+    background-color: rgb(var(--md-sys-color-surface-variant));
+    padding: 8px 16px;
+    border-radius: var(--md-sys-corner-size-full);
+    box-shadow: var(--md-elevation-shadow-1);
+    z-index: 10;
+
+}
+
+.toolbar .iconButton.active{
+    color: rgb(var(--md-sys-color-tertiary));
+}

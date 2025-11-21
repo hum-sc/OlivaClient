@@ -1,5 +1,7 @@
 import { createElement, type ElementType, type ReactElement, type ReactNode } from "react";
 import { joinBase } from "./helpers";
+import { EditableComponent, type EditableComponentProps } from "../components/EditableComponent";
+import type { MathComponentProps, MathComponentPropsWithMath } from "react-katex";
 const pkg = await import("react-katex");
 const { BlockMath, InlineMath } = pkg;
 export type HeadingLevels = 1 | 2 | 3 | 4 | 5 | 6;
@@ -17,6 +19,7 @@ export interface ReactRendererOptions {
     openLinksInNewTab?: boolean;
     langPrefix?: string;
     renderer?: CustomReactRenderer;
+    editable?: boolean;
 }
 
 class ReactRenderer {
@@ -59,6 +62,7 @@ class ReactRenderer {
             supresshydrationwarning: "true",
         };
         this.#incrementElId();
+        if(this.#options.editable) return EditableComponent<T>({el, ...props, key: elProps.key, suppress: elProps.supresshydrationwarning, children} as EditableComponentProps<T>)
         return createElement(el, { ...props, ...elProps }, children);
     }
 
@@ -127,7 +131,7 @@ class ReactRenderer {
     }
 
     math( text: ReactNode ): ReactElement {
-        return <BlockMath>{text}</BlockMath>;
+        return this.#h( BlockMath, text );
     }
 
     table( children: ReactNode[] ): ReactElement {
@@ -168,7 +172,7 @@ class ReactRenderer {
     }
 
     html( html: ReactNode ): ReactElement {
-        return this.#h( "div", html, { dangerouslySetInnerHTML: { __html: html } } );
+        return this.#h( "div", null, { dangerouslySetInnerHTML: { __html: html } } );
     }
 
     hr(): ReactElement {
@@ -179,9 +183,7 @@ class ReactRenderer {
         return this.#h( "br" );
     }
     inlineMath( text: ReactNode ): ReactElement {
-        return <InlineMath>
-            {text}
-        </InlineMath>
+        return this.#h(InlineMath, text)
     }
 
 }

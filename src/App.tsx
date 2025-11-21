@@ -1,7 +1,7 @@
 import './App.css'
 import { useSelector } from 'react-redux'
 import { BrowserRouter, Route, Routes } from 'react-router'
-import Editor from './Editor.tsx'
+import Editor from './components/Editor/Editor.tsx'
 import Home from './Home.tsx'
 import Layout from './Layout.tsx'
 import { useEffect } from 'react'
@@ -14,6 +14,7 @@ import { setConnected, setDisconnected} from './features/online/onlineSlice.ts'
 import { getUserData, loginUrl } from './hooks/useApi.ts'
 
 import Button from './components/Button.tsx'
+import { Logout } from './Logout.tsx'
 
 
 function App() {
@@ -50,7 +51,7 @@ function App() {
       }
     }
     return () => { clearTimeout(timeoutId); }
-  },[])
+  },[isLoggedIn, isOnline])
 
   useEffect(()=>{
     if (!isLoggedIn) {
@@ -80,6 +81,7 @@ function App() {
           <Route path='/editor/:notebookId' element={
               <Editor />
             } />
+          <Route path='/logout' element={<Logout />} />
         </Route>
       </Routes>
       <PWABadge />

@@ -1,9 +1,10 @@
 import { Marked, type MarkedOptions, type Token } from "marked";
 import ReactParser from "./ReactParser";
 import ReactRenderer, { type ReactRendererOptions } from "./ReactRenderer";
-type LexerOptions = Pick<MarkedOptions, "gfm" | "breaks">;
+import type { HTMLAttributes } from "react";
+export type LexerOptions = Pick<MarkedOptions, "gfm" | "breaks">;
 
-export interface MarkdownProps extends ReactRendererOptions, LexerOptions {
+export interface MarkdownProps extends ReactRendererOptions, LexerOptions, HTMLAttributes<HTMLDivElement> {
     value?: string;
     children?: string;
     isInline?: boolean;
@@ -12,7 +13,7 @@ export interface MarkdownProps extends ReactRendererOptions, LexerOptions {
     style?:React.CSSProperties;
 }
 
-const validateComponentProps = (props: MarkdownProps) => {
+export const validateComponentProps = (props: MarkdownProps) => {
     if (props.value && typeof props.value !== "string") {
         throw new Error("Invalid prop: value must be a string");
     }
@@ -22,7 +23,7 @@ const validateComponentProps = (props: MarkdownProps) => {
     }
 };
 
-const defaultProps = {
+export const defaultProps = {
     isInline: false,
     breaks: false,
     gfm: true,
@@ -45,7 +46,7 @@ const math = {
         type: 'math',
         raw: match[0],
         text: match[1].trim(),
-        tokens: tokens
+        tokens: []
       };
     }  
     return false;
@@ -69,7 +70,7 @@ const inlineMath = {
         type: 'inlineMath',
         raw: match[0],
         text: match[1].trim(),
-        tokens: tokens
+        tokens: []
       };
     }
     return false;
@@ -80,7 +81,7 @@ const inlineMath = {
 }
 
 
-function useMarkedJS() {
+export function useMarkedJS() {
   const marked = new Marked();
   marked.use({ extensions: [math, inlineMath] });
   return marked;
@@ -113,7 +114,7 @@ function Markdown(props: MarkdownProps) {
     const parser = new ReactParser(parserOptions);
     const children = options.isInline ? parser.parseInline(tokens) : parser.parse(tokens);
 
-    return<div id={props.id} className="markdown" style={props.style}>
+    return<div id={props.id} className="markdown">
      
         {children}
      

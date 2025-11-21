@@ -110,12 +110,12 @@ class ReactParser {
                 }
                 case "math": {
                     return this.renderer.math(
-                        (token as any).text
+                        (token as Tokens.Text).text
                     );
                 }
                 case "inlineMath": {
                     return this.renderer.inlineMath(
-                        (token as any).text
+                        (token as Tokens.Text).text
                     );
                 }
                 default: {
@@ -177,7 +177,7 @@ class ReactParser {
                 }
                 case "inlineMath": {
                     return this.renderer.inlineMath(
-                        (token as any).text,
+                        (token as Tokens.Text).text,
                     );
                 }
                 case "del":{

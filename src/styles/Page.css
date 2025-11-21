@@ -23,8 +23,6 @@
     grid-row: span 5;
     padding: 0%;
     margin: 0;
-    display: flex;
-    flex-direction: column;
     gap: 0px;
     border-right: gray 1px solid;
     border-radius: var(--md-sys-corner-size-none);
@@ -38,8 +36,6 @@
     grid-row: span 5;
     padding: 0%;
     margin: 0;
-    display: flex;
-    flex-direction: column;
     gap: 0px;
     border-radius: var(--md-sys-corner-size-none);
 }

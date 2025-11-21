@@ -15,11 +15,12 @@ const editorSlice = createSlice({
     } as EditorState,
     reducers: {
         setMetadata(state, action) {
+            console.log(action.payload)
             state.metadata = action.payload;
         },
         setNotebookPixelsWidth(state, action) {
             state.notebookPixelsWidth = action.payload;
-            state.notebookPixelsHeight = action.payload * (state.metadata?.paper?.dimensions!.height! / state.metadata?.paper?.dimensions!.width!);
+            state.notebookPixelsHeight = action.payload * (state.metadata!.paper.dimensions.height / state.metadata!.paper.dimensions.width);
         }
     },
 });
