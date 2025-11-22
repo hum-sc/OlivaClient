@@ -68,8 +68,6 @@
     border-radius: 50%;
 }
 
-
-
 .square {
     mask-image: url('./shapes/Shape=Square.png');
     mask-size: 100% 100%;

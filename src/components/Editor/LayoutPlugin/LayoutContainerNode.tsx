@@ -1,7 +1,14 @@
 import { $createParagraphNode, $createTextNode, ElementNode, type DOMConversionMap, type DOMConversionOutput, type DOMExportOutput, type EditorConfig, type LexicalEditor, type LexicalNode, type LexicalUpdateJSON, type NodeKey, type SerializedElementNode, type Spread } from "lexical";
 import {addClassNamesToElement} from '@lexical/utils'
-import { $createLayoutItemNode } from "./LayoutItemNode";
+import { $createLayoutItemNode, type LayoutItemTemplate } from "./LayoutItemNode";
 export let defaultClassName = "page";
+
+export interface LayoutTemplate {
+    columns: string;
+    rows: string;
+    components: LayoutItemTemplate[];
+}
+
 
 export type SerializedLayoutContainerNode = Spread<
     {
@@ -56,7 +63,6 @@ export class LayoutContainerNode extends ElementNode {
         const dom = document.createElement('div');
         dom.style.gridTemplateColumns = this.__template.columns;
         dom.style.gridTemplateRows = this.__template.rows;
-        console.log("Layout: ", config.theme.layoutContainer)
         if (typeof config.theme.layoutContainer ==="string"){
             addClassNamesToElement(dom, config.theme.layoutContainer)
         }
@@ -170,13 +176,15 @@ export function $createFilledLayoutContainer(
     template:LayoutTemplate = {
         columns:'',
         rows:'',
-        components:[]
+        components:[{id:"", area:""}] as LayoutItemTemplate[],
     }
 ) {
+    
     const layout = $createLayoutContainerNode(template);
 
-    for( const component in template.components ){
-        const part = $createLayoutItemNode();
+    for( let componentTemplate of template.components ){
+        console.log(componentTemplate);
+        const part = $createLayoutItemNode(componentTemplate);
         part.append($createParagraphNode().append($createTextNode()));
         layout.append(part);
     }
@@ -188,9 +196,4 @@ export function $isLayoutContainerNode(
     node: LexicalNode | null | undefined,
 ): node is LayoutContainerNode {
     return node instanceof LayoutContainerNode;
-}
-export interface LayoutTemplate {
-    columns: string;
-    rows: string;
-    components: { label: string; area: string; }[];
 }

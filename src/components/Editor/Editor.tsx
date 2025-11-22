@@ -22,13 +22,16 @@ import OlivaEditorTheme from './OlivaEditorTheme'
 import { buildHTMLConfig } from "./buildHTMLConfig";
 import { $createFilledLayoutContainer, $createLayoutContainerNode, type LayoutTemplate } from "./LayoutPlugin/LayoutContainerNode";
 import * as React from 'react'
+import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
+import { TRANSFORMERS } from '@lexical/markdown'
+import EquationPlugin from "./EquationPlugin/EquationsPlugin";
 const cornellLayout:LayoutTemplate = {
-    columns: '1fr 3fr', 
-    rows: '5fr 1fr', 
+    columns: '25% 75%', 
+    rows: '80% 20%', 
     components:[
-        { label: 'Notes', area: '1 / 1 / 2 / 2' },
-        { label: 'Main', area: '1 / 2 / 2 / 3' },
-        { label: 'Summary', area: '2 / 1 / 3 / 3' },
+        { id: 'Notes', area: '1 / 1 / 2 / 2' },
+        { id: 'Main', area: '1 / 2 / 2 / 3' },
+        { id: 'Summary', area: '2 / 1 / 3 / 3' },
     ],
 };
 
@@ -37,10 +40,10 @@ const placeholder = "Escribe aquí...";
 const PointMM = 0.34;
 function $firstLayout() {
     const root = $getRoot();
-    console.log("Layout: "+ JSON.stringify(root.exportJSON()), null, 2);
     if(root.getFirstChild()===null){
         const layout = $createFilledLayoutContainer(cornellLayout);        
         root.append(layout);
+        layout.selectStart();
     }
 }
 
@@ -70,14 +73,22 @@ export default function Editor() {
     const notebookMetadata = useSelector((state:RootState) => state.editor.metadata);
 
     const getFontSize = (pt:number) => {
-        if (!notebookMetadata) return '16px';
+        if (!notebookMetadata) return 16;
         return pt*PointMM/notebookMetadata.paper.dimensions.width!*notebookPixelsWidth!;
     }
-    const [update, setUpdate] = useState(false);
-    useEffect(() => {
 
+
+    const {pageHeight, fontSize} = useMemo(()=>{
+        let fontSize:number;
+        let pageHeight:number;
+        pageHeight = notebookPixelsWidth! * (notebookMetadata!.paper.dimensions.height / notebookMetadata!.paper.dimensions.width);
+        fontSize = getFontSize(notebookMetadata?.base_font_size!);
+        return {pageHeight, fontSize};
+
+    },[notebookPixelsWidth, notebookMetadata]);
+
+    useEffect(() => {
         getNotebook(notebookId!).then(data => {
-            console.log("Fetched notebook data:", data);
             const notebookFetched = NotebookOliva.notebookFromJSON(data!);
             setNotebook(notebookFetched);
             dispatch(setMetadata(notebookFetched.metadata));
@@ -85,7 +96,8 @@ export default function Editor() {
         }).catch(error => {
             console.error("Error fetching notebook:", error);
         });
-
+    }, []);
+    useEffect(()=>{
         const current = notebookRef.current;
         if (current) {
             const resizeObserver = new ResizeObserver((entries) => {
@@ -99,31 +111,23 @@ export default function Editor() {
                 resizeObserver.unobserve(current);
             };
         }
-
-    }, []);
-
-    useEffect( () => {
-        const fontSize = getFontSize(notebookMetadata?.base_font_size!);
-        if (notebookRef.current) {
-            notebookRef.current.style.fontSize = `${fontSize}px`;
-        }
-        const pages = document.getElementsByClassName('page');
+    },[])
+    useEffect(()=>{
+        const pages = notebookRef.current?.getElementsByClassName('page')||[];
         for (let i = 0; i < pages.length; i++) {
             const page = pages[i] as HTMLElement;
-            page.style.width = `${notebookPixelsWidth}px`;
-            page.style.height = `${notebookPixelsWidth! * (notebookMetadata!.paper.dimensions.height / notebookMetadata!.paper.dimensions.width)}px`;
+            page.style.height = `${pageHeight}px`;
         }
-
-    }, [notebookPixelsWidth, update])
+    })
     return (
     <ErrorBoundary>
             <LexicalExtensionComposer extension={app} contentEditable={null}>
                 
             <div className="editor">
-                <ToolbarPlugin/>
                 <input value={title} onChange={(e) => setTitle(e.target.value)} className="title titleMedium" />
+                <ToolbarPlugin/>
                 <section ref={notebookRef} className="editor-container" style={{
-                    fontSize:`${getFontSize(notebookMetadata?.base_font_size!)}px`
+                    fontSize:`${fontSize}px`
                 }}>
                     <RichTextPlugin
                         contentEditable={
@@ -135,14 +139,15 @@ export default function Editor() {
                                         className="notebook"
                                         aria-placeholder={placeholder}
                                     />
-                        }
+                                }
                         
                         ErrorBoundary={LexicalErrorBoundary}
                     />
                     <HistoryPlugin/>
                     <AutoFocusPlugin/>
                     <LayoutPlugin/>
-                    <OnChangePlugin onChange={()=> setUpdate(!update)}/>
+                    <MarkdownShortcutPlugin transformers={TRANSFORMERS}/>
+                    <EquationPlugin/>
                 </section>
             </div>
                     </LexicalExtensionComposer>

@@ -64,7 +64,7 @@ export default function ToolbarPlugin(){
             )
         )
     },[editor, $updateToolbar])
-    return <div className="toolbar" ref = {toolbarRef}>
+    return <div className="toolbar large-top-round" ref = {toolbarRef}>
         <IconButton disabled={!canUndo} onClick={()=>{editor.dispatchCommand(UNDO_COMMAND, undefined)}} icon="undo" label="undo"/>
         <IconButton disabled={!canRedo} onClick={()=>{editor.dispatchCommand(REDO_COMMAND, undefined)}} icon="redo" label="redo"/>
         <IconButton onClick={()=>{editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold')}} className={isBold ? "active" : ""} icon="format_bold" label="bold"/>

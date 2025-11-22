@@ -10,6 +10,7 @@ import {HeadingNode, QuoteNode} from '@lexical/rich-text';
 import {TableCellNode, TableNode, TableRowNode} from '@lexical/table';
 import { LayoutContainerNode } from "./LayoutPlugin/LayoutContainerNode";
 import { LayoutItemNode } from "./LayoutPlugin/LayoutItemNode";
+import { EquationNode } from "./EquationPlugin/EquationNode";
 
 export const OlivaNodes: Array<Klass<LexicalNode>>=[
     HeadingNode,
@@ -28,5 +29,6 @@ export const OlivaNodes: Array<Klass<LexicalNode>>=[
     HorizontalRuleNode,
     TableRowNode,
     LayoutContainerNode,
-    LayoutItemNode
+    LayoutItemNode,
+    EquationNode
 ]

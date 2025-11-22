@@ -1,14 +1,22 @@
 import type {
     DOMConversionMap,
     DOMConversionOutput,
+    DOMExportOutput,
     EditorConfig,
+    LexicalEditor,
     LexicalNode,
+    NodeKey,
     SerializedElementNode,
 } from "lexical";
 
 import { addClassNamesToElement } from "@lexical/utils";
-import { $isParagraphNode, ElementNode } from "lexical";
+import { $createParagraphNode, $isParagraphNode, ElementNode } from "lexical";
 export type SerializedLayoutItemNode = SerializedElementNode;
+
+export interface LayoutItemTemplate {
+    id: string;
+    area: string;
+}
 
 function $convertLayoutItemElement():DOMConversionOutput | null {
     return { node: $createLayoutItemNode() };
@@ -22,12 +30,18 @@ export function $isEmptyLayoutItemNode( node: LexicalNode ): boolean {
 }
 
 export class LayoutItemNode extends ElementNode {
+    __template: LayoutItemTemplate;
+    constructor(template:LayoutItemTemplate, key?: NodeKey){
+        super(key);
+        this.__template = template;
+        
+    }
     static getType(): string {
         return "layout-item";
     }
     
     static clone( node: LayoutItemNode ): LayoutItemNode {
-        return new LayoutItemNode( node.__key );
+        return new LayoutItemNode( node.__template, node.__key );
     }
 
     createDOM(config: EditorConfig): HTMLElement {
@@ -36,7 +50,18 @@ export class LayoutItemNode extends ElementNode {
         if( typeof config.theme.layoutItem === "string") {
             addClassNamesToElement(dom, config.theme.layoutItem);
         }
+        dom.id = this.__template.id;
+        dom.style.gridArea=this.__template.area;
+        
         return dom;
+    }
+
+    exportDOM(): DOMExportOutput {
+        const element = document.createElement('div');
+        element.style.gridArea = this.__template.area;
+        element.id=this.__template.id;
+        element.setAttribute("data-lexical-layout-node","true");
+        return {element};
     }
 
     updateDOM(): boolean {
@@ -78,8 +103,9 @@ export class LayoutItemNode extends ElementNode {
     }
 }
 
-export function $createLayoutItemNode(): LayoutItemNode {
-    return new LayoutItemNode();
+export function $createLayoutItemNode(template:LayoutItemTemplate={id:"",area:""}): LayoutItemNode {
+    const layoutItem = new LayoutItemNode(template);
+    return layoutItem;
 }
 
 export function $isLayoutItemNode(

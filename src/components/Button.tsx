@@ -1,24 +1,26 @@
 import { useState } from 'react';
 import '../styles/Button.css'
-export type ButtonProps = {
-    type?: 'default' | 'toggle';
+export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+    buttonType?: 'default' | 'toggle';
     color?: 'elevated' | 'filled' | 'tonal' | 'outlined' | 'text';
     size?: 'extra-small' | 'small' | 'medium' | 'large' | 'extra-large';
     shape?: 'rounded' | 'squared';
     onClick: ()=>void;
-    text: string;
+    text?: string | undefined;
     icon?: string;
     disabled?: boolean;
-}
+} ;
+
 export default function Button({
-    onClick,
-    text,
-    icon,
-    type='default',
+    onClick = ()=>{},
+    text= undefined,
+    icon = undefined,
+    buttonType='default',
     color='filled',
     size='small',
     shape='rounded',
     disabled=false,
+    ...rest
 }:ButtonProps){
     
     const [isSelected, setIsSelected] = useState(false);
@@ -26,9 +28,10 @@ export default function Button({
         setIsSelected(!isSelected);
         onClick();
     }
-    return <button disabled={disabled} onClick={handleOnClick} className={`${type} ${color} ${size} ${shape} ${isSelected? "selected":"unselected"}`}>
+    const child = text || rest.children;
+    return <button disabled={disabled} onClick={handleOnClick} className={`${buttonType} ${color} ${size} ${shape} ${isSelected? "selected":"unselected"}`} {...rest}>
         {icon&&<span className="material-symbols-outlined">{icon}</span>}
-        <p>{text}</p>
+        <p>{child}</p>
         <div className="stateLayer"/>
     </button>
 

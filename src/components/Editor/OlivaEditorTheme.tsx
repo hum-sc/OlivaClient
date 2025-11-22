@@ -59,7 +59,7 @@ const theme: EditorThemeClasses = {
   image: 'editor-image',
   indent: 'PlaygroundEditorTheme__indent',
   layoutContainer: 'page',
-  layoutItem: 'PlaygroundEditorTheme__layoutItem',
+  layoutItem: 'component',
   link: 'PlaygroundEditorTheme__link',
   list: {
     checklist: 'PlaygroundEditorTheme__checklist',
