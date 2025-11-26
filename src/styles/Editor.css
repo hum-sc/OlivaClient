@@ -50,6 +50,21 @@ main section{
 
 }
 
+.editor-container::-webkit-scrollbar {
+    position: absolute;
+    width:10px;
+    height: 100%;
+    background-color: rgb(var(--md-sys-color-surface-container-low));
+    border-radius: var(--md-sys-corner-size-full);
+}
+
+.editor-container::-webkit-scrollbar-thumb {
+    background-color: rgba(var(--md-sys-color-on-surface),0.5);
+    border-radius: var(--md-sys-corner-size-small);
+    border: 2px solid transparent;
+    background-clip: content-box;
+}
+
 
 .notebook {
     position: relative;
@@ -75,7 +90,7 @@ main section{
 .page{
     display: grid;
     box-sizing: border-box;
-
+    font-size: inherit;
     width: 100%;
     overflow: hidden;
     line-height: 1.5;
@@ -91,6 +106,7 @@ main section{
 }
 .component {
     box-sizing: border-box;
+    font-size: inherit;
     border: 1px dotted rgb(var(--md-sys-color-outline));
     padding: 4px;
 

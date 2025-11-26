@@ -20,12 +20,12 @@ import {
   type NodeKey,
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
+import * as React from 'react';
 import {useCallback, useEffect, useRef, useState} from 'react';
 import {ErrorBoundary} from 'react-error-boundary';
 
 import EquationEditor from './EquationEditor';
 import KatexRenderer from './KatexRenderer';
-
 import {$isEquationNode} from './EquationNode';
 
 type EquationComponentProps = {

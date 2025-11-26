@@ -63,7 +63,9 @@ export default function EquationPlugin(): JSX.Element | null {
             (payload) => {
                 const {equation, inline} = payload;
                 const equationNode = $createEquationNode(equation, inline);
+                
                 $insertNodes([equationNode]);
+
                 if( $isRootOrShadowRoot(equationNode.getParentOrThrow())){
                     $wrapNodeInElement(equationNode, $createParagraphNode).selectEnd();
                 }

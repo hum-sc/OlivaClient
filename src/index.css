@@ -80,62 +80,62 @@ h1, h2, h3, h4, h5, h6, p {
 }
 .displayLarge, h1 {
     font-family: "Work Sans", sans-serif;
-    font-size: 57pt;
-    line-height: 64px;
+    font-size: 4.75em;
+    line-height: 1.2em;
     font-weight: normal;
     letter-spacing: -0.25px;
 }
 
 .displayMedium, h2 {
     font-family: "Work Sans", sans-serif;
-    font-size: 45px;
-    line-height: 52px;
+    font-size: 3.75em;
+    line-height: 1.2em;
     font-weight: normal;
     letter-spacing: 0px;
 }
 
 .displaySmall, h3 {
     font-family: "Work Sans", sans-serif;
-    font-size: 36px;
-    line-height: 44px;
+    font-size: 3em;
+    line-height: 1.2em;
     font-weight: normal;
     letter-spacing: 0px;
 }
 
 .headlineLarge, h4 {
     font-family: "Work Sans", sans-serif;
-    font-size: 32px;
-    line-height: 40px;
+    font-size: 2.55em;
+    line-height: 1.2em;
     font-weight: normal;
     letter-spacing: 0px;
 }
 .headlineMedium, h5 {
     font-family: "Work Sans", sans-serif;
-    font-size: 28px;
-    line-height: 36px;
+    font-size: 2.33em;
+    line-height: 1.2em;
     font-weight: normal;
     letter-spacing: 0px;
 }
 .headlineSmall, h6 {
     font-family: "Work Sans", sans-serif;
-    font-size: 24px;
-    line-height: 32px;
+    font-size: 2em;
+    line-height: 1.2em;
     font-weight: normal;
     letter-spacing: 0px;
 }
 
 .titleLarge {
     font-family: "Work Sans", sans-serif;
-    font-size: 22px;
-    line-height: 28px;
+    font-size: 1.833em;
+    line-height: 1.2em;
     font-weight: normal;
     letter-spacing: 0px;
 }
 
 .titleMedium {
     font-family: "Work Sans", sans-serif;
-    font-size: 16px;
-    line-height: 24px;
+    font-size: 1.333em;
+    line-height: 1.2em;
     font-weight: 500;
     letter-spacing: 0.15px;
 }
@@ -143,7 +143,7 @@ h1, h2, h3, h4, h5, h6, p {
 .titleSmall {
     font-family: "Work Sans", sans-serif;
     font-size: 1.167em;
-    line-height: 1.667;
+    line-height: 1.2em;
     font-weight: 500;
     letter-spacing: 0.1px;
 }
@@ -151,7 +151,7 @@ h1, h2, h3, h4, h5, h6, p {
 .labelLarge {
     font-family: "Inter", sans-serif;
     font-size: 1.167em;
-    line-height: 1.667em;
+    line-height: 1.5em;
     font-weight: 500;
     letter-spacing: 0.0084em;
 }
@@ -159,7 +159,7 @@ h1, h2, h3, h4, h5, h6, p {
 .labelMedium {
     font-family: "Inter", sans-serif;
     font-size: 1em;
-    line-height: 1.33em;
+    line-height: 1.5em;
     font-weight: 500;
     letter-spacing: 0.0417em;
 }
@@ -167,7 +167,7 @@ h1, h2, h3, h4, h5, h6, p {
 .labelSmall {
     font-family: "Inter", sans-serif;
     font-size: 0.917em;
-    line-height: 1.33em;
+    line-height: 1.5em;
     font-weight: 500;
     letter-spacing: 0.0417em;
 }
@@ -175,7 +175,7 @@ h1, h2, h3, h4, h5, h6, p {
 .bodyLarge {
     font-family: "Inter", sans-serif;
     font-size: 1.33em;
-    line-height: 2em;
+    line-height: 1.5em;
     font-weight: normal;
     letter-spacing: 0.0417em;
 }
@@ -183,7 +183,7 @@ h1, h2, h3, h4, h5, h6, p {
 .bodyMedium {
     font-family: "Inter", sans-serif;
     font-size: 1.167em;
-    line-height: 1.667em;
+    line-height: 1.5em;
     font-weight: normal;
     letter-spacing: 0.021em;
 }
@@ -191,7 +191,7 @@ h1, h2, h3, h4, h5, h6, p {
 .bodySmall p {
     font-family: "Inter", sans-serif;
     font-size: 1em;
-    line-height: 1.33em;
+    line-height: 1.5em;
     font-weight: normal;
     letter-spacing: 0.03em;
 }

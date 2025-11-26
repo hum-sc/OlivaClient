@@ -1,11 +1,12 @@
-import { ElementNode, type LexicalNode, type LexicalCommand, type NodeKey, KEY_BACKSPACE_COMMAND, DELETE_CHARACTER_COMMAND, COMMAND_PRIORITY_HIGH, KEY_ENTER_COMMAND, $isRootNode, type UpdateListenerPayload, type MutationListener, TextNode } from "lexical";
+import { ElementNode, type LexicalNode, type LexicalCommand, type NodeKey, DELETE_CHARACTER_COMMAND, COMMAND_PRIORITY_HIGH, type UpdateListenerPayload, TextNode, $addUpdateTag, HISTORY_MERGE_TAG, KEY_ENTER_COMMAND, type CommandListener, type LexicalEditor, $create, $isElementNode, $getSiblingCaret, $getAdjacentSiblingOrParentSiblingCaret, $isLineBreakNode, $getRoot } from "lexical";
 
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
 import {
     $findMatchingParent,
+    $getNextSiblingOrParentSibling,
     $insertNodeToNearestRoot,
-    mergeRegister, 
+    mergeRegister,
 } from "@lexical/utils";
 
 import {
@@ -13,14 +14,7 @@ import {
     $getNodeByKey,
     $getSelection,
     $isRangeSelection,
-    COMMAND_PRIORITY_EDITOR,
-    COMMAND_PRIORITY_LOW,
-    createCommand,
-    KEY_ARROW_DOWN_COMMAND,
-    KEY_ARROW_UP_COMMAND,
-    KEY_ARROW_RIGHT_COMMAND,
-    KEY_ARROW_LEFT_COMMAND,
-    KEY_DELETE_COMMAND,
+    COMMAND_PRIORITY_EDITOR, createCommand
 } from "lexical";
 
 import { useEffect } from "react";
@@ -46,8 +40,11 @@ export const UPDATE_LAYOUT_COMMAND: LexicalCommand<{
     template:LayoutTemplate,
     nodeKey:NodeKey
 }> = createCommand<{template:LayoutTemplate, nodeKey:NodeKey}>()
+
 export const INSERT_NEW_PAGE_ON_OVERFLOW = "insert-new-page-on-overflow";
-export function LayoutPlugin(): null {
+export const REMOVE_PAGE_ON_UNDO = "remove-page-on-undo";
+
+export function LayoutPlugin({aspectRatio, template}: {aspectRatio: number, template: LayoutTemplate}): null {
     const [editor] = useLexicalComposerContext();
     useEffect(()=>{
         if(!editor.hasNodes([LayoutContainerNode, LayoutItemNode])){
@@ -55,7 +52,33 @@ export function LayoutPlugin(): null {
                 "Layout plugin: LayoutContainerNode, or LayoutItemNode not registered on editor",
             );
         }
+        
+        const $fillLayoutItemIfEmpty = (node: LayoutItemNode) => {
+            if (node.isEmpty()) {
+                node.append($createParagraphNode());
+            }
+        };
+
+        const $insertLayout = () => {
+            return (template: LayoutTemplate) => {
+                editor.update(() => {
+                    const container = $createLayoutContainerNode(template);
+                    const itemsCount = getItemsCountFromTemplate(template);
+                    for (let i = 0; i < itemsCount; i++) {
+                        container.append(
+                            $createLayoutItemNode().append($createParagraphNode())
+                        );
+                    }
+                    $insertNodeToNearestRoot(container);
+                    container.selectStart();
+                });
+
+                return true;
+            };
+        };
+
         const $onDelete = () => {
+            // TODO: Check if all layout items are empty, then remove the layout container.
             const selection = $getSelection();
             if (
                 $isRangeSelection(selection) &&
@@ -81,11 +104,7 @@ export function LayoutPlugin(): null {
             }
             return false;
         }
-        const $fillLayoutItemIfEmpty = (node: LayoutItemNode) => {
-            if (node.isEmpty()) {
-                node.append($createParagraphNode());
-            }
-        };
+
         const $onEditorUpdate = (changes: UpdateListenerPayload) => {
             changes.editorState.read(() => {
                 const selection = $getSelection();
@@ -116,15 +135,17 @@ export function LayoutPlugin(): null {
                         }
                         if( itemSize < childrenSize && !changes.tags.has(INSERT_NEW_PAGE_ON_OVERFLOW)){
                             editor.update(() => {
+                                $addUpdateTag(INSERT_NEW_PAGE_ON_OVERFLOW);
+                                $addUpdateTag(HISTORY_MERGE_TAG);
                                 const node = selection.anchor.getNode();
                                 let nextLayoutContainer = layoutContainer.getNextSibling<LayoutContainerNode>();
-                                console.log("Layout item overflowed");
+                                
                                 if( 
                                     nextLayoutContainer == null ||
                                     !$isLayoutContainerNode(nextLayoutContainer)
                                 ){
-                                    console.log("Need to create a new page");
-                                    nextLayoutContainer = $createFilledLayoutContainer(layoutContainer.getTemplate());
+                                    
+                                    nextLayoutContainer = $createFilledLayoutContainer(layoutContainer.getTemplate(), aspectRatio);
                                     const parent = layoutContainer.getParent<ElementNode>();
                                     if(parent !== null){
                                         parent.append(nextLayoutContainer);
@@ -135,7 +156,7 @@ export function LayoutPlugin(): null {
                                         layoutItem.getIndexWithinParent()
                                     );
                                 if( $isLayoutItemNode(nextLayoutItemInNextContainer) ){
-                                    console.log("Moving overflowed content to next page");
+                                    
                                     let accumulatedHeight = 0;
                                     const overflowedSize = childrenSize - itemSize;
                                     
@@ -147,7 +168,7 @@ export function LayoutPlugin(): null {
                                                 // @ts-ignore
                                                 accumulatedHeight += childElement.clientHeight;
                                             }
-                                            console.log(child);
+                                            
                                             let selectNext = false;
                                             if( node instanceof TextNode){
                                                 selectNext = $getLeafNodes(child).some((n=>n.getKey()===node.getKey()));
@@ -157,7 +178,7 @@ export function LayoutPlugin(): null {
                                                 selectNext = childLeafNodes.some(n=>leafNodes.includes(n));
                                             }
                                             selectNext = selectNext || node === child;
-                                            console.log("Selecting next: ", selectNext, " for node: ", node);
+                                            
                                             child.remove();
                                             nextLayoutItemInNextContainer.getFirstChild()?.insertBefore(child);
                                             selectNext && nextLayoutItemInNextContainer.selectStart();
@@ -165,96 +186,16 @@ export function LayoutPlugin(): null {
                                     }
                                 }
 
-                            },{ tag: INSERT_NEW_PAGE_ON_OVERFLOW } );
+                            });
                         }
                         
                     }
                     
                 }
-                //console.log("Current selection: ", selection);
+                //
             });
 
         };
-        const $onLayoutItemChange:MutationListener = ( nodes, payload )=>{
-            payload.prevEditorState.read(()=>{
-                const selection = $getSelection();
-                if( selection !== null &&
-                    $isRangeSelection(selection)
-                ){
-                    const layoutItem = $findMatchingParent(
-                        selection.anchor.getNode(),
-                        $isLayoutItemNode,
-                    );
-                    const page = $findMatchingParent(
-                        selection.anchor.getNode(),
-                        $isLayoutContainerNode,
-                    );
-
-                    if( $isLayoutItemNode(layoutItem) &&
-                        $isLayoutContainerNode(page)
-                    ){
-                        const itemSize = editor.getElementByKey(layoutItem.getKey())?.clientHeight;
-                        const pageSize = editor.getElementByKey(page.getKey())?.clientHeight;
-                        //console.log("Layout item changed: ", layoutItem.getKey());
-                        //console.log("Page container: ", page.getKey());
-                    }
-                    
-                }
-                //console.log("Previous selection: ", selection);
-
-            });
-        }
-        const $onEnter = (event: KeyboardEvent) =>{
-            const selection = $getSelection();
-            if (
-                $isRangeSelection(selection) &&
-                selection.isCollapsed()
-            ){
-            
-                const item = $findMatchingParent(
-                    selection.anchor.getNode(),
-                    $isLayoutItemNode,
-                );
-
-                // If inside a layout item there no space to go down, create a new page
-                if($isLayoutItemNode(item)){
-                    //console.log("Enter in layout item")
-                    const parent = item.getParent<ElementNode>();
-                    if(
-                        $isLayoutContainerNode(parent) &&
-                        $isLayoutItemNode(item)
-                    ){
-                        const DOMItem =editor.getElementByKey(item.getKey());
-                        const heightItem = DOMItem?.clientHeight;
-
-                        const nextSibling = parent.getNextSibling();
-                        
-                    }
-                }
-
-                const container = $findMatchingParent(
-                    selection.anchor.getNode(),
-                    $isLayoutContainerNode,
-                );
-                if($isLayoutContainerNode(container)){
-                    const parent = container.getParent<ElementNode>();
-                    if(
-                        parent !== null
-                    ){
-                        if (event.ctrlKey) {
-                            const newPage = $createFilledLayoutContainer(container.getTemplate());
-                            parent.append(newPage);
-                            
-                            newPage.selectStart();
-                            return true;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
-
         const $removeIsolatedLayoutItem = (node: LayoutItemNode) => {
             const parent = node.getParent<ElementNode>();
             if(!$isLayoutContainerNode(parent)) {
@@ -268,74 +209,110 @@ export function LayoutPlugin(): null {
             return false;
         }
 
+        const $updateLayout = ({ template , nodeKey }:{template: LayoutTemplate, nodeKey: NodeKey}) => {
+            editor.update(() => {
+                const container = $getNodeByKey<LexicalNode>(nodeKey);
+
+                if (!$isLayoutContainerNode(container)) {
+                    return;
+                }
+
+                const itemsCount = getItemsCountFromTemplate(template);
+                const prevItemsCount = getItemsCountFromTemplate(
+                    container.getTemplate()
+                );
+
+                if (itemsCount > prevItemsCount) {
+                    for (let i = prevItemsCount; i < itemsCount; i++) {
+                        container.append(
+                            $createLayoutItemNode().append($createParagraphNode())
+                        );
+                    }
+                } else if (itemsCount < prevItemsCount) {
+                    for (let i = prevItemsCount - 1; i >= itemsCount; i--) {
+                        const layoutItem = container.getChildAtIndex<LexicalNode>(i);
+                        if ($isLayoutItemNode(layoutItem)) {
+                            layoutItem.remove();
+                        }
+                    }
+                }
+                container.setTemplate(template);
+            });
+            return true;
+        };
+        const $onEnter:CommandListener<KeyboardEvent | null> = (payload: KeyboardEvent | null, editor: LexicalEditor) => {
+            console.log("Enter pressed inside layout item");
+            if(payload?.shiftKey){
+                const selection = $getSelection();
+                if(
+                    $isRangeSelection(selection)
+                ){
+                    console.log("Shift+Enter pressed inside layout item");
+                    //selection.insertLineBreak(false);
+                    const selectionNode = selection.anchor.getNode();
+                    if($isLayoutItemNode(selectionNode))return true;
+                    let actualNode = selectionNode.getParent();
+                    let firstNode = selectionNode;
+                    if (selectionNode instanceof TextNode){
+                        actualNode = selectionNode.getParent();
+                        firstNode.remove();
+                        firstNode = $createParagraphNode().append(firstNode);
+                    } else {
+                        actualNode = selectionNode;
+                        firstNode = selectionNode;
+                    }
+                    const nextSiblings = [firstNode, ...actualNode?.getNextSiblings() || [] ] ;
+                    console.log(nextSiblings);
+                    const layoutContainer = $findMatchingParent(
+                        selection.anchor.getNode(),
+                        $isLayoutContainerNode,
+                    );
+                    let nextLayoutContainer = layoutContainer?.getNextSibling<LayoutContainerNode>();
+                    if( !nextLayoutContainer ){
+                        nextLayoutContainer = $createFilledLayoutContainer(layoutContainer!.getTemplate(), aspectRatio);
+                    }
+                    const layoutItemIndex = $findMatchingParent(
+                        selection.anchor.getNode(),
+                        $isLayoutItemNode,
+                    )?.getIndexWithinParent();
+                     
+                    const nextLayoutItemInNextContainer = nextLayoutContainer
+                        .getChildAtIndex<LayoutItemNode>(layoutItemIndex!);
+                        const newFirstNode = nextLayoutItemInNextContainer!.getFirstChild();
+                    for(const sibling of nextSiblings){
+                        sibling!.remove();
+                        newFirstNode?.insertBefore(sibling!);
+                    }
+                    layoutContainer?.insertAfter(nextLayoutContainer);
+                    nextLayoutItemInNextContainer?.selectStart();
+                }
+                return false;
+
+            }
+
+            return false;
+        };
         return mergeRegister(
-            editor.registerMutationListener( TextNode , $onLayoutItemChange, {skipInitialization:false}),
-            editor.registerMutationListener( LayoutItemNode, $onLayoutItemChange, {skipInitialization:false}),
             editor.registerUpdateListener($onEditorUpdate),
             editor.registerCommand(
+                KEY_ENTER_COMMAND,
+                $onEnter,
+                COMMAND_PRIORITY_HIGH,
+            ),
+            editor.registerCommand(
                 INSERT_LAYOUT_COMMAND,
-                (template: LayoutTemplate)=>{
-                    editor.update(()=>{
-                        const container = $createLayoutContainerNode(template);
-                        const itemsCount = getItemsCountFromTemplate(template);
-                        for(let i = 0;  i < itemsCount; i++){
-                            container.append(
-                                $createLayoutItemNode().append($createParagraphNode()),
-                            );
-                        }
-
-                        $insertNodeToNearestRoot(container);
-                        container.selectStart();
-                    });
-
-                    return true;
-                },
+                $insertLayout(),
                 COMMAND_PRIORITY_EDITOR,
             ),
             editor.registerCommand(
                 UPDATE_LAYOUT_COMMAND,
-                ({template, nodeKey})=>{
-                    editor.update(()=>{
-                        const container = $getNodeByKey<LexicalNode>(nodeKey);
-
-                        if( !$isLayoutContainerNode(container) ){
-                            return;
-                        }
-
-                        const itemsCount = getItemsCountFromTemplate(template);
-                        const prevItemsCount = getItemsCountFromTemplate(
-                            container.getTemplate(),
-                        );
-
-                        if(itemsCount > prevItemsCount) {
-                            for( let i = prevItemsCount; i < itemsCount; i++){
-                                container.append(
-                                    $createLayoutItemNode().append($createParagraphNode()),
-                                )
-                            }
-                        } else if (itemsCount < prevItemsCount){
-                            for(let i = prevItemsCount -1; i>= itemsCount; i--){
-                                const layoutItem = container.getChildAtIndex<LexicalNode>(i);
-                                if ($isLayoutItemNode(layoutItem)){
-                                    layoutItem.remove();
-                                }
-                            }
-                        }
-                        container.setTemplate(template);
-                    });
-                    return true;
-                },
+                $updateLayout,
                 COMMAND_PRIORITY_EDITOR
             ),
             editor.registerCommand(
                 DELETE_CHARACTER_COMMAND,
-                (event) => $onDelete(),
+                () => $onDelete(),
                 COMMAND_PRIORITY_HIGH,
-            ),
-            editor.registerCommand(
-                KEY_ENTER_COMMAND,
-                (event) => $onEnter(event!),
-                COMMAND_PRIORITY_HIGH
             ),
             editor.registerNodeTransform(LayoutItemNode, (node) => {
                 const isRemoved = $removeIsolatedLayoutItem(node);
@@ -355,7 +332,22 @@ export function LayoutPlugin(): null {
             }),
         );
 
+
+        
     }, [editor]);
+
+    useEffect(() => {
+        editor.update(() => {
+            const root = $getRoot();
+            if(root?.getChildren().length! > 0){
+                return;
+            } else {
+                const layout = $createFilledLayoutContainer(template, aspectRatio);
+                root.append(layout);
+                layout.selectStart();
+            }
+        });
+    }, [])
 
     return null;
 }

@@ -1,30 +1,29 @@
+import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
+import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
+import { LexicalExtensionComposer } from "@lexical/react/LexicalExtensionComposer";
+import { createEmptyHistoryState, HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { defineExtension } from "lexical";
+import * as React from 'react';
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 import NotebookOliva from "../../OlivaFormat/src/Oliva";
+import { setMetadata, setNotebookPixelsWidth } from "../../features/editor/editorSlice";
 import { getNotebook } from "../../hooks/useApi";
 import type { RootState } from "../../store";
-import { useSelector } from "react-redux";
 import '../../styles/Editor.css';
-import { useDispatch } from "react-redux";
-import { setMetadata, setNotebookPixelsWidth } from "../../features/editor/editorSlice";
-import { $createParagraphNode, $createTextNode, $getRoot, defineExtension, type EditorState, type LexicalEditor } from "lexical";
 import ToolbarPlugin from "../Toolbar";
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
-import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
-import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
-import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
-import { ContentEditable } from "@lexical/react/LexicalContentEditable";
-import { LayoutPlugin } from "./LayoutPlugin/LayoutPlugin";
-import { LexicalExtensionComposer } from "@lexical/react/LexicalExtensionComposer";
-import { OlivaNodes } from "./OlivaNodes";
-import OlivaEditorTheme from './OlivaEditorTheme'
-import { buildHTMLConfig } from "./buildHTMLConfig";
-import { $createFilledLayoutContainer, $createLayoutContainerNode, type LayoutTemplate } from "./LayoutPlugin/LayoutContainerNode";
-import * as React from 'react'
-import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
-import { TRANSFORMERS } from '@lexical/markdown'
 import EquationPlugin from "./EquationPlugin/EquationsPlugin";
+import { type LayoutTemplate } from "./LayoutPlugin/LayoutContainerNode";
+import { LayoutPlugin } from "./LayoutPlugin/LayoutPlugin";
+import OlivaEditorTheme from './OlivaEditorTheme';
+import { OlivaNodes } from "./OlivaNodes";
+import { buildHTMLConfig } from "./buildHTMLConfig";
+import MarkdownPlugin from './MarkdownPlugin/MarkdownPlugin';
+import { SharedHistoryContext } from './context/SharedHistoryContext';
+import { LexicalCollaboration } from '@lexical/react/LexicalCollaborationContext';
 const cornellLayout:LayoutTemplate = {
     columns: '25% 75%', 
     rows: '80% 20%', 
@@ -38,22 +37,15 @@ const cornellLayout:LayoutTemplate = {
 const placeholder = "Escribe aquí...";
 
 const PointMM = 0.34;
-function $firstLayout() {
-    const root = $getRoot();
-    if(root.getFirstChild()===null){
-        const layout = $createFilledLayoutContainer(cornellLayout);        
-        root.append(layout);
-        layout.selectStart();
-    }
-}
+
 
 export default function Editor() {
     const [title, setTitle] = useState("");
-    
+    const historyState = createEmptyHistoryState();
     const app = useMemo(
         ()=> 
         defineExtension({
-            $initialEditorState: $firstLayout,
+            $initialEditorState: null,
             html: buildHTMLConfig(),
             name:'Oliva editor',
             namespace: 'Oliva',
@@ -62,7 +54,6 @@ export default function Editor() {
         }),
         []
     );
-
     const notebookId = useParams().notebookId;
     const [notebook, setNotebook] = useState<NotebookOliva | null>(null);
     const dispatch = useDispatch();
@@ -74,18 +65,8 @@ export default function Editor() {
 
     const getFontSize = (pt:number) => {
         if (!notebookMetadata) return 16;
-        return pt*PointMM/notebookMetadata.paper.dimensions.width!*notebookPixelsWidth!;
+        return Math.trunc(pt*PointMM/notebookMetadata.paper.dimensions.width!*notebookPixelsWidth!);
     }
-
-
-    const {pageHeight, fontSize} = useMemo(()=>{
-        let fontSize:number;
-        let pageHeight:number;
-        pageHeight = notebookPixelsWidth! * (notebookMetadata!.paper.dimensions.height / notebookMetadata!.paper.dimensions.width);
-        fontSize = getFontSize(notebookMetadata?.base_font_size!);
-        return {pageHeight, fontSize};
-
-    },[notebookPixelsWidth, notebookMetadata]);
 
     useEffect(() => {
         getNotebook(notebookId!).then(data => {
@@ -97,6 +78,18 @@ export default function Editor() {
             console.error("Error fetching notebook:", error);
         });
     }, []);
+    const aspectRatio = useMemo(()=>{
+        let aspectRatio: number;
+        aspectRatio = notebookMetadata?.paper.dimensions.width! / notebookMetadata?.paper.dimensions.height! || (297/210); // Default A4 ratio
+        return notebookMetadata?.paper.orientation === 'landscape' ? 1/aspectRatio : aspectRatio;
+    },[notebookMetadata]);
+
+    const fontSize = useMemo(()=>{
+        let fontSize:number;
+        fontSize = getFontSize(notebookMetadata?.base_font_size!);
+        return fontSize;
+    },[notebookMetadata, Math.trunc(notebookPixelsWidth!) % 2]);
+
     useEffect(()=>{
         const current = notebookRef.current;
         if (current) {
@@ -111,18 +104,12 @@ export default function Editor() {
                 resizeObserver.unobserve(current);
             };
         }
-    },[])
-    useEffect(()=>{
-        const pages = notebookRef.current?.getElementsByClassName('page')||[];
-        for (let i = 0; i < pages.length; i++) {
-            const page = pages[i] as HTMLElement;
-            page.style.height = `${pageHeight}px`;
-        }
-    })
+    },[]);
     return (
     <ErrorBoundary>
-            <LexicalExtensionComposer extension={app} contentEditable={null}>
-                
+        <LexicalCollaboration>
+        <LexicalExtensionComposer extension={app} contentEditable={null}>   
+        <SharedHistoryContext>
             <div className="editor">
                 <input value={title} onChange={(e) => setTitle(e.target.value)} className="title titleMedium" />
                 <ToolbarPlugin/>
@@ -143,14 +130,16 @@ export default function Editor() {
                         
                         ErrorBoundary={LexicalErrorBoundary}
                     />
-                    <HistoryPlugin/>
+                    <HistoryPlugin externalHistoryState={historyState}/>
                     <AutoFocusPlugin/>
-                    <LayoutPlugin/>
-                    <MarkdownShortcutPlugin transformers={TRANSFORMERS}/>
                     <EquationPlugin/>
+                    <MarkdownPlugin/>
+                    <LayoutPlugin aspectRatio={aspectRatio} template={cornellLayout} />
                 </section>
             </div>
-                    </LexicalExtensionComposer>
+        </SharedHistoryContext>
+        </LexicalExtensionComposer>
+        </LexicalCollaboration>
     </ErrorBoundary>
         
     );

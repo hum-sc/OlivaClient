@@ -1,4 +1,3 @@
-
 import type {JSX} from 'react';
 
 import './KatexEquationAlterer.css';
@@ -69,7 +68,7 @@ export default function KatexEquationAlterer({
         </ErrorBoundary>
       </div>
       <div className="KatexEquationAlterer_dialogActions">
-        <Button buttonType='toggle'  onClick={onClick}>Confirm</Button>
+        <Button onClick={onClick}>Confirmar</Button>
       </div>
     </>
   );

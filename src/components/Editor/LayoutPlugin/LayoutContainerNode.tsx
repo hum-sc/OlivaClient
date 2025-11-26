@@ -1,4 +1,4 @@
-import { $createParagraphNode, $createTextNode, ElementNode, type DOMConversionMap, type DOMConversionOutput, type DOMExportOutput, type EditorConfig, type LexicalEditor, type LexicalNode, type LexicalUpdateJSON, type NodeKey, type SerializedElementNode, type Spread } from "lexical";
+import { $createParagraphNode, $createTextNode, ElementNode, type DOMConversionMap, type DOMConversionOutput, type DOMExportOutput, type EditorConfig, type LexicalNode, type LexicalUpdateJSON, type NodeKey, type SerializedElementNode, type Spread } from "lexical";
 import {addClassNamesToElement} from '@lexical/utils'
 import { $createLayoutItemNode, type LayoutItemTemplate } from "./LayoutItemNode";
 export let defaultClassName = "page";
@@ -46,10 +46,12 @@ function $convertLayoutContainerElement(
 
 export class LayoutContainerNode extends ElementNode {
     __template: LayoutTemplate;
+    __aspectRatio: number | null;
     
-    constructor( template: LayoutTemplate, key?: NodeKey ) {
+    constructor( template: LayoutTemplate, aspectRatio:number | null, key?: NodeKey ) {
         super(key);
         this.__template = template;
+        this.__aspectRatio = aspectRatio;
     }
 
     static getType(): string {
@@ -57,12 +59,13 @@ export class LayoutContainerNode extends ElementNode {
     }
 
     static clone( node: LayoutContainerNode ): LayoutContainerNode {
-        return new LayoutContainerNode( node.__template, node.__key );
+        return new LayoutContainerNode( node.__template, node.__aspectRatio, node.__key );
     }
     createDOM(config: EditorConfig): HTMLElement {
         const dom = document.createElement('div');
         dom.style.gridTemplateColumns = this.__template.columns;
         dom.style.gridTemplateRows = this.__template.rows;
+        dom.style.aspectRatio = this.__aspectRatio ? this.__aspectRatio.toString() : "auto";
         if (typeof config.theme.layoutContainer ==="string"){
             addClassNamesToElement(dom, config.theme.layoutContainer)
         }
@@ -73,6 +76,7 @@ export class LayoutContainerNode extends ElementNode {
         const element = document.createElement("div");
         element.style.gridTemplateColumns = this.__template.columns ;
         element.style.gridTemplateRows = this.__template.rows;
+        element.style.aspectRatio = this.__aspectRatio ? this.__aspectRatio.toString() : "auto";
         element.setAttribute("template-components", JSON.stringify(this.__template.components))
         element.setAttribute("data-lexical-layout-container", "true");
         return { element };
@@ -87,6 +91,9 @@ export class LayoutContainerNode extends ElementNode {
         }
         if(prevNode.__template.components !== this.__template.components) {
             dom.setAttribute("template-components", this.__template.components.toString())
+        }
+        if(prevNode.__aspectRatio !== this.__aspectRatio){
+            dom.style.aspectRatio = this.__aspectRatio ? this.__aspectRatio.toString() : "auto";
         }
         return false;
     }
@@ -160,6 +167,15 @@ export class LayoutContainerNode extends ElementNode {
         self.__template = template
         return self;
     }
+
+    setAspectRatio( aspectRatio: number | null ): this {
+        const self = this.getWritable();
+        self.__aspectRatio = aspectRatio;
+        return self;
+    }
+    getAspectRatio(): number | null {
+        return this.getLatest().__aspectRatio;
+    }
 }
 
 export function $createLayoutContainerNode(
@@ -167,9 +183,10 @@ export function $createLayoutContainerNode(
         columns: '',
         rows: '',
         components:[]
-    }
+    },
+    aspectRatio:number | null = null,
 ): LayoutContainerNode {
-    return new LayoutContainerNode( template )
+    return new LayoutContainerNode( template, aspectRatio )
 }
 
 export function $createFilledLayoutContainer(
@@ -177,13 +194,13 @@ export function $createFilledLayoutContainer(
         columns:'',
         rows:'',
         components:[{id:"", area:""}] as LayoutItemTemplate[],
-    }
+    },
+    aspectRatio:number,
 ) {
     
-    const layout = $createLayoutContainerNode(template);
+    const layout = $createLayoutContainerNode(template, aspectRatio);
 
     for( let componentTemplate of template.components ){
-        console.log(componentTemplate);
         const part = $createLayoutItemNode(componentTemplate);
         part.append($createParagraphNode().append($createTextNode()));
         layout.append(part);

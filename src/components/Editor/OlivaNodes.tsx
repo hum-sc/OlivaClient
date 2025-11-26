@@ -11,6 +11,7 @@ import {TableCellNode, TableNode, TableRowNode} from '@lexical/table';
 import { LayoutContainerNode } from "./LayoutPlugin/LayoutContainerNode";
 import { LayoutItemNode } from "./LayoutPlugin/LayoutItemNode";
 import { EquationNode } from "./EquationPlugin/EquationNode";
+import { ImageNode } from "./ImagePlugin/ImageNode";
 
 export const OlivaNodes: Array<Klass<LexicalNode>>=[
     HeadingNode,
@@ -30,5 +31,6 @@ export const OlivaNodes: Array<Klass<LexicalNode>>=[
     TableRowNode,
     LayoutContainerNode,
     LayoutItemNode,
-    EquationNode
+    EquationNode,
+    ImageNode
 ]
