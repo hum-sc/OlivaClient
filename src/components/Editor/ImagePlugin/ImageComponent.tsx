@@ -6,22 +6,22 @@
  *
  */
 
-import type {LexicalCommand, LexicalEditor, NodeKey} from 'lexical';
-import type {JSX} from 'react';
+import type { LexicalCommand, LexicalEditor, NodeKey } from 'lexical';
+import type { JSX } from 'react';
 
 import './ImageNode.css';
 
-import {useCollaborationContext} from '@lexical/react/LexicalCollaborationContext';
-import {CollaborationPlugin} from '@lexical/react/LexicalCollaborationPlugin';
-import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
-import {LexicalErrorBoundary} from '@lexical/react/LexicalErrorBoundary';
-import {HashtagPlugin} from '@lexical/react/LexicalHashtagPlugin';
-import {HistoryPlugin} from '@lexical/react/LexicalHistoryPlugin';
-import {LexicalNestedComposer} from '@lexical/react/LexicalNestedComposer';
-import {RichTextPlugin} from '@lexical/react/LexicalRichTextPlugin';
-import {useLexicalEditable} from '@lexical/react/useLexicalEditable';
-import {useLexicalNodeSelection} from '@lexical/react/useLexicalNodeSelection';
-import {mergeRegister} from '@lexical/utils';
+import { useCollaborationContext } from '@lexical/react/LexicalCollaborationContext';
+import { CollaborationPlugin } from '@lexical/react/LexicalCollaborationPlugin';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
+import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
+import { HashtagPlugin } from '@lexical/react/LexicalHashtagPlugin';
+import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
+import { LexicalNestedComposer } from '@lexical/react/LexicalNestedComposer';
+import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
+import { useLexicalEditable } from '@lexical/react/useLexicalEditable';
+import { useLexicalNodeSelection } from '@lexical/react/useLexicalNodeSelection';
+import { mergeRegister } from '@lexical/utils';
 import {
   $getNodeByKey,
   $getRoot,
@@ -39,7 +39,6 @@ import {
   KEY_ESCAPE_COMMAND,
   SELECTION_CHANGE_COMMAND,
 } from 'lexical';
-import * as React from 'react';
 import {
   Suspense,
   useCallback,
@@ -49,15 +48,15 @@ import {
   useState,
 } from 'react';
 
-import {createWebsocketProvider} from '../collaboration';
-import {useSharedHistoryContext} from '../context/SharedHistoryContext';
+import { createWebsocketProvider } from '../collaboration';
+import { useSharedHistoryContext } from '../context/SharedHistoryContext';
 import brokenImage from './image/image-broken.svg';
 import EmojisPlugin from '../EmojisPlugin/EmojisPlugin';
 import KeywordsPlugin from '../KeywordsPlugin/KeywordsPlugin';
 import LinkPlugin from '../LinkPlugin/LinkPlugin';
 import ContentEditable from '../ContentEditable';
 import ImageResizer from '../ImageResizer';
-import {$isCaptionEditorEmpty, $isImageNode} from './ImageNode';
+import { $isCaptionEditorEmpty, $isImageNode } from './ImageNode';
 
 type ImageStatus =
   | {error: true}

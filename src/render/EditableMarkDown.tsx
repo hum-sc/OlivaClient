@@ -1,5 +1,5 @@
 import type { ReactRendererOptions } from "./ReactRenderer";
-import { useEffect, useState, type HTMLAttributes } from "react";
+import {  type HTMLAttributes } from "react";
 import { useMarkedJS, validateComponentProps, type LexerOptions } from "./Markdown";
 import { Marked } from "marked";
 import ReactRenderer from "./ReactRenderer";

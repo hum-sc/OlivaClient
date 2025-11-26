@@ -120,7 +120,7 @@ export const EQUATION: TextMatchTransformer = {
     return `$${node.getEquation()}$`;
   },
   importRegExp: /\$([^$]+?)\$/,
-  regExp: /\$([^$]+?)\$$/,
+  regExp: /\$([^$]+?)\$/,
   replace: (textNode, match) => {
     const [, equation] = match;
     const equationNode = $createEquationNode(equation, true);

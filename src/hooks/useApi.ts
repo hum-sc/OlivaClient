@@ -77,9 +77,9 @@ async function fetchWithAuth(url: string, method: string = 'GET', body?: unknown
     if (body) {
         options.body = JSON.stringify(body);
     }
-    const timeout = 500; // 1 seconds timeout
+    const timeout = 1000; // 1 seconds timeout
     const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), timeout);
+    setTimeout(() => controller.abort(), timeout);
     options.signal = controller.signal;
     
     return fetch(url, options);

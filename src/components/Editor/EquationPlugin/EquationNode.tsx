@@ -78,7 +78,7 @@ export class EquationNode extends DecoratorNode<JSX.Element> {
       inline: this.__inline,
     };
   }
-
+  
   createDOM(_config: EditorConfig): HTMLElement {
     const element = document.createElement(this.__inline ? 'span' : 'div');
     // EquationNodes should implement `user-action:none` in their CSS to avoid issues with deletion on Android.

@@ -9,7 +9,6 @@ import {type NavFab } from './features/sidebar/sidebarSlice.ts';
 import IconButton from './components/IconButton.tsx';
 export default function Home() {
     const dispatch = useDispatch();
-    const isAuthenticated = useSelector((state:RootState) => state.auth.isAuthenticated);
     const notebooksMetadata = useSelector((state:RootState) => state.dataSync.localNotebooksMetadata);
     const downloadedNotebooks = useSelector((state:RootState) => state.dataSync.downloadedNotebooks);
     const isOnline = useSelector((state:RootState) => state.onlineStatus.isOnline);

@@ -2,15 +2,13 @@ import type {
     DOMConversionMap,
     DOMConversionOutput,
     DOMExportOutput,
-    EditorConfig,
-    LexicalEditor,
-    LexicalNode,
+    EditorConfig, LexicalNode,
     NodeKey,
-    SerializedElementNode,
+    SerializedElementNode
 } from "lexical";
 
 import { addClassNamesToElement } from "@lexical/utils";
-import { $createParagraphNode, $isParagraphNode, ElementNode } from "lexical";
+import { $isParagraphNode, ElementNode } from "lexical";
 export type SerializedLayoutItemNode = SerializedElementNode;
 
 export interface LayoutItemTemplate {

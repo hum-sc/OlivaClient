@@ -15,7 +15,6 @@ import { getNotebook } from "../../hooks/useApi";
 import type { RootState } from "../../store";
 import '../../styles/Editor.css';
 import ToolbarPlugin from "../Toolbar";
-import EquationPlugin from "./EquationPlugin/EquationsPlugin";
 import { type LayoutTemplate } from "./LayoutPlugin/LayoutContainerNode";
 import { LayoutPlugin } from "./LayoutPlugin/LayoutPlugin";
 import OlivaEditorTheme from './OlivaEditorTheme';
@@ -24,6 +23,7 @@ import { buildHTMLConfig } from "./buildHTMLConfig";
 import MarkdownPlugin from './MarkdownPlugin/MarkdownPlugin';
 import { SharedHistoryContext } from './context/SharedHistoryContext';
 import { LexicalCollaboration } from '@lexical/react/LexicalCollaborationContext';
+import EquationsPlugin from "./EquationPlugin/EquationsPlugin";
 const cornellLayout:LayoutTemplate = {
     columns: '25% 75%', 
     rows: '80% 20%', 
@@ -58,6 +58,7 @@ export default function Editor() {
     const [notebook, setNotebook] = useState<NotebookOliva | null>(null);
     const dispatch = useDispatch();
 
+    notebook;
     const notebookRef = useRef<HTMLDivElement>(null);
 
     const notebookPixelsWidth = useSelector((state:RootState) => state.editor.notebookPixelsWidth);
@@ -132,8 +133,8 @@ export default function Editor() {
                     />
                     <HistoryPlugin externalHistoryState={historyState}/>
                     <AutoFocusPlugin/>
-                    <EquationPlugin/>
                     <MarkdownPlugin/>
+                    <EquationsPlugin/>
                     <LayoutPlugin aspectRatio={aspectRatio} template={cornellLayout} />
                 </section>
             </div>
@@ -153,6 +154,7 @@ class ErrorBoundary extends React.Component<React.PropsWithChildren> {
   }
 
   static getDerivedStateFromError(error:Error) {
+    console.error("Derived state from error: ", error);
     // Update state so the next render will show the fallback UI.
     return { hasError: true };
   }

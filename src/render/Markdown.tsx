@@ -40,6 +40,7 @@ const math = {
     return match?.index;
   },
   tokenizer(src:string, tokens: Token[]) {
+    tokens;
     const match = src.match(/^\$\$([^$]+?)\$\$/);
     if (match) {
       return {
@@ -64,6 +65,7 @@ const inlineMath = {
     return match?.index;
   },
   tokenizer(src:string, tokens: Token[]) {
+    tokens;
     const match = src.match(/^\$([^$]+?)\$/);
     if (match) {
       return {

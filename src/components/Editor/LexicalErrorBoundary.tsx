@@ -1,6 +1,5 @@
 import type {JSX} from 'react';
 
-import * as React from 'react';
 import {ErrorBoundary as ReactErrorBoundary} from 'react-error-boundary';
 
 export type LexicalErrorBoundaryProps = {

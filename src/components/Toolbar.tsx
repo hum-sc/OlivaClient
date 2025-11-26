@@ -5,10 +5,6 @@ import {mergeRegister} from '@lexical/utils'
 import IconButton from "./IconButton";
 import '../styles/Toolbar.css'
 
-function Divider(){
-    return <div className="divider"/>;
-}
-
 export default function ToolbarPlugin(){
     const [editor] = useLexicalComposerContext();
     const toolbarRef = useRef(null);

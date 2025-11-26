@@ -1,10 +1,9 @@
-import { ElementNode, type LexicalNode, type LexicalCommand, type NodeKey, DELETE_CHARACTER_COMMAND, COMMAND_PRIORITY_HIGH, type UpdateListenerPayload, TextNode, $addUpdateTag, HISTORY_MERGE_TAG, KEY_ENTER_COMMAND, type CommandListener, type LexicalEditor, $create, $isElementNode, $getSiblingCaret, $getAdjacentSiblingOrParentSiblingCaret, $isLineBreakNode, $getRoot } from "lexical";
+import { ElementNode, type LexicalNode, type LexicalCommand, type NodeKey, DELETE_CHARACTER_COMMAND, COMMAND_PRIORITY_HIGH, type UpdateListenerPayload, TextNode, $addUpdateTag, HISTORY_MERGE_TAG, KEY_ENTER_COMMAND, type CommandListener, $getRoot } from "lexical";
 
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
 import {
     $findMatchingParent,
-    $getNextSiblingOrParentSibling,
     $insertNodeToNearestRoot,
     mergeRegister,
 } from "@lexical/utils";
@@ -240,7 +239,7 @@ export function LayoutPlugin({aspectRatio, template}: {aspectRatio: number, temp
             });
             return true;
         };
-        const $onEnter:CommandListener<KeyboardEvent | null> = (payload: KeyboardEvent | null, editor: LexicalEditor) => {
+        const $onEnter:CommandListener<KeyboardEvent | null> = (payload: KeyboardEvent | null) => {
             console.log("Enter pressed inside layout item");
             if(payload?.shiftKey){
                 const selection = $getSelection();

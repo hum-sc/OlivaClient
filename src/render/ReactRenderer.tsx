@@ -1,7 +1,6 @@
 import { createElement, type ElementType, type ReactElement, type ReactNode } from "react";
 import { joinBase } from "./helpers";
 import { EditableComponent, type EditableComponentProps } from "../components/EditableComponent";
-import type { MathComponentProps, MathComponentPropsWithMath } from "react-katex";
 const pkg = await import("react-katex");
 const { BlockMath, InlineMath } = pkg;
 export type HeadingLevels = 1 | 2 | 3 | 4 | 5 | 6;
