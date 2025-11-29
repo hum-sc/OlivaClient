@@ -3,9 +3,7 @@ import { defineExtension } from "lexical";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import NotebookOliva from "../OlivaFormat/src/Oliva";
-import { setMetadata, setNotebookPixelsWidth } from "../features/editor/editorSlice";
-import { getNotebook, type User } from "../hooks/useApi";
+
 import type { RootState } from "../store";
 import '../styles/routes/Editor.css';
 import { type LayoutTemplate } from "../components/Editor/LayoutPlugin/LayoutContainerNode";
@@ -16,6 +14,9 @@ import { SharedHistoryContext } from '../components/Editor/context/SharedHistory
 import { LexicalCollaboration } from '@lexical/react/LexicalCollaborationContext';
 import LexicalEditor from "../components/Editor/LexicalEditor";
 import * as React from 'react';
+import type { MetadataList } from "../features/dataSync/MetadataStore";
+import { useDocument } from "@automerge/react";
+
 const cornellLayout:LayoutTemplate = {
     columns: '25% 75%', 
     rows: '80% 20%', 
@@ -31,58 +32,70 @@ const PointMM = 0.34;
 
 
 export default function Editor() {
-    const [title, setTitle] = useState("");
+    const notebookId = useParams().notebookId;
     const app = useMemo(
         ()=> 
-        defineExtension({
-            $initialEditorState: null,
-            html: buildHTMLConfig(),
-            name:'Oliva editor',
-            namespace: 'Oliva',
-            nodes:OlivaNodes,
-            theme: OlivaEditorTheme
-        }),
-        []
+            defineExtension({
+                $initialEditorState: null,
+                html: buildHTMLConfig(),
+                name:'Oliva editor',
+                namespace: notebookId!,
+                nodes:OlivaNodes,
+                theme: OlivaEditorTheme
+            }
+        ),[]
     );
-    const notebookId = useParams().notebookId;
-    const [notebook, setNotebook] = useState<NotebookOliva | null>(null);
-    const dispatch = useDispatch();
 
-    notebook;
+    const user = useSelector((state:RootState) => state.auth.user?.username);
+    
+    const docUrl = useSelector((state:RootState) => state.dataSync.docUrl);
+    
+    const [doc, changeDoc] = useDocument<MetadataList>(docUrl,{
+        suspense: true
+    });
+    
+    const [title, setTitle] = useState<string>( "Untitled Notebook");
+
+    const [notebookPixelsWidth, setNotebookPixelsWidth] = useState<number|undefined>(undefined);
     const notebookRef = useRef<HTMLDivElement>(null);
-
-    const notebookPixelsWidth = useSelector((state:RootState) => state.editor.notebookPixelsWidth);
-    const notebookMetadata = useSelector((state:RootState) => state.editor.metadata);
-
-    const getFontSize = (pt:number) => {
-        if (!notebookMetadata) return 16;
-        return Math.trunc(pt*PointMM/notebookMetadata.paper.dimensions.width!*notebookPixelsWidth!);
-    }
-
-    useEffect(() => {
-        getNotebook(notebookId!).then((data: any) => {
-            const notebookFetched = NotebookOliva.notebookFromJSON(data!);
-            setNotebook(notebookFetched);
-            dispatch(setMetadata(notebookFetched.metadata));
-            setTitle(notebookFetched.metadata.title);
-        }).catch((error: any) => {
-            console.error("Error fetching notebook:", error);
-        });
-        return () => {
-            dispatch(setMetadata(null));
+    
+    const metadata = useMemo(()=>{
+        if(doc){
+            const meta = doc.metadata.find(
+                (meta) => meta.notebookID === notebookId
+            );
+            if (meta){
+            setTitle(meta.title!);
+            }
+            return meta || undefined;
         }
-    }, []);
+        return undefined;
+    }, [doc, docUrl, notebookId]);
+
     const aspectRatio = useMemo(()=>{
         let aspectRatio: number;
-        aspectRatio = notebookMetadata?.paper.dimensions.width! / notebookMetadata?.paper.dimensions.height! || (297/210); // Default A4 ratio
-        return notebookMetadata?.paper.orientation === 'landscape' ? 1/aspectRatio : aspectRatio;
-    },[notebookMetadata]);
+        aspectRatio = metadata?.paper?.dimensions.width! / metadata?.paper?.dimensions.height! || (297/210); // Default A4 ratio
+        return metadata?.paper?.orientation === 'landscape' ? 1/aspectRatio : aspectRatio;
+    },[metadata]);
 
     const fontSize = useMemo(()=>{
-        let fontSize:number;
-        fontSize = getFontSize(notebookMetadata?.base_font_size!);
-        return fontSize;
-    },[notebookMetadata, Math.trunc(notebookPixelsWidth!) % 2]);
+        let pt = metadata?.baseFontSize || 12;
+        if (!metadata || !notebookPixelsWidth) return 16;
+        return Math.trunc(pt*PointMM/metadata.paper!.dimensions.width!*notebookPixelsWidth!);
+    },[metadata,notebookPixelsWidth!]);
+
+    const onChangeTitle = useCallback((e:React.ChangeEvent<HTMLInputElement>)=>{
+        setTitle(e.target.value);
+        const newTitle = e.target.value;
+        changeDoc(doc => {
+            const meta = doc.metadata.find(
+                (meta) => meta.notebookID === notebookId
+            );
+            if (meta){
+                meta.title = newTitle;
+            }
+        });
+    }, [changeDoc, notebookId]);
 
     useEffect(()=>{
         const current = notebookRef.current;
@@ -90,7 +103,7 @@ export default function Editor() {
             const resizeObserver = new ResizeObserver((entries) => {
                 for (const entry of entries) {
                     const width = entry.contentRect.width;
-                    dispatch(setNotebookPixelsWidth(width));
+                    setNotebookPixelsWidth(width);
                 }
             });
             resizeObserver.observe(current);
@@ -99,14 +112,20 @@ export default function Editor() {
             };
         }
     },[]);
-    return notebookMetadata ? (
+    return metadata !==undefined ? (
     <ErrorBoundary>
         <LexicalCollaboration>
             <LexicalExtensionComposer extension={app} contentEditable={null}>   
                 <SharedHistoryContext>
-                    <div className="editor" style={{fontSize:fontSize}}>
-                        <input value={title} onChange={(e) => setTitle(e.target.value)} className="title titleMedium" />
-                        <LexicalEditor placeholder={placeholder} template={cornellLayout} aspectRatio={aspectRatio}/>
+                    <div className="editor" ref={notebookRef} style={{fontSize:fontSize}}>
+                        <input value={title} className="title titleMedium" onChange={(e)=>onChangeTitle(e)} />
+                        <LexicalEditor 
+                            placeholder={placeholder} 
+                            template={cornellLayout} 
+                            aspectRatio={aspectRatio}
+                            user={user!}
+                            id={notebookId!}
+                        />
                     </div>
                 </SharedHistoryContext>
             </LexicalExtensionComposer>

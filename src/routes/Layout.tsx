@@ -9,9 +9,16 @@ import "../styles/routes/Layout.css";
 import FAB from "../components/FAB";
 import NavItem from "../components/NavItem";
 import Avatar from "../components/Avatar";
-import { newNotebook } from "../hooks/useApi";
+import { createDefaultNotebookMetadata } from "../hooks/useApi";
+import { useDocument } from "@automerge/react";
+import type { Metadata, MetadataList } from "../features/dataSync/MetadataStore";
+import type { UUID } from "crypto";
 
 export default function Layout() {
+    const docUrl = useSelector((state: RootState) => state.dataSync.docUrl);
+    const [doc, changeDoc] = useDocument<MetadataList>(docUrl,{
+            suspense: true
+    });
     const isOnline = useSelector((state: RootState) => state.onlineStatus.isOnline);
     const isDarkMode = useSelector((state: RootState) => state.theme.theme);
     const user = useSelector((state: RootState) => state.auth.user);
@@ -20,9 +27,14 @@ export default function Layout() {
     const navigate = useNavigate();
 
     const handleNewNotebook = async () => {
-        const notebook = await newNotebook();
-        if (notebook){
-            navigate(`/editor/${notebook}`);
+        const metadata = createDefaultNotebookMetadata(user!.user_id as UUID, "Libreta sin título");
+        changeDoc(doc => {
+            doc.metadata.unshift(metadata);
+        });
+        console.log("Created new notebook with ID:", metadata.notebookID);
+        console.log("Current doc metadata:", doc.metadata);
+        if (metadata.notebookID) {
+            navigate(`/editor/${metadata.notebookID}`);
         }
     }
 

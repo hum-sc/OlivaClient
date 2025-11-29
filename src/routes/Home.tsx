@@ -7,8 +7,13 @@ import { useNavigate } from 'react-router';
 import { setActiveNav } from '../features/sidebar/sidebarSlice.ts';
 import {type NavFab } from '../features/sidebar/sidebarSlice.ts';
 import IconButton from '../components/IconButton.tsx';
-import { useMetadataList } from '../features/dataSync/MetadataStore.ts';
+import { useDocument } from '@automerge/react';
+import type { MetadataList } from '../features/dataSync/MetadataStore.ts';
 export default function Home() {
+    const docUrl = useSelector((state: RootState) => state.dataSync.docUrl);
+    const [doc, changeDoc] = useDocument<MetadataList>(docUrl,{
+        suspense: true
+    });
     const dispatch = useDispatch();
     const notebooksMetadata = useSelector((state:RootState) => state.dataSync.localNotebooksMetadata);
     const downloadedNotebooks = useSelector((state:RootState) => state.dataSync.downloadedNotebooks);
@@ -18,6 +23,15 @@ export default function Home() {
         text: "Nueva libreta",
         icon: "edit",
         action: "newNotebook"
+    }
+
+    const handleDeleteNotebook = (notebookID: string) => {
+        const index = doc.metadata.findIndex((meta) => meta.notebookID === notebookID);
+        if (index >= 0) {
+            changeDoc(doc => {
+                doc.metadata.at(index)!.type = 'deleted';
+            })
+        }
     }
     
     useEffect( ()=>{
@@ -29,23 +43,20 @@ export default function Home() {
             <h2 className="headlineMedium">
                 Mis notas
             </h2>
-            { notebooksMetadata.length === 0 ? <p className="bodyMedium">No tienes libretas creadas aún.</p> :
+            { doc.metadata.filter((metadata)=> metadata.type !== 'deleted').length === 0 ? <p className="bodyMedium">No tienes libretas creadas aún.</p> :
                 <div className="notebooksGrid">
-                    {notebooksMetadata.map((notebook) => (
-                        <div key={notebook.id} className="notebookCard" 
-                        style={{
-                            color: !isOnline&&!downloadedNotebooks.includes(notebook.id!) ? "gray":"rgb(var(--md-sys-color-on-surface)",
-                        }}
-                        >
+                    {doc && doc.metadata.filter((metadata)=> metadata.type !== 'deleted').map((metadata)=>{
+                        return <div key={metadata.notebookID} className="notebookCard unsynced">
                             <div className='NotebookData'
-                            onClick={()=> isOnline||downloadedNotebooks.includes(notebook.id!) ? navigate(`/editor/${notebook.id!}`) : null}
+                            onClick={()=> navigate(`/editor/${metadata.notebookID}`)}
                             >
-                            <h3 className="titleMedium">{notebook.title || "Libreta sin título"}</h3>
-                            <p className="bodySmall">{notebook.updated_at.toLocaleString() || "Sin actualización"}</p>
+                            <h3 className="titleMedium">{metadata.title || "Libreta sin título"}</h3>
                             </div>
-                            <IconButton label='delete' size="small" icon='delete' onClick={()=>{deleteNotebook(notebook.id!)}}/>
+                            <IconButton label='delete' size="small" icon='delete' onClick={()=>{handleDeleteNotebook(metadata.notebookID)}}/>
                         </div>
-                    ))}
+                        })
+                    }
+                    
                 </div>
             }
         </section>

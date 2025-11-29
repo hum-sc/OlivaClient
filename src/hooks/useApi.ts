@@ -6,14 +6,17 @@ import { saveLocalNotebook, deleteLocalNotebook, readLocalNotebook } from "./ind
 import { appStore } from "./useStoredContext";
 export const apiBaseUrl = 'http://localhost:8080';
 export const loginUrl = `${apiBaseUrl}/auth/login`;
+import {type Metadata as MetadataStore} from '../features/dataSync/MetadataStore.ts';
+import type { UUID } from "crypto";
+import type { LayoutTemplate } from "../components/Editor/LayoutPlugin/LayoutContainerNode.tsx";
 
-const totalNumberofColumns = 3;
-const totalNumberofRows = 5;
-const cueColumns = 1;
-const summaryRows = 1;
+export const totalNumberofColumns = 3;
+export const totalNumberofRows = 5;
+export const cueColumns = 1;
+export const summaryRows = 1;
 
 
-const defaultPaper: Metadata["paper"] = {
+export const defaultPaper: Metadata["paper"] = {
     dimensions: {
         width: 210,
         height: 297,
@@ -22,29 +25,22 @@ const defaultPaper: Metadata["paper"] = {
     orientation: "portrait"
 };
 
-const defaultLayout: Metadata["page_layout"] = {
-    columns: totalNumberofColumns,
-    rows: totalNumberofRows,
-    cue_section: {
-        columns: cueColumns,
-        rows: totalNumberofRows - summaryRows
-    },
-    content_section: {
-        columns: totalNumberofColumns - cueColumns,
-        rows: totalNumberofRows - summaryRows
-    },
-    summary_section: {
-        columns: totalNumberofColumns,
-        rows: summaryRows
-    }
-}
-const defaultFontSize = 12;
-const defaultFontFamily: Metadata["body_font_family"] = {
+export const defaultLayout:LayoutTemplate = {
+    columns: '25% 75%', 
+    rows: '80% 20%', 
+    components:[
+        { id: 'Notes', area: '1 / 1 / 2 / 2' },
+        { id: 'Main', area: '1 / 2 / 2 / 3' },
+        { id: 'Summary', area: '2 / 1 / 3 / 2' },
+    ],
+};
+export const defaultFontSize = 12;
+export const defaultFontFamily: Metadata["body_font_family"] = {
     name: "Inter",
     generic_family: "sans-serif",
     url: "https://fonts.googleapis.com/css2?family=Inter&display=swap"
 }
-const defaultHeaderFontFamily: Metadata["header_font_family"] = {
+export const defaultHeaderFontFamily: Metadata["header_font_family"] = {
     name: "Work Sans",
     generic_family: "sans-serif",
     url: "https://fonts.googleapis.com/css2?family=Work+Sans&display=swap"
@@ -63,6 +59,21 @@ export type File = {
     type: string;
 }
 
+
+export const createDefaultNotebookMetadata = (authorId: UUID, title?: string): MetadataStore => {
+    return {
+        notebookID: crypto.randomUUID(),
+        ownerId: authorId,
+        title: title || "Libreta sin título",
+        paper: defaultPaper,
+        baseFontSize: defaultFontSize,
+        bodyFontFamily: defaultFontFamily,
+        headerFontFamily: defaultHeaderFontFamily,
+        pageLayout: defaultLayout,
+        createdAt: new Date(),
+        type: "post"
+    };
+}
 // Helper function for authenticated API requests
 async function fetchWithAuth(url: string, method: string = 'GET', body?: unknown): Promise<Response> {
     const token = getToken();
@@ -174,43 +185,7 @@ export async function useGetNotebooksMetadata (){
         return;
     }
 }
-export async function newNotebook(){
-    console.log("Creating new notebook");
-    const user = appStore.getState().auth.user;
-    try{
-        const isOnline = appStore.getState().onlineStatus.isOnline;
-        let metadata: Metadata;
-        try{
-            if(!isOnline) throw new Error("Offline mode");
-            console.log("Creating notebook online");
-            const response = await fetchWithAuth(`${apiBaseUrl}/notebooks/new`, 'POST');
-            metadata = await response.json();
-        } catch {
-            console.log("Offline mode, creating notebook locally");
-            metadata = {
-                id: crypto.randomUUID(),
-                title: "Libreta sin titulo",
-                paper:defaultPaper,
-                author: {
-                    name: user?.username || "Unknown",
-                    id: user!.user_id
-                },
-                base_font_size: defaultFontSize,
-                body_font_family: defaultFontFamily,
-                page_layout:defaultLayout,
-                header_font_family: defaultHeaderFontFamily,
-                created_at: new Date().toISOString(),
-                updated_at: new Date().toISOString(),
-            }; 
-            appStore.dispatch(addOfflineNotebookMetadata({...metadata, typeOfModification: 'added'}));
-        }
-        const notebook = NotebookOliva.newNotebookFromMetadata(metadata);
-        saveLocalNotebook(notebook.oli());
-        return notebook.metadata.id;
-    } catch (error){
-        console.error("Error creating new notebook:", error);
-    }
-}
+
 export async function updateNotebook(notebook: NotebookOliva){
     const token = getToken();
     if (!token) {
