@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import '../styles/Button.css'
+import '../styles/components/Button.css'
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
     buttonType?: 'default' | 'toggle';
     color?: 'elevated' | 'filled' | 'tonal' | 'outlined' | 'text';

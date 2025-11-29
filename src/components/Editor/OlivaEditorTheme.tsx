@@ -1,6 +1,6 @@
 import type { EditorThemeClasses } from "lexical";
 
-import '../../styles/Editor.css'
+import '../../styles/routes/Editor.css'
 
 const theme: EditorThemeClasses = {
     

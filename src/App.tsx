@@ -1,20 +1,20 @@
-import './App.css'
+import './styles/App.css'
 import { useSelector } from 'react-redux'
 import { BrowserRouter, Route, Routes } from 'react-router'
-import Editor from './components/Editor/Editor.tsx'
-import Home from './Home.tsx'
-import Layout from './Layout.tsx'
+import Editor from './routes/Editor.tsx'
+import Home from './routes/Home.tsx'
+import Layout from './routes/Layout.tsx'
 import { useEffect } from 'react'
 import { disableOfflineByUser } from './features/online/onlineSlice.ts'
 
-import PWABadge from './PWABadge.tsx'
+import PWABadge from './components/PWABadge.tsx'
 import type { RootState } from './store.ts'
 import { useDispatch } from 'react-redux'
 import { setConnected, setDisconnected} from './features/online/onlineSlice.ts'
 import { getUserData, loginUrl } from './hooks/useApi.ts'
 
 import Button from './components/Button.tsx'
-import { Logout } from './Logout.tsx'
+import { Logout } from './routes/Logout.tsx'
 
 
 function App() {

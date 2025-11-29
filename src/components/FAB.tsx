@@ -1,4 +1,4 @@
-import '../styles/FAB.css';
+import '../styles/components/FAB.css';
 export type FABProps = {
     types?: 'baseline' | 'large' | 'medium';
     color?: 'primary' | 'secondary' | 'tertiary'| 'tonalPrimary' |'tonalSecondary' | 'tonalTertiary' ;

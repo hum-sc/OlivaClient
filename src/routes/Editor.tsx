@@ -1,39 +1,30 @@
-import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
-import { ContentEditable } from "@lexical/react/LexicalContentEditable";
-import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
 import { LexicalExtensionComposer } from "@lexical/react/LexicalExtensionComposer";
-import { createEmptyHistoryState, HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { defineExtension } from "lexical";
-import * as React from 'react';
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import NotebookOliva from "../../OlivaFormat/src/Oliva";
-import { setMetadata, setNotebookPixelsWidth } from "../../features/editor/editorSlice";
-import { getNotebook } from "../../hooks/useApi";
-import type { RootState } from "../../store";
-import '../../styles/Editor.css';
-import ToolbarPlugin from "../Toolbar";
-import { type LayoutTemplate } from "./LayoutPlugin/LayoutContainerNode";
-import { LayoutPlugin } from "./LayoutPlugin/LayoutPlugin";
-import OlivaEditorTheme from './OlivaEditorTheme';
-import { OlivaNodes } from "./OlivaNodes";
-import { buildHTMLConfig } from "./buildHTMLConfig";
-import MarkdownPlugin from './MarkdownPlugin/MarkdownPlugin';
-import { SharedHistoryContext } from './context/SharedHistoryContext';
+import NotebookOliva from "../OlivaFormat/src/Oliva";
+import { setMetadata, setNotebookPixelsWidth } from "../features/editor/editorSlice";
+import { getNotebook, type User } from "../hooks/useApi";
+import type { RootState } from "../store";
+import '../styles/routes/Editor.css';
+import { type LayoutTemplate } from "../components/Editor/LayoutPlugin/LayoutContainerNode";
+import OlivaEditorTheme from '../components/Editor/OlivaEditorTheme';
+import { OlivaNodes } from "../components/Editor/OlivaNodes";
+import { buildHTMLConfig } from "../components/Editor/buildHTMLConfig";
+import { SharedHistoryContext } from '../components/Editor/context/SharedHistoryContext';
 import { LexicalCollaboration } from '@lexical/react/LexicalCollaborationContext';
-import EquationsPlugin from "./EquationPlugin/EquationsPlugin";
+import LexicalEditor from "../components/Editor/LexicalEditor";
+import * as React from 'react';
 const cornellLayout:LayoutTemplate = {
     columns: '25% 75%', 
     rows: '80% 20%', 
     components:[
         { id: 'Notes', area: '1 / 1 / 2 / 2' },
         { id: 'Main', area: '1 / 2 / 2 / 3' },
-        { id: 'Summary', area: '2 / 1 / 3 / 3' },
+        { id: 'Summary', area: '2 / 1 / 3 / 2' },
     ],
 };
-
 const placeholder = "Escribe aquí...";
 
 const PointMM = 0.34;
@@ -41,7 +32,6 @@ const PointMM = 0.34;
 
 export default function Editor() {
     const [title, setTitle] = useState("");
-    const historyState = createEmptyHistoryState();
     const app = useMemo(
         ()=> 
         defineExtension({
@@ -70,14 +60,17 @@ export default function Editor() {
     }
 
     useEffect(() => {
-        getNotebook(notebookId!).then(data => {
+        getNotebook(notebookId!).then((data: any) => {
             const notebookFetched = NotebookOliva.notebookFromJSON(data!);
             setNotebook(notebookFetched);
             dispatch(setMetadata(notebookFetched.metadata));
             setTitle(notebookFetched.metadata.title);
-        }).catch(error => {
+        }).catch((error: any) => {
             console.error("Error fetching notebook:", error);
         });
+        return () => {
+            dispatch(setMetadata(null));
+        }
     }, []);
     const aspectRatio = useMemo(()=>{
         let aspectRatio: number;
@@ -106,44 +99,21 @@ export default function Editor() {
             };
         }
     },[]);
-    return (
+    return notebookMetadata ? (
     <ErrorBoundary>
         <LexicalCollaboration>
-        <LexicalExtensionComposer extension={app} contentEditable={null}>   
-        <SharedHistoryContext>
-            <div className="editor">
-                <input value={title} onChange={(e) => setTitle(e.target.value)} className="title titleMedium" />
-                <ToolbarPlugin/>
-                <section ref={notebookRef} className="editor-container" style={{
-                    fontSize:`${fontSize}px`
-                }}>
-                    <RichTextPlugin
-                        contentEditable={
-                                    <ContentEditable placeholder={
-                                            <div className="editor-placeholder">
-                                                {placeholder}
-                                            </div>
-                                        } 
-                                        className="notebook"
-                                        aria-placeholder={placeholder}
-                                    />
-                                }
-                        
-                        ErrorBoundary={LexicalErrorBoundary}
-                    />
-                    <HistoryPlugin externalHistoryState={historyState}/>
-                    <AutoFocusPlugin/>
-                    <MarkdownPlugin/>
-                    <EquationsPlugin/>
-                    <LayoutPlugin aspectRatio={aspectRatio} template={cornellLayout} />
-                </section>
-            </div>
-        </SharedHistoryContext>
-        </LexicalExtensionComposer>
+            <LexicalExtensionComposer extension={app} contentEditable={null}>   
+                <SharedHistoryContext>
+                    <div className="editor" style={{fontSize:fontSize}}>
+                        <input value={title} onChange={(e) => setTitle(e.target.value)} className="title titleMedium" />
+                        <LexicalEditor placeholder={placeholder} template={cornellLayout} aspectRatio={aspectRatio}/>
+                    </div>
+                </SharedHistoryContext>
+            </LexicalExtensionComposer>
         </LexicalCollaboration>
     </ErrorBoundary>
         
-    );
+    ):(<div>Loading...</div>);
 }
 
 class ErrorBoundary extends React.Component<React.PropsWithChildren> {

@@ -2,7 +2,7 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getFile, logoutUser } from "../hooks/useApi";
-import '../styles/Avatar.css';
+import '../styles//components/Avatar.css';
 import Button from "./Button";
 import type { RootState } from "../store";
 export type AvatarProps = {

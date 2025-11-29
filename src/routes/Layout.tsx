@@ -1,15 +1,15 @@
 import { useSelector , useDispatch} from "react-redux";
 import { Outlet, useNavigate } from "react-router";
 
-import { enableDarkMode, disableDarkMode, ThemeMode } from "./features/theme/themeSlice";
-import {  handleIsOfflineByUser } from "./features/online/onlineSlice";
-import IconButton from "./components/IconButton";
-import { type RootState } from "./store";
-import "./styles/Layout.css";
-import FAB from "./components/FAB";
-import NavItem from "./components/NavItem";
-import Avatar from "./components/Avatar";
-import { newNotebook } from "./hooks/useApi";
+import { enableDarkMode, disableDarkMode, ThemeMode } from "../features/theme/themeSlice";
+import {  handleIsOfflineByUser } from "../features/online/onlineSlice";
+import IconButton from "../components/IconButton";
+import { type RootState } from "../store";
+import "../styles/routes/Layout.css";
+import FAB from "../components/FAB";
+import NavItem from "../components/NavItem";
+import Avatar from "../components/Avatar";
+import { newNotebook } from "../hooks/useApi";
 
 export default function Layout() {
     const isOnline = useSelector((state: RootState) => state.onlineStatus.isOnline);

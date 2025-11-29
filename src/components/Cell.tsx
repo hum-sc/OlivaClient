@@ -1,5 +1,5 @@
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
-import '../styles/Cell.css'
+import '../styles/components/Cell.css'
 
 
 export default function CellComponent(){

@@ -2,7 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import { type Metadata } from "../../OlivaFormat/src/Oliva";
 
 // Helper function to find notebook index by ID
-const findNotebookIndexById = (notebooks: (Metadata | NotebookModification)[], notebookId: string | undefined): number => {
+const findNotebookIndexById = (
+    notebooks: (Metadata | NotebookModification)[], 
+    notebookId: string | undefined
+): number => {
     if (!notebookId) return -1;
     return notebooks.findIndex(n => n.id === notebookId);
 };
@@ -10,6 +13,12 @@ const findNotebookIndexById = (notebooks: (Metadata | NotebookModification)[], n
 // extend NotebookMetadata to include typee of modifications
 export type NotebookModification =  Metadata & {
     typeOfModification: 'added' | 'updated' | 'deleted';
+}
+
+type Modification = {
+    id: string;
+    notebookId: string;
+    type: 'added' | 'updated' | 'deleted';
 }
 
 export type DataSyncState = {
@@ -36,7 +45,6 @@ const dataSyncSlice = createSlice({
             state.isSyncing = true;
         },
         addOfflineNotebookMetadata(state, action) {
-            console.log("Adding offline notebook modification:", action.payload);
             const payload: NotebookModification = action.payload;
             const existingIndex = findNotebookIndexById(state.offlineNotbooksModification, action.payload.id);
             const existingLocalIndex = findNotebookIndexById(state.localNotebooksMetadata, action.payload.id);

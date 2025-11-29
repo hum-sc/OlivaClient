@@ -77,7 +77,7 @@ async function fetchWithAuth(url: string, method: string = 'GET', body?: unknown
     if (body) {
         options.body = JSON.stringify(body);
     }
-    const timeout = 1000; // 1 seconds timeout
+    const timeout = 500; // 1 seconds timeout
     const controller = new AbortController();
     setTimeout(() => controller.abort(), timeout);
     options.signal = controller.signal;
@@ -162,15 +162,14 @@ export async function getFile(fileId: string) {
     
     return await response.blob();
 }
-export async function getNotebooksMetadata (){
+export async function useGetNotebooksMetadata (){
     try{
-        if(!appStore.getState().onlineStatus.isOnline) return;
-        
-        const response = await fetchWithAuth(`${apiBaseUrl}/notebooks/`, 'GET');
-        
-        const newOnlineNotebooks: Metadata[] = await response.json();
-        console.log("Fetched online notebooks metadata:", newOnlineNotebooks.length);
-        appStore.dispatch(addOnlineNotebookMetadata(newOnlineNotebooks));
+        if(appStore.getState().onlineStatus.isOnline){
+            const response = await fetchWithAuth(`${apiBaseUrl}/notebooks/`, 'GET');
+            const newOnlineNotebooks: Metadata[] = await response.json();
+            console.log("Fetched online notebooks metadata:", newOnlineNotebooks.length);
+            appStore.dispatch(addOnlineNotebookMetadata(newOnlineNotebooks));
+        }
     } catch {
         return;
     }
@@ -322,7 +321,6 @@ export async function syncOfflineNotebooks(){
     }
 }
 export async function getNotebook(notebookId:string){
-    console.log("Getting notebook:", notebookId);
     const token = getToken();
     if (!token) {
         throw new Error("No token available");
@@ -336,6 +334,7 @@ export async function getNotebook(notebookId:string){
     try {
         localNotebook =await readLocalNotebook(notebookId);
         console.log("Found local notebook:", notebookId);
+        return localNotebook;
     } catch {
         console.log("No local notebook found:", notebookId);
     }
@@ -364,18 +363,10 @@ export async function getNotebook(notebookId:string){
                 return onlineNotebook;
             }
         } catch {
-            if(localNotebook){
-                console.log("Error fetching online notebook, using local version:", notebookId);
-                return localNotebook;
-            }
+            throw new Error("Error fetching online notebook");
         }
     }else {
-        if(localNotebook){
-            console.log("Offline mode, using local notebook:", notebookId);
-            return localNotebook;
-        } else{
-            throw new Error("Notebook not found locally and offline");
-        }
+        throw( new Error("Offline mode, no local notebook available"));
     }
 }
 

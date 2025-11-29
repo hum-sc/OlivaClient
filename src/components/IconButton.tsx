@@ -1,5 +1,5 @@
 import type { HTMLAttributes } from 'react';
-import '../styles/IconButton.css';
+import '../styles/components/IconButton.css';
 // Enums of the configs
 export type IconButtonProps = {
     icon: string;

@@ -3,7 +3,7 @@ import { $getSelection, $isRangeSelection, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, C
 import { useCallback, useEffect, useRef, useState } from "react";
 import {mergeRegister} from '@lexical/utils'
 import IconButton from "./IconButton";
-import '../styles/Toolbar.css'
+import '../styles/components/Toolbar.css'
 
 export default function ToolbarPlugin(){
     const [editor] = useLexicalComposerContext();

@@ -1,6 +1,6 @@
 import { useEffect } from "react"
-import { logout } from "./features/auth/authSlice";
-import { userLoggedOut } from "./features/dataSync/dataSyncSlice";
+import { logout } from "../features/auth/authSlice";
+import { userLoggedOut } from "../features/dataSync/dataSyncSlice";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
 

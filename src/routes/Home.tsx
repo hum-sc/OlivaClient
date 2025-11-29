@@ -1,12 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteNotebook, getNotebooksMetadata } from './hooks/useApi.ts';
-import './styles/Home.css';
+import { deleteNotebook, useGetNotebooksMetadata } from '../hooks/useApi.ts';
+import '../styles/routes/Home.css';
 import { useEffect } from 'react';
-import type { RootState } from './store.ts';
+import type { RootState } from '../store.ts';
 import { useNavigate } from 'react-router';
-import { setActiveNav } from './features/sidebar/sidebarSlice.ts';
-import {type NavFab } from './features/sidebar/sidebarSlice.ts';
-import IconButton from './components/IconButton.tsx';
+import { setActiveNav } from '../features/sidebar/sidebarSlice.ts';
+import {type NavFab } from '../features/sidebar/sidebarSlice.ts';
+import IconButton from '../components/IconButton.tsx';
+import { useMetadataList } from '../features/dataSync/MetadataStore.ts';
 export default function Home() {
     const dispatch = useDispatch();
     const notebooksMetadata = useSelector((state:RootState) => state.dataSync.localNotebooksMetadata);
@@ -19,9 +20,9 @@ export default function Home() {
         action: "newNotebook"
     }
     
-    useEffect(()=>{
+    useEffect( ()=>{
         dispatch(setActiveNav(nav));
-        getNotebooksMetadata();
+        useGetNotebooksMetadata();
     },[]);
     return (<>
         <section className="myNotes">
