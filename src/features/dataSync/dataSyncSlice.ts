@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { type Metadata } from "../../OlivaFormat/src/Oliva";
+import type { AutomergeUrl } from "@automerge/react";
 
 // Helper function to find notebook index by ID
 const findNotebookIndexById = (
@@ -22,6 +23,7 @@ type Modification = {
 }
 
 export type DataSyncState = {
+    docUrl: AutomergeUrl;
     isSyncing: boolean;
     lastMetadataSync: string | null;
     lastOnlineMetadataSync?: string | null;
@@ -33,6 +35,7 @@ export type DataSyncState = {
 const dataSyncSlice = createSlice({
     name: "dataSync",
     initialState: {
+        docUrl: "" as AutomergeUrl,
         isSyncing: false,
         lastMetadataSync: null,
         lastOnlineMetadataSync: null,
@@ -41,6 +44,9 @@ const dataSyncSlice = createSlice({
         downloadedNotebooks: []
     } as DataSyncState,
     reducers: {
+        setDocUrl(state, action) {
+            state.docUrl = action.payload;
+        },
         setSyncing(state) {
             state.isSyncing = true;
         },
@@ -129,5 +135,5 @@ const dataSyncSlice = createSlice({
     },
 });
 
-export const { setSyncing, addOfflineNotebookMetadata, addOnlineNotebookMetadata, addDownloadedNotebook, removeDownloadedNotebook, userLoggedOut , deleteOnlineNotebookMetadata, deleteOfflineNotebookMetadata, syncedNotebookModification} = dataSyncSlice.actions;
+export const { setDocUrl, setSyncing, addOfflineNotebookMetadata, addOnlineNotebookMetadata, addDownloadedNotebook, removeDownloadedNotebook, userLoggedOut , deleteOnlineNotebookMetadata, deleteOfflineNotebookMetadata, syncedNotebookModification} = dataSyncSlice.actions;
 export default dataSyncSlice.reducer;

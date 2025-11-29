@@ -1,50 +1,41 @@
-import { 
-    Repo, 
-    BroadcastChannelNetworkAdapter, 
-    IndexedDBStorageAdapter,
-    DocHandle,
-    isValidAutomergeUrl
-} from "@automerge/react"
 import type { UUID } from "crypto"
-
-type Metadata = {
-    type: 'updated' | 'deleted',
-    notebookID:UUID,
-    owner_id?:UUID,
-    title?: string,
-    paper?: object,
-    base_font_size?: number,
-    body_font_family?: string,
-    page_layout?: object,
-    header_font_family?: object,
-    created_at?: Date,
+import type { LayoutTemplate } from "../../components/Editor/LayoutPlugin/LayoutContainerNode";
+export type Paper = {
+    dimensions: {
+        width: number,
+        height: number,
+        name: string
+    },
+    orientation: 'portrait' | 'landscape',
 }
 
-export type MetadataList = Metadata[];
+export type FontFamily = {
+    name: string,
+    generic_family: 'serif' | 'sans-serif' | 'monospace' | 'cursive' | 'fantasy' | 'system-ui',
+    url?: string,
+}
+
+export type Metadata = {
+    type: 'post' | 'deleted',
+    notebookID:UUID,
+    ownerId?:UUID,
+    title?: string,
+    paper?: Paper,
+    baseFontSize?: number,
+    bodyFontFamily?: FontFamily,
+    pageLayout?: LayoutTemplate,
+    headerFontFamily?: FontFamily,
+    createdAt?: Date,
+}
+
+export type MetadataList = {
+    title?: string,
+    metadata: Metadata[],
+};
 
 export const initMetadataList = (): MetadataList => {
-    return [{
-        type: 'updated',
-        notebookID: crypto.randomUUID() as UUID,
-        title: 'Sample Notebook',
-        created_at: new Date(),
-    }];
+    return {
+        title: 'Ejemplo',
+        metadata: []
+    };
 }
-
-export const useMetadataList : ()=>Promise<[Repo, DocHandle<MetadataList>]> = async () => {
-    let handle :DocHandle<MetadataList>;
-    let repo = new Repo({
-        network: [new BroadcastChannelNetworkAdapter()],
-        storage: new IndexedDBStorageAdapter(),
-    })
-    const locationHash = document.location.hash.substring(1);
-    if (isValidAutomergeUrl(locationHash)) {
-       handle = await repo.find(locationHash);
-    } else{
-        handle = repo.create<MetadataList>(initMetadataList());
-        document.location.hash = handle.url;
-    }
-
-    return [repo, handle];
-}
-

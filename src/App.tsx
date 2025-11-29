@@ -15,6 +15,8 @@ import { getUserData, loginUrl } from './hooks/useApi.ts'
 
 import Button from './components/Button.tsx'
 import { Logout } from './routes/Logout.tsx'
+import type { AutomergeUrl } from '@automerge/react'
+import { setDocUrl } from './features/dataSync/dataSyncSlice.ts'
 
 
 function App() {
@@ -79,6 +81,9 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/files" element={<Home />} />
           <Route path='/editor/:notebookId' element={
+              <Editor />
+            } />
+          <Route path='/editor' element={
               <Editor />
             } />
           <Route path='/logout' element={<Logout />} />
