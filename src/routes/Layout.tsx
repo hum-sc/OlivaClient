@@ -31,8 +31,6 @@ export default function Layout() {
         changeDoc(doc => {
             doc.metadata.unshift(metadata);
         });
-        console.log("Created new notebook with ID:", metadata.notebookID);
-        console.log("Current doc metadata:", doc.metadata);
         if (metadata.notebookID) {
             navigate(`/editor/${metadata.notebookID}`);
         }

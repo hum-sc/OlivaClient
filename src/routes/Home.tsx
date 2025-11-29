@@ -15,8 +15,6 @@ export default function Home() {
         suspense: true
     });
     const dispatch = useDispatch();
-    const notebooksMetadata = useSelector((state:RootState) => state.dataSync.localNotebooksMetadata);
-    const downloadedNotebooks = useSelector((state:RootState) => state.dataSync.downloadedNotebooks);
     const isOnline = useSelector((state:RootState) => state.onlineStatus.isOnline);
     const navigate = useNavigate();
     const nav: NavFab = {
