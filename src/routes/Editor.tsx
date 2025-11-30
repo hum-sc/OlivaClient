@@ -1,12 +1,12 @@
 import { LexicalExtensionComposer } from "@lexical/react/LexicalExtensionComposer";
-import { defineExtension } from "lexical";
+import { $addUpdateTag, $getRoot, defineExtension, HISTORY_MERGE_TAG } from "lexical";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 
 import type { RootState } from "../store";
 import '../styles/routes/Editor.css';
-import { type LayoutTemplate } from "../components/Editor/LayoutPlugin/LayoutContainerNode";
+import { $createFilledLayoutContainer, $createLayoutContainerNode, type LayoutTemplate } from "../components/Editor/LayoutPlugin/LayoutContainerNode";
 import OlivaEditorTheme from '../components/Editor/OlivaEditorTheme';
 import { OlivaNodes } from "../components/Editor/OlivaNodes";
 import { buildHTMLConfig } from "../components/Editor/buildHTMLConfig";
@@ -16,14 +16,15 @@ import LexicalEditor from "../components/Editor/LexicalEditor";
 import * as React from 'react';
 import type { MetadataList } from "../features/dataSync/MetadataStore";
 import { useDocument } from "@automerge/react";
+import { type LexicalEditor as LexicalEditorType } from "lexical";
 
-const cornellLayout:LayoutTemplate = {
+export const cornellLayout:LayoutTemplate = {
     columns: '25% 75%', 
     rows: '80% 20%', 
     components:[
-        { id: 'Notes', area: '1 / 1 / 2 / 2' },
         { id: 'Main', area: '1 / 2 / 2 / 3' },
-        { id: 'Summary', area: '2 / 1 / 3 / 2' },
+        { id: 'Notes', area: '1 / 1 / 2 / 2' },
+        { id: 'Summary', area: '2 / 1 / 3 / 3' },
     ],
 };
 const placeholder = "Escribe aquí...";
@@ -97,6 +98,20 @@ export default function Editor() {
         });
     }, [changeDoc, notebookId]);
 
+    const initalEditor = (editor: LexicalEditorType) => {
+        console.log("Bootstrapping editor layout");
+        editor.update(()=>{
+            $addUpdateTag(HISTORY_MERGE_TAG);
+            const layout = $createFilledLayoutContainer(cornellLayout, aspectRatio);
+            if($getRoot().getChildrenSize() == 0) {
+                $getRoot().append(layout);
+                layout.selectStart();
+            }
+        },{
+            discrete: true
+        })
+    }
+
     useEffect(()=>{
         const current = notebookRef.current;
         if (current) {
@@ -125,6 +140,8 @@ export default function Editor() {
                             aspectRatio={aspectRatio}
                             user={user!}
                             id={notebookId!}
+                            initialEditorState={initalEditor}
+                            shouldBootstrap={true}
                         />
                     </div>
                 </SharedHistoryContext>

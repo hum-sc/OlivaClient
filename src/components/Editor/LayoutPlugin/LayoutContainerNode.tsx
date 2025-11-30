@@ -1,6 +1,7 @@
-import { $createParagraphNode, $createTextNode, ElementNode, type DOMConversionMap, type DOMConversionOutput, type DOMExportOutput, type EditorConfig, type LexicalNode, type LexicalUpdateJSON, type NodeKey, type SerializedElementNode, type Spread } from "lexical";
+import { $createParagraphNode, $createTextNode, ElementNode, ParagraphNode, type RangeSelection, type DOMConversionMap, type DOMConversionOutput, type DOMExportOutput, type EditorConfig, type LexicalNode, type LexicalUpdateJSON, type NodeKey, type SerializedElementNode, type Spread } from "lexical";
 import {addClassNamesToElement} from '@lexical/utils'
-import { $createLayoutItemNode, type LayoutItemTemplate } from "./LayoutItemNode";
+import { $createLayoutItemNode, $isLayoutItemNode, LayoutItemNode, type LayoutItemTemplate } from "./LayoutItemNode";
+import { $isPageBreakNode } from "./PageBreakNode";
 export let defaultClassName = "page";
 
 export interface LayoutTemplate {
@@ -213,4 +214,62 @@ export function $isLayoutContainerNode(
     node: LexicalNode | null | undefined,
 ): node is LayoutContainerNode {
     return node instanceof LayoutContainerNode;
+}
+
+export function $isLayoutContainerEmpty (
+    node: LayoutContainerNode
+): boolean {
+    const items = node.getChildren<LayoutItemNode>();
+    for (const item of items) {
+        if (item.getChildrenSize() > 0) {
+            if(item.getChildrenSize()==1){
+                const child = item.getFirstChild<ParagraphNode>();
+                if(child && child.getChildrenSize()===0){
+                    continue;
+                }
+            }
+            return false;
+        }
+    }
+    return true;
+}
+export function $isUniqueLayoutContainerNode(
+    node: LayoutContainerNode
+): boolean {
+    const parent = node.getParent();
+
+    if( parent !== null && parent.getChildrenSize() > 1){
+        return false;
+    }
+    return true;
+}
+
+export function $displaceContentUpwardsOnce(
+    prevNode: LayoutContainerNode,
+    node: LayoutContainerNode,
+    itemIndex: number = 0,
+):void{
+    const item = node.getChildAtIndex<LayoutItemNode>(itemIndex);
+    if($isLayoutItemNode(item)){
+        const firstChildren = item.getFirstChild();
+        if($isPageBreakNode(firstChildren)){
+            console.log("Stoping displacement");
+            return;
+        } else {
+            firstChildren?.remove();
+            prevNode.getChildAtIndex<LayoutItemNode>(
+                itemIndex
+            )?.append(firstChildren!);
+            if($isLayoutContainerEmpty(node)){
+                node.remove();
+            }
+            const nextLayoutContainer = node.getNextSibling<LayoutContainerNode>();
+            if($isLayoutContainerNode(nextLayoutContainer))
+            $displaceContentUpwardsOnce(
+                node,
+                nextLayoutContainer,
+                itemIndex
+            );
+        }
+    }
 }
