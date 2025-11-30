@@ -13,7 +13,6 @@ import { useSelector } from "react-redux";
 import type { RootState } from "../../store";
 import { CollaborationPlugin } from "@lexical/react/LexicalCollaborationPlugin";
 import { createSyncronizationProvider } from "./collaborator/providers";
-import PageBreakPlugin from "./PagePlugin/";
 import { LayoutPlugin } from "./LayoutPlugin/LayoutPlugin";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import type { InitialEditorStateType } from "@lexical/react/LexicalComposer";

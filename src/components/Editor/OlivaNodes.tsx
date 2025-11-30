@@ -12,7 +12,7 @@ import { LayoutContainerNode } from "./LayoutPlugin/LayoutContainerNode";
 import { LayoutItemNode } from "./LayoutPlugin/LayoutItemNode";
 import { EquationNode } from "./EquationPlugin/EquationNode";
 import { ImageNode } from "./ImagePlugin/ImageNode";
-import { PageBreakNode } from "./PagePlugin/PageBreakNode";
+import { PageBreakNode } from "./LayoutPlugin/PageBreakNode";
 
 export const OlivaNodes: Array<Klass<LexicalNode>>=[
     HeadingNode,

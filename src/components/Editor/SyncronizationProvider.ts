@@ -17,6 +17,7 @@ export default class SyncronizationProvider implements Provider{
         this.wsProvider.connect();
     }
     disconnect() {
+        this.idbProvider?.destroy();
         this.wsProvider.disconnect();
     }
     on(event: string, callback: (...args: any[]) => void): void {

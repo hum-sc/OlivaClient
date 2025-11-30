@@ -26,10 +26,9 @@ export default function ToolbarPlugin(){
         }
     },[])
     const onDownloadPDF = useCallback(()=>{
-        editor.read(()=> {
-            const htmlString = $generateHtmlFromNodes(editor, null);
-            console.log(htmlString);
-        });
+        
+        window.print();
+        // Reload the original contents after printing
     },[]);
     useEffect(()=>{
         return mergeRegister(

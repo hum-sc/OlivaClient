@@ -1,4 +1,4 @@
-import { $addUpdateTag, $getRoot, COMMAND_PRIORITY_HIGH, DELETE_CHARACTER_COMMAND, ElementNode, HISTORY_MERGE_TAG, KEY_ENTER_COMMAND, TextNode, type CommandListener, type LexicalCommand, type LexicalNode, type NodeKey, type UpdateListenerPayload } from "lexical";
+import { $addUpdateTag, $createRangeSelection, $getRoot, $isElementNode, $setSelection, $splitAtPointCaretNext, COMMAND_PRIORITY_HIGH, DELETE_CHARACTER_COMMAND, ElementNode, HISTORY_MERGE_TAG, KEY_ENTER_COMMAND, ParagraphNode, TextNode, type CommandListener, type LexicalCommand, type LexicalNode, type NodeKey, type RangeSelection, type UpdateListenerPayload } from "lexical";
 
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
@@ -21,7 +21,10 @@ import { useEffect } from "react";
 import {
     $createFilledLayoutContainer,
     $createLayoutContainerNode,
+    $displaceContentUpwardsOnce,
+    $isLayoutContainerEmpty,
     $isLayoutContainerNode,
+    $isUniqueLayoutContainerNode,
     LayoutContainerNode,
     type LayoutTemplate
 } from './LayoutContainerNode';
@@ -32,6 +35,7 @@ import {
     LayoutItemNode,
 } from './LayoutItemNode';
 import { useCollaborationContext } from "@lexical/react/LexicalCollaborationContext";
+import { $createPageBreakNode } from "./PageBreakNode";
 
 export const INSERT_LAYOUT_COMMAND: LexicalCommand<LayoutTemplate> = 
     createCommand<LayoutTemplate>();
@@ -44,9 +48,6 @@ export const UPDATE_LAYOUT_COMMAND: LexicalCommand<{
 export const INSERT_NEW_PAGE_ON_OVERFLOW = "insert-new-page-on-overflow";
 export const REMOVE_PAGE_ON_UNDO = "remove-page-on-undo";
 
-// Plugin-local state map to avoid mutating the editor instance directly.
-const pluginState = new WeakMap<any, { didInsertPageOnOverflow?: boolean; skipNextOnUndo?: boolean }>();
-
 function ensureNextLayoutContainer( layoutContainer: LayoutContainerNode, aspectRatio: number) {
     let nextLayoutContainer = layoutContainer.getNextSibling<LayoutContainerNode>();
     if (!nextLayoutContainer || !$isLayoutContainerNode(nextLayoutContainer)) {
@@ -58,7 +59,8 @@ function ensureNextLayoutContainer( layoutContainer: LayoutContainerNode, aspect
 }
 
 
-function moveChildrenToNext(editor: any, layoutItem: LayoutItemNode, nextLayoutItemInNextContainer: LayoutItemNode, selectionNode: LexicalNode | null, overflowedSize?: number) {
+function moveChildrenToNext(editor: any, layoutItem: LayoutItemNode, nextLayoutItemInNextContainer: LayoutItemNode, selection: RangeSelection, overflowedSize?: number) {
+    const selectionNode = selection.anchor.getNode();
     const children = layoutItem.getChildren<ElementNode>();
     let accumulatedHeight = 0;
     const overflowLimit = overflowedSize ?? Infinity;
@@ -83,7 +85,23 @@ function moveChildrenToNext(editor: any, layoutItem: LayoutItemNode, nextLayoutI
 
             child.remove();
             nextLayoutItemInNextContainer.getFirstChild()?.insertBefore(child);
-            if (selectNext) nextLayoutItemInNextContainer.selectStart();
+
+            if (selectNext){
+                // Check whether the selection is at the start or end of the child
+                const isAtEnd = selection.anchor.offset === selection.anchor.getNode().getTextContentSize();
+                if (isAtEnd) {
+                child.selectEnd();
+                } else {
+                    const offset = Math.min(selection.anchor.offset, child.getTextContentSize());
+                    const newSelection = $createRangeSelection();
+                    const textNode = child.getFirstChild<TextNode>();
+                    if (textNode) {
+                        textNode.select(offset, offset);
+                    } else {
+                        child.selectStart();
+                    }
+                }
+            }
         }
     }
 }
@@ -141,13 +159,46 @@ export function LayoutPlugin({aspectRatio, template}: {aspectRatio: number, temp
                     $isLayoutContainerNode,
                 );
                 if($isLayoutContainerNode(layoutContainerNode)){
-                    const layoutItems = layoutContainerNode.getChildren<LayoutItemNode>();
-                    const allEmpty = layoutItems.every((item) => item.getAllTextNodes().length === 0);
-                    console.log("LayoutPlugin: onDelete allEmpty=", allEmpty);
-                    if(allEmpty && layoutContainerNode !== $getRoot().getFirstChild<LayoutContainerNode>()){
-                        editor.update(()=>{
+                    if($isLayoutContainerEmpty(layoutContainerNode)){
+                        if(!$isUniqueLayoutContainerNode(layoutContainerNode)){
                             layoutContainerNode.remove();
-                        });
+                        }
+                        return true;
+                    } else {
+                        const layoutItemIndex = $findMatchingParent(
+                            selection.anchor.getNode(),
+                            $isLayoutItemNode,
+                        )?.getIndexWithinParent();
+                        const contentUpwards = $findMatchingParent(
+                            selection.anchor.getNode(),
+                            $isElementNode
+                        )?.getPreviousSiblings();
+                        if(contentUpwards && contentUpwards.length > 0){
+                            const nextLayoutContainer = 
+                                layoutContainerNode.getNextSibling<LayoutContainerNode>();
+                            if($isLayoutContainerNode(nextLayoutContainer))
+                                $displaceContentUpwardsOnce(
+                                    layoutContainerNode,
+                                    nextLayoutContainer, 
+                                    layoutItemIndex
+                                );
+                            return false;
+                        } else {
+                            const prevLayoutContainer = layoutContainerNode.getPreviousSibling<LayoutContainerNode>();
+                            if($isLayoutContainerNode(prevLayoutContainer)){
+                                prevLayoutContainer.
+                                    getChildAtIndex<LayoutItemNode>(
+                                        layoutItemIndex!
+                                    )?.selectEnd();
+                                $displaceContentUpwardsOnce(
+                                    prevLayoutContainer,
+                                    layoutContainerNode,
+                                    layoutItemIndex
+                                );
+                            }
+                            return true;
+                        }
+
                     }
                     return true;
                 }
@@ -156,12 +207,6 @@ export function LayoutPlugin({aspectRatio, template}: {aspectRatio: number, temp
         }
 
         const $onEditorUpdate = (changes: UpdateListenerPayload) => {
-            // clear plugin marker if present and this update is not the overflow update
-            const st = pluginState.get(editor);
-            if (st?.didInsertPageOnOverflow && !changes.tags.has(INSERT_NEW_PAGE_ON_OVERFLOW)) {
-                st.didInsertPageOnOverflow = false;
-                pluginState.set(editor, st);
-            }
 
             changes.editorState.read(() => {
                 const selection = $getSelection();
@@ -186,24 +231,22 @@ export function LayoutPlugin({aspectRatio, template}: {aspectRatio: number, temp
                         for(const child of children){
                             const childElement = editor.getElementByKey(child.getKey());
                             if(childElement){
-                                // @ts-ignore
                                 childrenSize += childElement.clientHeight;
                             }
                         }
-                        if (itemSize < childrenSize && !changes.tags.has(INSERT_NEW_PAGE_ON_OVERFLOW)) {
+                        if (itemSize < childrenSize) {
                             editor.update(() => {
-                                $addUpdateTag(INSERT_NEW_PAGE_ON_OVERFLOW);
                                 $addUpdateTag(HISTORY_MERGE_TAG);
-                                const node = selection.anchor.getNode();
-                                // ensure next container exists
+
                                 const nextLayoutContainer = ensureNextLayoutContainer(layoutContainer, aspectRatio);
                                 const nextLayoutItemInNextContainer = nextLayoutContainer.getChildAtIndex<LayoutItemNode>(layoutItem.getIndexWithinParent());
+
                                 if ($isLayoutItemNode(nextLayoutItemInNextContainer)) {
+
                                     const overflowedSize = childrenSize - itemSize;
-                                    moveChildrenToNext(editor, layoutItem, nextLayoutItemInNextContainer, node, overflowedSize);
+                                    moveChildrenToNext(editor, layoutItem, nextLayoutItemInNextContainer, selection, overflowedSize);
+
                                 }
-                                // mark plugin state so undo handler can react
-                                pluginState.set(editor, { ...(pluginState.get(editor) || {}), didInsertPageOnOverflow: true });
                             });
                         }
                         
@@ -259,7 +302,6 @@ export function LayoutPlugin({aspectRatio, template}: {aspectRatio: number, temp
             return true;
         };
         const $onEnter:CommandListener<KeyboardEvent | null> = (payload: KeyboardEvent | null) => {
-            console.log("Enter pressed inside layout item");
             if(payload?.shiftKey){
                 const selection = $getSelection();
                 if(
@@ -302,6 +344,17 @@ export function LayoutPlugin({aspectRatio, template}: {aspectRatio: number, temp
                             newFirstNode?.insertBefore(sibling!);
                         }
                         nextLayoutItemInNextContainer?.selectStart();
+                        const pageBreack = $createPageBreakNode();
+                        nextLayoutItemInNextContainer?.getFirstChild()?.insertBefore(pageBreack);
+                        if (pageBreack.__next) {
+                            const nextNode = $getNodeByKey(pageBreack.__next)
+                            
+                            nextNode?.remove()
+                        }
+                        if (pageBreack.__prev) {
+                            const prevNode = $getNodeByKey(pageBreack.__prev)
+                            if (prevNode?.getTextContent() === "") prevNode?.remove()
+                        }
                     }
                     // keep previous behavior: insert the new container after the current one
                     if (layoutContainer && nextLayoutContainer) layoutContainer.insertAfter(nextLayoutContainer);

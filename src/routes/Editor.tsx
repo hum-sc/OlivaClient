@@ -6,7 +6,7 @@ import { useParams } from "react-router";
 
 import type { RootState } from "../store";
 import '../styles/routes/Editor.css';
-import { $createFilledLayoutContainer, type LayoutTemplate } from "../components/Editor/LayoutPlugin/LayoutContainerNode";
+import { $createFilledLayoutContainer, $createLayoutContainerNode, type LayoutTemplate } from "../components/Editor/LayoutPlugin/LayoutContainerNode";
 import OlivaEditorTheme from '../components/Editor/OlivaEditorTheme';
 import { OlivaNodes } from "../components/Editor/OlivaNodes";
 import { buildHTMLConfig } from "../components/Editor/buildHTMLConfig";

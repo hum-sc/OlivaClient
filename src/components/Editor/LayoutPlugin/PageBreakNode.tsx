@@ -112,10 +112,6 @@ export class PageBreakNode extends DecoratorNode<JSX.Element> {
   updateDOM(): boolean {
     return false;
   }
-
-  decorate(): JSX.Element {
-    return <PageBreakComponent nodeKey={this.__key} />;
-  }
 }
 
 
