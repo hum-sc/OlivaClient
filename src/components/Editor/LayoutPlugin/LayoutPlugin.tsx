@@ -141,6 +141,15 @@ export function LayoutPlugin({aspectRatio, template}: {aspectRatio: number, temp
                     $isLayoutContainerNode,
                 );
                 if($isLayoutContainerNode(layoutContainerNode)){
+                    const layoutItems = layoutContainerNode.getChildren<LayoutItemNode>();
+                    const allEmpty = layoutItems.every((item) => item.getAllTextNodes().length === 0);
+                    console.log("LayoutPlugin: onDelete allEmpty=", allEmpty);
+                    if(allEmpty && layoutContainerNode !== $getRoot().getFirstChild<LayoutContainerNode>()){
+                        editor.update(()=>{
+                            layoutContainerNode.remove();
+                        });
+                    }
+                    return true;
                 }
             }
             return false;
@@ -346,20 +355,6 @@ export function LayoutPlugin({aspectRatio, template}: {aspectRatio: number, temp
 
         
     }, [editor]);
-
-    useEffect(() => {
-        editor.update(() => {
-            const root = $getRoot();
-            if(root?.getChildren().length! > 0){
-                return;
-            } else {
-                const layout = $createFilledLayoutContainer(template, aspectRatio);
-                root.append(layout);
-                layout.selectStart();
-            }
-        });
-    }, [])
-
     return null;
 }
 

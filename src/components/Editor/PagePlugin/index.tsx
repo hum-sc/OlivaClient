@@ -1,0 +1,85 @@
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ */
+
+import type {JSX} from 'react';
+
+import {useLexicalComposerContext} from '@lexical/react/LexicalComposerContext';
+import {$insertNodeToNearestRoot, mergeRegister} from '@lexical/utils';
+import {
+  $getSelection,
+  $isRangeSelection,
+  COMMAND_PRIORITY_EDITOR,
+  COMMAND_PRIORITY_HIGH,
+  createCommand,
+  KEY_ENTER_COMMAND,
+  type LexicalCommand,
+  type CommandListener,
+  $getNodeByKey,
+} from 'lexical';
+import {useEffect} from 'react';
+
+import {$createPageBreakNode, PageBreakNode} from './PageBreakNode';
+
+export const INSERT_PAGE_BREAK: LexicalCommand<undefined> = createCommand();
+
+export default function PageBreakPlugin(): JSX.Element | null {
+  const [editor] = useLexicalComposerContext();
+
+  useEffect(() => {
+    if (!editor.hasNodes([PageBreakNode])) {
+      throw new Error(
+        'PageBreakPlugin: PageBreakNode is not registered on editor',
+      );
+    }
+
+    const $onEnter:CommandListener<KeyboardEvent | null> = (payload: KeyboardEvent | null)=>{
+        if(payload?.shiftKey){
+            editor.dispatchCommand(INSERT_PAGE_BREAK, undefined);
+        }
+        return false;
+    }
+
+    return mergeRegister(
+        editor.registerCommand(
+            KEY_ENTER_COMMAND,
+            $onEnter,
+            COMMAND_PRIORITY_HIGH,    
+        ),
+      editor.registerCommand(
+        INSERT_PAGE_BREAK,
+        () => {
+          const selection = $getSelection();
+
+          if (!$isRangeSelection(selection)) {
+            return false;
+          }
+
+          const focusNode = selection.focus.getNode();
+          if (focusNode !== null) {
+            const pgBreak = $createPageBreakNode();
+            const node = $insertNodeToNearestRoot(pgBreak);
+            if (node.__next) {
+                const nextNode = $getNodeByKey(node.__next)
+                
+                nextNode?.remove()
+            }
+            if (node.__prev) {
+                const prevNode = $getNodeByKey(node.__prev)
+                if (prevNode?.getTextContent() === "") prevNode?.remove()
+            }
+          }
+
+          return true;
+        },
+        COMMAND_PRIORITY_EDITOR,
+      ),
+    );
+  }, [editor]);
+
+  return null;
+}

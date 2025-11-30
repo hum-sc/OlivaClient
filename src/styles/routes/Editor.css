@@ -71,7 +71,6 @@ main section{
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    gap: 24px;
     width: 100%;
     background-color: transparent;
     z-index: 0;
@@ -99,6 +98,7 @@ main section{
     background-color: rgb(var(--md-sys-color-surface-container-lowest));
     
     padding: 8px;
+    margin-bottom: 20px;
     
     border-radius: var(--md-sys-corner-size-extra-small);
     box-shadow: var(--md-elevation-shadow-1);

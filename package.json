@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@automerge/react": "^2.5.0",
+    "@lexical/headless": "^0.38.2",
     "@lexical/react": "^0.38.2",
     "@reduxjs/toolkit": "^2.9.2",
     "axios": "^1.13.2",

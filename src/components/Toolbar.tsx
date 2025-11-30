@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {mergeRegister} from '@lexical/utils'
 import IconButton from "./IconButton";
 import '../styles/components/Toolbar.css'
+import {$generateHtmlFromNodes} from '@lexical/html';
 
 export default function ToolbarPlugin(){
     const [editor] = useLexicalComposerContext();
@@ -24,6 +25,12 @@ export default function ToolbarPlugin(){
             setIsStrikethrough(selection.hasFormat('strikethrough'));
         }
     },[])
+    const onDownloadPDF = useCallback(()=>{
+        editor.read(()=> {
+            const htmlString = $generateHtmlFromNodes(editor, null);
+            console.log(htmlString);
+        });
+    },[]);
     useEffect(()=>{
         return mergeRegister(
             editor.registerUpdateListener(({editorState}) => {
@@ -71,5 +78,6 @@ export default function ToolbarPlugin(){
         <IconButton onClick={()=>{editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'center')}} icon="format_align_center" label="align center"/>
         <IconButton onClick={()=>{editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right')}} icon="format_align_right" label="align right"/>
         <IconButton onClick={()=>{editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'justify')}} icon="format_align_justify" label="align justify"/>
+        <IconButton onClick={()=>{onDownloadPDF()}} icon="download" label="Descargar PDF"/>
     </div>
 }

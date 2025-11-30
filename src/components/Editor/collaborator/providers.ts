@@ -77,12 +77,12 @@ export function createSyncronizationProvider(id:string, yjsDocMap: Map<string, Y
 
 function getDocFromMap(id: string, yjsDocMap: Map<string, Y.Doc>): Y.Doc {
   let doc = yjsDocMap.get(id);
-  
   if (doc === undefined) {
     doc = new Y.Doc();
     yjsDocMap.set(id, doc);
   } else {
     doc.load();
   }
+  console.log("getDocFromMap: ", {id, doc, yjsDocMap});
   return doc;
 }
