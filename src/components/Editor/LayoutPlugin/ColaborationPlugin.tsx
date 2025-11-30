@@ -191,10 +191,6 @@ function YjsCollaborationCursors({
     syncCursorPositionsFn,
   );
 
-  editor.read(()=>{
-    $getRoot().getFirstChild()?.selectStart();
-  })
-
   useYjsHistory(editor, binding);
   useYjsFocusTracking(editor, provider, name, color, awarenessData);
 

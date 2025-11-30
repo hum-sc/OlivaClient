@@ -362,11 +362,12 @@ function useProvider(
       document.activeElement === editor.getRootElement(),
       awarenessData || {},
     );
+    
+    const connectionPromise = connect();
 
     provider.on('status', onStatus);
     provider.on('sync', onSync);
 
-    const connectionPromise = connect();
 
     return () => {
       // eslint-disable-next-line react-hooks/exhaustive-deps -- expected that isReloadingDoc.current may change

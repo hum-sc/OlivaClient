@@ -1,12 +1,12 @@
 import { LexicalExtensionComposer } from "@lexical/react/LexicalExtensionComposer";
 import { $addUpdateTag, $getRoot, defineExtension, HISTORY_MERGE_TAG } from "lexical";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router";
 
 import type { RootState } from "../store";
 import '../styles/routes/Editor.css';
-import { $createFilledLayoutContainer, $createLayoutContainerNode, type LayoutTemplate } from "../components/Editor/LayoutPlugin/LayoutContainerNode";
+import { $createFilledLayoutContainer, type LayoutTemplate } from "../components/Editor/LayoutPlugin/LayoutContainerNode";
 import OlivaEditorTheme from '../components/Editor/OlivaEditorTheme';
 import { OlivaNodes } from "../components/Editor/OlivaNodes";
 import { buildHTMLConfig } from "../components/Editor/buildHTMLConfig";

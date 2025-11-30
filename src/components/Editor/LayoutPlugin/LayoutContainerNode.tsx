@@ -1,4 +1,4 @@
-import { $createParagraphNode, $createTextNode, ElementNode, ParagraphNode, type RangeSelection, type DOMConversionMap, type DOMConversionOutput, type DOMExportOutput, type EditorConfig, type LexicalNode, type LexicalUpdateJSON, type NodeKey, type SerializedElementNode, type Spread } from "lexical";
+import { $createParagraphNode, $createTextNode, ElementNode, ParagraphNode, type DOMConversionMap, type DOMConversionOutput, type DOMExportOutput, type EditorConfig, type LexicalNode, type LexicalUpdateJSON, type NodeKey, type SerializedElementNode, type Spread } from "lexical";
 import {addClassNamesToElement} from '@lexical/utils'
 import { $createLayoutItemNode, $isLayoutItemNode, LayoutItemNode, type LayoutItemTemplate } from "./LayoutItemNode";
 import { $isPageBreakNode } from "./PageBreakNode";

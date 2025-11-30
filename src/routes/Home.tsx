@@ -9,6 +9,8 @@ import {type NavFab } from '../features/sidebar/sidebarSlice.ts';
 import IconButton from '../components/IconButton.tsx';
 import { useDocument } from '@automerge/react';
 import type { MetadataList } from '../features/dataSync/MetadataStore.ts';
+import { IndexeddbPersistence } from 'y-indexeddb';
+import * as Y from 'yjs';
 export default function Home() {
     const docUrl = useSelector((state: RootState) => state.dataSync.docUrl);
     const [doc, changeDoc] = useDocument<MetadataList>(docUrl,{
@@ -26,9 +28,10 @@ export default function Home() {
     const handleDeleteNotebook = (notebookID: string) => {
         const index = doc.metadata.findIndex((meta) => meta.notebookID === notebookID);
         if (index >= 0) {
+            const id = doc.metadata[index].notebookID;            
             changeDoc(doc => {
-                doc.metadata.at(index)!.type = 'deleted';
-            })
+                    doc.metadata.at(index)!.type = 'deleted';
+            });
         }
     }
     
@@ -41,9 +44,9 @@ export default function Home() {
             <h2 className="headlineMedium">
                 Mis notas
             </h2>
-            { doc.metadata.filter((metadata)=> metadata.type !== 'deleted').length === 0 ? <p className="bodyMedium">No tienes libretas creadas aún.</p> :
+            { doc.metadata.filter(meta => meta.type !== 'deleted').length === 0 ? <p className="bodyMedium">No tienes libretas creadas aún.</p> :
                 <div className="notebooksGrid">
-                    {doc && doc.metadata.filter((metadata)=> metadata.type !== 'deleted').map((metadata)=>{
+                    {doc && doc.metadata.filter(meta => meta.type !== 'deleted').map((metadata)=>{
                         return <div key={metadata.notebookID} className="notebookCard unsynced">
                             <div className='NotebookData'
                             onClick={()=> navigate(`/editor/${metadata.notebookID}`)}

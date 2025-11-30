@@ -11,7 +11,7 @@ import { IndexeddbPersistence } from 'y-indexeddb';
 import {WebrtcProvider} from 'y-webrtc';
 import {WebsocketProvider} from 'y-websocket';
 import * as Y from 'yjs';
-import SyncronizationProvider from '../SynchronizationPlugin/SyncronizationProvider';
+import SyncronizationProvider from '../SyncronizationProvider';
 
 let idSuffix = 0; // In React Strict mode "new WebrtcProvider" may be called twice
 
