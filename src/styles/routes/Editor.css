@@ -14,11 +14,15 @@
 .title:hover{
     border: 1px solid rgb(var(--md-sys-color-outline-variant));
 }
+main{
+    align-items: center;
+}
 .editor{
     display: flex;
     box-sizing: border-box;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     box-sizing: border-box;
 
     width: 100%;
@@ -72,7 +76,7 @@ main section{
     display: flex;
     flex-direction: column;
     width: 100%;
-    background-color: transparent;
+    background-color: rgb(var(--md-sys-color-background));
     z-index: 0;
 }
 
@@ -110,4 +114,442 @@ main section{
     border: 1px dotted rgb(var(--md-sys-color-outline));
     padding: 4px;
 
+}
+
+h1, h2, h3, h4, h5, h6, p {
+    margin: 0;
+    padding: 0;
+}
+.notebook .displayLarge, h1 {
+    font-family: "Work Sans", sans-serif;
+    font-size: 2.5em;
+    line-height: 1.2em;
+    font-weight: normal;
+    letter-spacing: -0.25px;
+}
+
+.notebook .displayMedium, h2 {
+    font-family: "Work Sans", sans-serif;
+    font-size: 2.3em;
+    line-height: 1.2em;
+    font-weight: normal;
+    letter-spacing: 0px;
+}
+
+.notebook.displaySmall, h3 {
+    font-family: "Work Sans", sans-serif;
+    font-size: 2.1em;
+    line-height: 1.2em;
+    font-weight: normal;
+    letter-spacing: 0px;
+}
+
+.notebook.headlineLarge, h4 {
+    font-family: "Work Sans", sans-serif;
+    font-size: 1.90em;
+    line-height: 1.2em;
+    font-weight: normal;
+    letter-spacing: 0px;
+}
+.notebook .headlineMedium, h5 {
+    font-family: "Work Sans", sans-serif;
+    font-size: 1.70em;
+    line-height: 1.2em;
+    font-weight: normal;
+    letter-spacing: 0px;
+}
+.notebook .headlineSmall, h6 {
+    font-family: "Work Sans", sans-serif;
+    font-size: 1.50em;
+    line-height: 1.2em;
+    font-weight: normal;
+    letter-spacing: 0px;
+}
+
+.notebook .titleLarge {
+    font-family: "Work Sans", sans-serif;
+    font-size: 1.833em;
+    line-height: 1.2em;
+    font-weight: normal;
+    letter-spacing: 0px;
+}
+
+.notebook .titleMedium {
+    font-family: "Work Sans", sans-serif;
+    font-size: 1.333em;
+    line-height: 1.2em;
+    font-weight: 500;
+    letter-spacing: 0.15px;
+}
+
+.notebook .titleSmall {
+    font-family: "Work Sans", sans-serif;
+    font-size: 1.167em;
+    line-height: 1.2em;
+    font-weight: 500;
+    letter-spacing: 0.1px;
+}
+
+.notebook .labelLarge {
+    font-family: "Inter", sans-serif;
+    font-size: 1.167em;
+    line-height: 1.5em;
+    font-weight: 500;
+    letter-spacing: 0.0084em;
+}
+
+.notebook .labelMedium {
+    font-family: "Inter", sans-serif;
+    font-size: 1em;
+    line-height: 1.5em;
+    font-weight: 500;
+    letter-spacing: 0.0417em;
+}
+
+.notebook .labelSmall {
+    font-family: "Inter", sans-serif;
+    font-size: 0.917em;
+    line-height: 1.5em;
+    font-weight: 500;
+    letter-spacing: 0.0417em;
+}
+
+.notebook .bodyLarge {
+    font-family: "Inter", sans-serif;
+    font-size: 1.33em;
+    line-height: 1.5em;
+    font-weight: normal;
+    letter-spacing: 0.0417em;
+}
+
+.notebook .bodyMedium {
+    font-family: "Inter", sans-serif;
+    font-size: 1.167em;
+    line-height: 1.5em;
+    font-weight: normal;
+    letter-spacing: 0.021em;
+}
+
+.notebook .bodySmall p {
+    font-family: "Inter", sans-serif;
+    font-size: 1em;
+    line-height: 1.5em;
+    font-weight: normal;
+    letter-spacing: 0.03em;
+}
+
+.notebook .material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}
+
+.notebook .material-symbols-outlined {
+  font-family: 'Material Symbols Outlined';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+}
+.notebook .material-symbols-outlined.filled {
+    font-variation-settings:'FILL' 1
+}
+
+
+
+@media (min-width: 1024px){
+    .editor {
+        width: 900px;
+    }
+}
+
+@media (min-width: 768px) and (max-width: 1023px){
+    .editor {
+        width: 630px;
+    }
+}
+
+.PlaygroundEditorTheme__tableScrollableWrapper {
+  overflow-x: auto;
+  margin: 0px 25px 30px 0px;
+}
+.PlaygroundEditorTheme__tableScrollableWrapper > .PlaygroundEditorTheme__table {
+  /* Remove the table's vertical margin and put it on the wrapper */
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.PlaygroundEditorTheme__tableAlignmentCenter {
+  margin-left: auto;
+  margin-right: auto;
+}
+.PlaygroundEditorTheme__tableAlignmentRight {
+  margin-left: auto;
+}
+.PlaygroundEditorTheme__table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  overflow-y: scroll;
+  overflow-x: scroll;
+  table-layout: fixed;
+  width: fit-content;
+  margin-top: 25px;
+  margin-bottom: 30px;
+}
+.PlaygroundEditorTheme__tableScrollableWrapper.PlaygroundEditorTheme__tableFrozenRow {
+  /* position:sticky needs overflow:clip or visible
+     https://github.com/w3c/csswg-drafts/issues/865#issuecomment-350585274 */
+  overflow-x: clip;
+}
+.PlaygroundEditorTheme__tableFrozenRow tr:nth-of-type(1) > td {
+  overflow: clip;
+  background-color: #ffffff;
+  position: sticky;
+  z-index: 2;
+  top: 44px;
+}
+.PlaygroundEditorTheme__tableFrozenRow tr:nth-of-type(1) > th {
+  overflow: clip;
+  background-color: #f2f3f5;
+  position: sticky;
+  z-index: 2;
+  top: 44px;
+}
+.PlaygroundEditorTheme__tableFrozenRow tr:nth-of-type(1) > th:after,
+.PlaygroundEditorTheme__tableFrozenRow tr:nth-of-type(1) > td:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  border-bottom: 1px solid #bbb;
+}
+.PlaygroundEditorTheme__tableFrozenColumn tr > td:first-child {
+  background-color: #ffffff;
+  position: sticky;
+  z-index: 2;
+  left: 0;
+}
+.PlaygroundEditorTheme__tableFrozenColumn tr > th:first-child {
+  background-color: #f2f3f5;
+  position: sticky;
+  z-index: 2;
+  left: 0;
+}
+.PlaygroundEditorTheme__tableFrozenColumn tr > :first-child::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 100%;
+  border-right: 1px solid #bbb;
+}
+.PlaygroundEditorTheme__tableRowStriping tr:nth-child(even),
+.PlaygroundEditorTheme__tableFrozenColumn
+  .PlaygroundEditorTheme__table.PlaygroundEditorTheme__tableRowStriping
+  tr:nth-child(even)
+  > td:first-child {
+  background-color: #f2f5fb;
+}
+.PlaygroundEditorTheme__tableSelection *::selection {
+  background-color: transparent;
+}
+.PlaygroundEditorTheme__tableSelected {
+  outline: 2px solid rgb(60, 132, 244);
+}
+.PlaygroundEditorTheme__tableCell {
+  border: 1px solid #bbb;
+  width: 75px;
+  vertical-align: top;
+  text-align: start;
+  padding: 6px 8px;
+  position: relative;
+  outline: none;
+  overflow: auto;
+}
+/*
+  A firefox workaround to allow scrolling of overflowing table cell
+  ref: https://bugzilla.mozilla.org/show_bug.cgi?id=1904159
+*/
+.PlaygroundEditorTheme__tableCell > * {
+  overflow: inherit;
+}
+.PlaygroundEditorTheme__tableCellResizer {
+  position: absolute;
+  right: -4px;
+  height: 100%;
+  width: 8px;
+  cursor: ew-resize;
+  z-index: 10;
+  top: 0;
+}
+.PlaygroundEditorTheme__tableCellHeader {
+  background-color: #f2f3f5;
+  text-align: start;
+}
+.PlaygroundEditorTheme__tableCellSelected {
+  caret-color: transparent;
+}
+.PlaygroundEditorTheme__tableCellSelected::after {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  background-color: highlight;
+  mix-blend-mode: multiply;
+  content: '';
+  pointer-events: none;
+}
+.PlaygroundEditorTheme__tableAddColumns {
+  position: absolute;
+  background-color: #eee;
+  height: 100%;
+  animation: table-controls 0.2s ease;
+  border: 0;
+  cursor: pointer;
+}
+.PlaygroundEditorTheme__tableAddColumns:after {
+  background-image: url(../images/icons/plus.svg);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: block;
+  content: ' ';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.4;
+}
+.PlaygroundEditorTheme__tableAddColumns:hover,
+.PlaygroundEditorTheme__tableAddRows:hover {
+  background-color: #c9dbf0;
+}
+.PlaygroundEditorTheme__tableAddRows {
+  position: absolute;
+  width: calc(100% - 25px);
+  background-color: #eee;
+  animation: table-controls 0.2s ease;
+  border: 0;
+  cursor: pointer;
+}
+.PlaygroundEditorTheme__tableAddRows:after {
+  background-image: url(../images/icons/plus.svg);
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: block;
+  content: ' ';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.4;
+}
+@keyframes table-controls {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.PlaygroundEditorTheme__tableCellResizeRuler {
+  display: block;
+  position: absolute;
+  width: 1px;
+  background-color: rgb(60, 132, 244);
+  height: 100%;
+  top: 0;
+}
+.PlaygroundEditorTheme__tableCellActionButtonContainer {
+  display: block;
+  right: 5px;
+  top: 6px;
+  position: absolute;
+  z-index: 4;
+  width: 20px;
+  height: 20px;
+}
+.PlaygroundEditorTheme__tableCellActionButton {
+  background-color: #eee;
+  display: block;
+  border: 0;
+  border-radius: 20px;
+  width: 20px;
+  height: 20px;
+  color: #222;
+  cursor: pointer;
+}
+.PlaygroundEditorTheme__tableCellActionButton:hover {
+  background-color: #ddd;
+}
+
+.PlaygroundEditorTheme__contextMenu {
+  outline: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+}
+.PlaygroundEditorTheme__contextMenu button:first-child {
+  border-radius: 8px 8px 0px 0px;
+}
+.PlaygroundEditorTheme__contextMenu button:last-child {
+  border-radius: 0px 0px 8px 8px;
+}
+.PlaygroundEditorTheme__contextMenuItem {
+  width: 100%;
+  display: block;
+}
+.PlaygroundEditorTheme__contextMenuItem {
+  display: flex;
+  justify-content: left;
+  width: 100%;
+  background-color: #fff;
+  color: #050505;
+  border: 0;
+  border-radius: 0px;
+  font-size: 15px;
+  text-align: left;
+  line-height: 20px;
+  padding: 8px;
+  padding-right: 14px;
+  outline: 0;
+  cursor: pointer;
+}
+.PlaygroundEditorTheme__contextMenuItem.open {
+  background: #ddd;
+}
+.PlaygroundEditorTheme__contextMenuItem:focus,
+.PlaygroundEditorTheme__contextMenuItem:not([disabled]):active {
+  background: #eee;
+}
+.PlaygroundEditorTheme__contextMenuItem:disabled {
+  background: #fff;
+  color: #aaa;
+  cursor: not-allowed;
+}
+.PlaygroundEditorTheme__contextMenuItemIcon {
+  width: 20px;
+  margin-right: 8px;
+  background-repeat: no-repeat;
+  background-size: contain;
 }

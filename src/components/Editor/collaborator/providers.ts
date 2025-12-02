@@ -12,6 +12,8 @@ import {WebrtcProvider} from 'y-webrtc';
 import {WebsocketProvider} from 'y-websocket';
 import * as Y from 'yjs';
 import SyncronizationProvider from '../SyncronizationProvider';
+import { appStore } from '../../../hooks/useStoredContext';
+import { setDisconnected } from '../../../features/online/onlineSlice';
 
 let idSuffix = 0; // In React Strict mode "new WebrtcProvider" may be called twice
 
@@ -36,37 +38,6 @@ export function createWebRTCProvider(
 
   // @ts-expect-error TODO: FIXME
   return provider;
-}
-
-export function createWebsocketProvider(
-  id: string,
-  yjsDocMap: Map<string, Y.Doc>,
-): Provider {
-  const doc = getDocFromMap(id, yjsDocMap);
-
-  const idbProvider = new IndexeddbPersistence(id, doc);
-  const wsProvider =  new WebsocketProvider('ws://localhost:1234', id, doc, {
-    connect: false,
-  });
-
-
-  return {
-    connect: () => {
-      
-      wsProvider.connect();
-    },
-    disconnect: () => {
-      idbProvider.destroy();
-      wsProvider.disconnect();
-    },
-    on: () => {
-
-    },
-    off: () => {
-
-    },
-    awareness: wsProvider.awareness as unknown as Provider['awareness'],
-  }
 }
 
 export function createSyncronizationProvider(id:string, yjsDocMap: Map<string, Y.Doc>): Provider {

@@ -1,4 +1,4 @@
-import { $createParagraphNode, $createTextNode, ElementNode, ParagraphNode, type DOMConversionMap, type DOMConversionOutput, type DOMExportOutput, type EditorConfig, type LexicalNode, type LexicalUpdateJSON, type NodeKey, type SerializedElementNode, type Spread } from "lexical";
+import { $createParagraphNode, $createTextNode, $isParagraphNode, ElementNode, ParagraphNode, type DOMConversionMap, type DOMConversionOutput, type DOMExportOutput, type EditorConfig, type LexicalNode, type LexicalUpdateJSON, type NodeKey, type SerializedElementNode, type Spread } from "lexical";
 import {addClassNamesToElement} from '@lexical/utils'
 import { $createLayoutItemNode, $isLayoutItemNode, LayoutItemNode, type LayoutItemTemplate } from "./LayoutItemNode";
 import { $isPageBreakNode } from "./PageBreakNode";
@@ -224,7 +224,11 @@ export function $isLayoutContainerEmpty (
         if (item.getChildrenSize() > 0) {
             if(item.getChildrenSize()==1){
                 const child = item.getFirstChild<ParagraphNode>();
-                if(child && child.getChildrenSize()===0){
+                if($isParagraphNode(child)){
+                    if(child && child.getChildrenSize()===0){
+                        continue;
+                    }
+                } else {
                     continue;
                 }
             }

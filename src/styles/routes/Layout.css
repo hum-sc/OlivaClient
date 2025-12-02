@@ -50,7 +50,6 @@ nav{
     max-width: 360px;
     width: max-content;
     background-color: rgb(var(--md-sys-color-surface-container));
-    transition: width 5s ease-in-out;
     box-sizing: border-box;
 }
 nav.collapsed{
@@ -117,4 +116,46 @@ main {
     overflow-y: hidden;
     overflow-x: hidden;
     box-sizing: border-box;
+}
+
+@media (max-width: 767px) {
+    .appLayout {
+        display: grid;
+        grid-template-rows: 44px 1fr auto;
+        grid-template-columns: 1fr;
+    }
+    header, main {
+        grid-column: 1 / 3;
+    }
+    nav, nav.collapsed{
+        grid-column: 1 / 3;
+        grid-row: 3 / 4;
+        max-width: 100%;
+        height: auto;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        margin: 0;
+        padding: 10px;
+        border-radius: var(--md-sys-corner-size-none);
+    }
+    nav .routes {
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        overflow-x: auto;
+        gap: 12px;
+        padding: 0 10px;
+        width: fit-content;
+    }
+
+    nav .fab{
+        position: absolute;
+        right: 16px;
+        bottom: 100px;
+        z-index: 3;
+    }
+    
 }

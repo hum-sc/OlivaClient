@@ -15,8 +15,6 @@ import { getUserData, loginUrl } from './hooks/useApi.ts'
 
 import Button from './components/Button.tsx'
 import { Logout } from './routes/Logout.tsx'
-import type { AutomergeUrl } from '@automerge/react'
-import { setDocUrl } from './features/dataSync/dataSyncSlice.ts'
 
 
 function App() {

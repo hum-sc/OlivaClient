@@ -226,4 +226,45 @@ h1, h2, h3, h4, h5, h6, p {
 .material-symbols-outlined.filled {
     font-variation-settings:'FILL' 1
 }
+@media print{
+    body {
+        margin: 0;
+        padding: 0;
+        display: flex !important;
+        flex-direction: column !important;
+    }
 
+    .appLayout {
+        display: flex !important;
+    }
+    body * :not(notebook, notebook *) {
+        background-color: transparent!important;
+        padding: 0;
+        margin: 0;
+        overflow: visible;
+        height: auto;
+        width: auto;
+    }
+    .notebook {
+        display: block !important;
+        margin: 0;
+        padding: 0;
+        overflow: visible;
+        font-size: 11pt !important;
+    background-color: white !important;
+    }
+    .page {
+        box-shadow: none !important;
+        page-break-inside: avoid;
+        margin: 0 !important;
+        margin-bottom: 0 !important;
+        height: 100vh;
+        width: 100vw;
+        
+        background-color: white !important;
+    }
+    body * :not(#root, .app, .appLayout, main, .editor, .editor-container, .notebook, .notebook *) {
+        display: none !important;
+    }
+
+}

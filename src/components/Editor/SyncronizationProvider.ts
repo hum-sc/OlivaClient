@@ -2,6 +2,8 @@ import type { Provider, ProviderAwareness } from '@lexical/yjs';
 import { IndexeddbPersistence } from 'y-indexeddb';
 import { WebsocketProvider } from 'y-websocket';
 import * as Y from 'yjs';
+import { appStore } from '../../hooks/useStoredContext';
+import { setConnected, setDisconnected } from '../../features/online/onlineSlice';
 export default class SyncronizationProvider implements Provider{
     awareness: ProviderAwareness;
     wsProvider: WebsocketProvider;
@@ -13,14 +15,13 @@ export default class SyncronizationProvider implements Provider{
         this.idbProvider = null;
         this.awareness = this.wsProvider.awareness as unknown as ProviderAwareness;
         console.log("SyncronizationProvider: created", {path, id, doc});
+        
     }
     connect() {
-        console.log("SyncronizationProvider: connecting");
         this.idbProvider = new IndexeddbPersistence(this.wsProvider.roomname, this.wsProvider.doc);
         this.wsProvider.connect();
     }
     disconnect() {
-        console.log("SyncronizationProvider: disconnecting");
         this.idbProvider?.destroy();
         this.wsProvider.disconnect();
     }
@@ -30,7 +31,23 @@ export default class SyncronizationProvider implements Provider{
             this.idbProvider?.whenSynced.then(()=>{
                 console.log("SyncronizationProvider: IDB synced");
                 callback(true);
-            });   
+            }); 
+            this.wsProvider.on('sync', (isSynced: boolean) => {
+                console.log("SyncronizationProvider: WS sync event", isSynced);
+                callback(isSynced);
+            });
+        }
+        if( event === 'status'){
+            this.wsProvider.on('status', (status: {status:'connected' | 'disconnected' | 'connecting'}) => {
+                if (status.status === 'connected'){
+                    appStore.dispatch(setConnected());
+                } else if (status.status === 'disconnected'){
+                    appStore.dispatch(setDisconnected());
+                } else if (status.status === 'connecting'){
+                    appStore.dispatch(setDisconnected());
+                }
+                callback(status);
+            });
         }
         this.wsProvider.on(event as any, callback);
     }

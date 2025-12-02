@@ -18,7 +18,7 @@ import { Suspense, useEffect } from 'react'
 import { setDocUrl } from './features/dataSync/dataSyncSlice.ts'
 
 const repo = new Repo({
-  network: [new BroadcastChannelNetworkAdapter()],
+  network: [new WebSocketClientAdapter('ws://localhost:8081'),],
   storage: new IndexedDBStorageAdapter(),
 })
 
@@ -34,20 +34,12 @@ window.repo = repo;
 function Root(){
   useEffect(()=>{
     const initRepo = async () => {
-      const repo = new Repo({
-        network: [
-          new BroadcastChannelNetworkAdapter(), 
-          new WebSocketClientAdapter("wss://sync.automerge.org"),
-        ],
-        storage: new IndexedDBStorageAdapter(),
-      })
-      let handle :DocHandle<MetadataList>;
       const locationHash = appStore.getState().dataSync.docUrl;
       if(isValidAutomergeUrl(locationHash)) {
-        handle= await repo.find<MetadataList>(locationHash);
+        window.handle= await repo.find<MetadataList>(locationHash);
       } else {
-        handle = await repo.create<MetadataList>(initMetadataList());
-        appStore.dispatch(setDocUrl(handle.url));
+        window.handle = await repo.create<MetadataList>(initMetadataList());
+        appStore.dispatch(setDocUrl(window.handle.url));
       }
     }
     initRepo();

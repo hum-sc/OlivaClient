@@ -1,10 +1,9 @@
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { mergeRegister } from '@lexical/utils';
 import { $getSelection, $isRangeSelection, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, COMMAND_PRIORITY_LOW, FORMAT_ELEMENT_COMMAND, FORMAT_TEXT_COMMAND, REDO_COMMAND, SELECTION_CHANGE_COMMAND, UNDO_COMMAND } from "lexical";
 import { useCallback, useEffect, useRef, useState } from "react";
-import {mergeRegister} from '@lexical/utils'
+import '../styles/components/Toolbar.css';
 import IconButton from "./IconButton";
-import '../styles/components/Toolbar.css'
-import {$generateHtmlFromNodes} from '@lexical/html';
 
 export default function ToolbarPlugin(){
     const [editor] = useLexicalComposerContext();
@@ -15,6 +14,7 @@ export default function ToolbarPlugin(){
     const [isItalic, setIsItalic] = useState(false);
     const [isUnderline, setIsUnderline] = useState(false);
     const [isStrikethrough, setIsStrikethrough] = useState(false);
+    
 
     const $updateToolbar = useCallback(()=>{
         const selection = $getSelection();
@@ -26,9 +26,12 @@ export default function ToolbarPlugin(){
         }
     },[])
     const onDownloadPDF = useCallback(()=>{
-        
+        const pages = document.body.getElementsByClassName('notebook');
+        document.body.innerHTML = pages[0].parentElement!.innerHTML;
         window.print();
+        //document.body.innerHTML = actualContents;
         // Reload the original contents after printing
+        window.location.reload();
     },[]);
     useEffect(()=>{
         return mergeRegister(

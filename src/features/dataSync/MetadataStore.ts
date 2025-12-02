@@ -26,6 +26,7 @@ export type Metadata = {
     pageLayout?: LayoutTemplate,
     headerFontFamily?: FontFamily,
     createdAt?: Date,
+    updatedAt?: Date,
 }
 
 export type MetadataList = {

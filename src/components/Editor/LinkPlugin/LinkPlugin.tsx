@@ -3,7 +3,7 @@ import type {JSX} from 'react';
 
 import {LinkPlugin as LexicalLinkPlugin} from '@lexical/react/LexicalLinkPlugin';
 
-import {validateUrl} from '../url';
+import {validateUrl} from '../utils/url';
 
 type Props = {
   hasLinkAttributes?: boolean;

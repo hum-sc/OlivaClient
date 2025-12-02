@@ -1,22 +1,24 @@
 import { LexicalExtensionComposer } from "@lexical/react/LexicalExtensionComposer";
 import { $addUpdateTag, $getRoot, defineExtension, HISTORY_MERGE_TAG } from "lexical";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
 
-import type { RootState } from "../store";
-import '../styles/routes/Editor.css';
+import { useDocument } from "@automerge/react";
+import { LexicalCollaboration } from '@lexical/react/LexicalCollaborationContext';
+import { type LexicalEditor as LexicalEditorType } from "lexical";
+import * as React from 'react';
 import { $createFilledLayoutContainer, type LayoutTemplate } from "../components/Editor/LayoutPlugin/LayoutContainerNode";
+import LexicalEditor from "../components/Editor/LexicalEditor";
 import OlivaEditorTheme from '../components/Editor/OlivaEditorTheme';
 import { OlivaNodes } from "../components/Editor/OlivaNodes";
 import { buildHTMLConfig } from "../components/Editor/buildHTMLConfig";
 import { SharedHistoryContext } from '../components/Editor/context/SharedHistoryContext';
-import { LexicalCollaboration } from '@lexical/react/LexicalCollaborationContext';
-import LexicalEditor from "../components/Editor/LexicalEditor";
-import * as React from 'react';
 import type { MetadataList } from "../features/dataSync/MetadataStore";
-import { useDocument } from "@automerge/react";
-import { type LexicalEditor as LexicalEditorType } from "lexical";
+import type { RootState } from "../store";
+import '../styles/routes/Editor.css';
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { collapseSidebar, expandSidebar } from "../features/sidebar/sidebarSlice";
 
 export const cornellLayout:LayoutTemplate = {
     columns: '25% 75%', 
@@ -29,7 +31,7 @@ export const cornellLayout:LayoutTemplate = {
 };
 const placeholder = "Escribe aquí...";
 
-const PointMM = 0.34;
+const PointMM = 0.35;
 
 
 export default function Editor() {
@@ -94,6 +96,7 @@ export default function Editor() {
             );
             if (meta){
                 meta.title = newTitle;
+                meta.updatedAt = new Date();
             }
         });
     }, [changeDoc, notebookId]);
@@ -127,12 +130,23 @@ export default function Editor() {
             };
         }
     },[]);
+
+    useEffect(()=>{
+        document.title = title + " - Oliva";
+    }, [title]);
+    const dispatch = useDispatch();
+    useEffect(()=>{
+        dispatch(collapseSidebar());
+        return ()=>{dispatch(expandSidebar());}
+    }, []);
     return metadata !==undefined ? (
     <ErrorBoundary>
         <LexicalCollaboration>
             <LexicalExtensionComposer extension={app} contentEditable={null}>   
                 <SharedHistoryContext>
-                    <div className="editor" ref={notebookRef} style={{fontSize:fontSize}}>
+                    <div className="editor" ref={notebookRef} style={{
+                        fontSize:fontSize
+                        }}>
                         <input value={title} className="title titleMedium" onChange={(e)=>onChangeTitle(e)} />
                         <LexicalEditor 
                             placeholder={placeholder} 

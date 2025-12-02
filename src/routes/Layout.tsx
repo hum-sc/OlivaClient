@@ -1,22 +1,25 @@
-import { useSelector , useDispatch} from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Outlet, useNavigate } from "react-router";
 
 import { enableDarkMode, disableDarkMode, ThemeMode } from "../features/theme/themeSlice";
-import {  handleIsOfflineByUser } from "../features/online/onlineSlice";
+import { handleIsOfflineByUser, setConnected, setDisconnected } from "../features/online/onlineSlice";
 import IconButton from "../components/IconButton";
 import { type RootState } from "../store";
 import "../styles/routes/Layout.css";
-import FAB from "../components/FAB";
-import NavItem from "../components/NavItem";
 import Avatar from "../components/Avatar";
 import { createDefaultNotebookMetadata } from "../hooks/useApi";
-import { useDocument } from "@automerge/react";
-import type { Metadata, MetadataList } from "../features/dataSync/MetadataStore";
+import { useDocument, useRepo, WebSocketClientAdapter, type PeerCandidatePayload } from "@automerge/react";
+import type { MetadataList } from "../features/dataSync/MetadataStore";
 import type { UUID } from "crypto";
+import SideBar from "../components/SideBar";
+import { useEffect } from "react";
+import { appStore } from "../hooks/useStoredContext";
 
 export default function Layout() {
     const docUrl = useSelector((state: RootState) => state.dataSync.docUrl);
-    const [doc, changeDoc] = useDocument<MetadataList>(docUrl,{
+    const repo = useRepo();
+
+    const [, changeDoc] = useDocument<MetadataList>(docUrl,{
             suspense: true
     });
     const isOnline = useSelector((state: RootState) => state.onlineStatus.isOnline);
@@ -45,6 +48,25 @@ export default function Layout() {
         }
 
     }
+
+    useEffect(()=>{
+    repo.networkSubsystem.adapters.forEach(adapter => {
+        if(adapter instanceof WebSocketClientAdapter){
+            adapter.onOpen = ()=>{
+                appStore.dispatch(setConnected());
+            }
+            adapter.onError = (error:Event)=>{
+                appStore.dispatch(setDisconnected());
+            }
+            adapter.onClose = ()=>{
+                appStore.dispatch(setDisconnected());
+            }
+            adapter.onMessage = ( event)=>{
+                console.log("Message received from peer:", event);
+            }
+        }
+    });
+    },[repo])
     
     return (
         <div className={`appLayout ${isDarkMode === ThemeMode.dark ? 'dark' : 'light'}`}>
@@ -85,16 +107,12 @@ export default function Layout() {
                     <Avatar url={user?.image_url || "/defaultAvatar.png"} size={32}/>
                 </div>
             </header>
-            <nav className={`large-end-round`}>
-                <FAB icon={navFAB?.icon || "edit"} text={navFAB?.text || "Nueva libreta"}  color="tertiary" plain onClick={handleFABClick}/>
-                <div className="routes">
-                    <NavItem to="/" label="Inicio" icon="home"/>
-                    <NavItem to="/files" label="Mis archivos" icon="edit"/>
-                </div>
-            </nav>
+            <SideBar navFAB={navFAB} handleFABClick={handleFABClick} />
             <main>
                 <Outlet />
             </main>
         </div>
     );
 }
+
+

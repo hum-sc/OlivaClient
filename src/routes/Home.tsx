@@ -1,43 +1,29 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteNotebook, useGetNotebooksMetadata } from '../hooks/useApi.ts';
 import '../styles/routes/Home.css';
 import { useEffect } from 'react';
 import type { RootState } from '../store.ts';
-import { useNavigate } from 'react-router';
 import { setActiveNav } from '../features/sidebar/sidebarSlice.ts';
-import {type NavFab } from '../features/sidebar/sidebarSlice.ts';
-import IconButton from '../components/IconButton.tsx';
+import { type NavFab } from '../features/sidebar/sidebarSlice.ts';
 import { useDocument } from '@automerge/react';
 import type { MetadataList } from '../features/dataSync/MetadataStore.ts';
-import { IndexeddbPersistence } from 'y-indexeddb';
-import * as Y from 'yjs';
+import NotebookCard from '../components/NotebookCard.tsx';
 export default function Home() {
     const docUrl = useSelector((state: RootState) => state.dataSync.docUrl);
-    const [doc, changeDoc] = useDocument<MetadataList>(docUrl,{
+    const [doc, ] = useDocument<MetadataList>(docUrl,{
         suspense: true
     });
     const dispatch = useDispatch();
-    const isOnline = useSelector((state:RootState) => state.onlineStatus.isOnline);
-    const navigate = useNavigate();
     const nav: NavFab = {
         text: "Nueva libreta",
         icon: "edit",
         action: "newNotebook"
     }
 
-    const handleDeleteNotebook = (notebookID: string) => {
-        const index = doc.metadata.findIndex((meta) => meta.notebookID === notebookID);
-        if (index >= 0) {
-            const id = doc.metadata[index].notebookID;            
-            changeDoc(doc => {
-                    doc.metadata.at(index)!.type = 'deleted';
-            });
-        }
-    }
+    
     
     useEffect( ()=>{
         dispatch(setActiveNav(nav));
-        useGetNotebooksMetadata();
+        window.document.title = "Oliva - Inicio";
     },[]);
     return (<>
         <section className="myNotes">
@@ -45,16 +31,9 @@ export default function Home() {
                 Mis notas
             </h2>
             { doc.metadata.filter(meta => meta.type !== 'deleted').length === 0 ? <p className="bodyMedium">No tienes libretas creadas aún.</p> :
-                <div className="notebooksGrid">
+                <div className="notebooksContainer">
                     {doc && doc.metadata.filter(meta => meta.type !== 'deleted').map((metadata)=>{
-                        return <div key={metadata.notebookID} className="notebookCard unsynced">
-                            <div className='NotebookData'
-                            onClick={()=> navigate(`/editor/${metadata.notebookID}`)}
-                            >
-                            <h3 className="titleMedium">{metadata.title || "Libreta sin título"}</h3>
-                            </div>
-                            <IconButton label='delete' size="small" icon='delete' onClick={()=>{handleDeleteNotebook(metadata.notebookID)}}/>
-                        </div>
+                        return <NotebookCard key={metadata.notebookID} metadata={metadata} />
                         })
                     }
                     
@@ -64,3 +43,4 @@ export default function Home() {
         </>
     );
 }
+
