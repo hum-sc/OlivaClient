@@ -227,6 +227,10 @@ h1, h2, h3, h4, h5, h6, p {
     font-variation-settings:'FILL' 1
 }
 @media print{
+    @page {
+        margin: 0;
+        padding:0;
+    }
     body {
         margin: 0;
         padding: 0;
@@ -239,8 +243,6 @@ h1, h2, h3, h4, h5, h6, p {
     }
     body * :not(notebook, notebook *) {
         background-color: transparent!important;
-        padding: 0;
-        margin: 0;
         overflow: visible;
         height: auto;
         width: auto;
@@ -250,7 +252,7 @@ h1, h2, h3, h4, h5, h6, p {
         margin: 0;
         padding: 0;
         overflow: visible;
-        font-size: 11pt !important;
+        font-size: 12pt!important;
     background-color: white !important;
     }
     .page {
@@ -260,11 +262,13 @@ h1, h2, h3, h4, h5, h6, p {
         margin-bottom: 0 !important;
         height: 100vh;
         width: 100vw;
-        
+        font-size: 12pt !important;
         background-color: white !important;
     }
     body * :not(#root, .app, .appLayout, main, .editor, .editor-container, .notebook, .notebook *) {
         display: none !important;
+        margin:0 !important;
+        padding: 0 !important;
     }
 
 }

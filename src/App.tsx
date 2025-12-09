@@ -15,6 +15,10 @@ import { getUserData, loginUrl } from './hooks/useApi.ts'
 
 import Button from './components/Button.tsx'
 import { Logout } from './routes/Logout.tsx'
+import { Worker } from '@react-pdf-viewer/core';
+import Files from './routes/Files.tsx'
+import FileViewer from './routes/FileViewer.tsx'
+import { ToolbarContext } from './components/Editor/context/ToolbarContext.tsx'
 
 
 function App() {
@@ -73,25 +77,32 @@ function App() {
         }
     </div>
     }
+    <Worker workerUrl="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js" >
     <BrowserRouter>
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/files" element={<Home />} />
+          <Route path="/files" element={<Files />} />
           <Route path='/editor/:notebookId' element={
+            <ToolbarContext>
               <Editor />
+            </ToolbarContext>
             } />
+          <Route path='/fileviewer/:fileId' element={<FileViewer/>}/>
           <Route path='/editor' element={
+              <ToolbarContext>
               <Editor />
+              </ToolbarContext>
             } />
           <Route path='/logout' element={<Logout />} />
         </Route>
       </Routes>
       <PWABadge />
     </BrowserRouter>
+    </Worker>
     </div>
   )
 }
 
 
-export default App
+export default App;

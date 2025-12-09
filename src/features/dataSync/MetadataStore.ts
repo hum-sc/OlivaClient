@@ -29,14 +29,28 @@ export type Metadata = {
     updatedAt?: Date,
 }
 
+export type FileMetadata = {
+    type: 'post' | 'deleted',
+    fileID:UUID,
+    ownerId?:UUID,
+    filename?: string,
+    fileURI?: string,
+    fileType?: string,
+    fileSize?: number,
+    createdAt?: Date,
+    updatedAt?: Date,
+}
+
 export type MetadataList = {
     title?: string,
     metadata: Metadata[],
+    files: FileMetadata[],
 };
 
 export const initMetadataList = (): MetadataList => {
     return {
         title: 'Ejemplo',
-        metadata: []
+        metadata: [],
+        files: [],
     };
 }

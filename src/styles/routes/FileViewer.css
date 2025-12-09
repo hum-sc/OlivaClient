@@ -15,10 +15,9 @@
     border: 1px solid rgb(var(--md-sys-color-outline-variant));
 }
 main{
-  flex-direction: row;
-  align-items: center;
+    align-items: center;
 }
-.editor{
+.viewer{
     display: flex;
     box-sizing: border-box;
     flex-direction: column;
@@ -36,7 +35,7 @@ main section{
     background-color: transparent;
 }
 
-.editor-container{
+.viewer-container{
     position: sticky;
     box-sizing: border-box;
     display: flex;
@@ -48,14 +47,14 @@ main section{
     max-height: 100%;
     overflow-y: auto;
     background-color: transparent;
-    border-radius: var(--md-sys-corner-size-none);
+    border-radius: var(--md-sys-corner-size-large);
     scroll-behavior: smooth;
     top: 0;
     padding: 0;
 
 }
 
-.editor-container::-webkit-scrollbar {
+.viewer-container::-webkit-scrollbar {
     position: absolute;
     width:10px;
     height: 100%;
@@ -63,7 +62,7 @@ main section{
     border-radius: var(--md-sys-corner-size-full);
 }
 
-.editor-container::-webkit-scrollbar-thumb {
+.viewer-container::-webkit-scrollbar-thumb {
     background-color: rgba(var(--md-sys-color-on-surface),0.5);
     border-radius: var(--md-sys-corner-size-small);
     border: 2px solid transparent;
@@ -81,7 +80,7 @@ main section{
     z-index: 0;
 }
 
-.editor-placeholder {
+.viewer-placeholder {
     position: absolute;
     top: 8px;
     left: 8px;
@@ -273,36 +272,34 @@ h1, h2, h3, h4, h5, h6, p {
 
 
 @media (min-width: 1024px){
-    .editor {
-        max-width: 900px;
-        min-width: 464px;
+    .viewer {
+        width: 900px;
     }
 }
 
 @media (min-width: 768px) and (max-width: 1023px){
-    .editor {
-        max-width: 630px;
-        min-width: 380px;
+    .viewer {
+        width: 630px;
     }
 }
 
-.PlaygroundEditorTheme__tableScrollableWrapper {
+.PlaygroundviewerTheme__tableScrollableWrapper {
   overflow-x: auto;
   margin: 0px 25px 30px 0px;
 }
-.PlaygroundEditorTheme__tableScrollableWrapper > .PlaygroundEditorTheme__table {
+.PlaygroundviewerTheme__tableScrollableWrapper > .PlaygroundviewerTheme__table {
   /* Remove the table's vertical margin and put it on the wrapper */
   margin-top: 0;
   margin-bottom: 0;
 }
-.PlaygroundEditorTheme__tableAlignmentCenter {
+.PlaygroundviewerTheme__tableAlignmentCenter {
   margin-left: auto;
   margin-right: auto;
 }
-.PlaygroundEditorTheme__tableAlignmentRight {
+.PlaygroundviewerTheme__tableAlignmentRight {
   margin-left: auto;
 }
-.PlaygroundEditorTheme__table {
+.PlaygroundviewerTheme__table {
   border-collapse: collapse;
   border-spacing: 0;
   overflow-y: scroll;
@@ -312,27 +309,27 @@ h1, h2, h3, h4, h5, h6, p {
   margin-top: 25px;
   margin-bottom: 30px;
 }
-.PlaygroundEditorTheme__tableScrollableWrapper.PlaygroundEditorTheme__tableFrozenRow {
+.PlaygroundviewerTheme__tableScrollableWrapper.PlaygroundviewerTheme__tableFrozenRow {
   /* position:sticky needs overflow:clip or visible
      https://github.com/w3c/csswg-drafts/issues/865#issuecomment-350585274 */
   overflow-x: clip;
 }
-.PlaygroundEditorTheme__tableFrozenRow tr:nth-of-type(1) > td {
+.PlaygroundviewerTheme__tableFrozenRow tr:nth-of-type(1) > td {
   overflow: clip;
   background-color: #ffffff;
   position: sticky;
   z-index: 2;
   top: 44px;
 }
-.PlaygroundEditorTheme__tableFrozenRow tr:nth-of-type(1) > th {
+.PlaygroundviewerTheme__tableFrozenRow tr:nth-of-type(1) > th {
   overflow: clip;
   background-color: #f2f3f5;
   position: sticky;
   z-index: 2;
   top: 44px;
 }
-.PlaygroundEditorTheme__tableFrozenRow tr:nth-of-type(1) > th:after,
-.PlaygroundEditorTheme__tableFrozenRow tr:nth-of-type(1) > td:after {
+.PlaygroundviewerTheme__tableFrozenRow tr:nth-of-type(1) > th:after,
+.PlaygroundviewerTheme__tableFrozenRow tr:nth-of-type(1) > td:after {
   content: '';
   position: absolute;
   left: 0;
@@ -340,19 +337,19 @@ h1, h2, h3, h4, h5, h6, p {
   width: 100%;
   border-bottom: 1px solid #bbb;
 }
-.PlaygroundEditorTheme__tableFrozenColumn tr > td:first-child {
+.PlaygroundviewerTheme__tableFrozenColumn tr > td:first-child {
   background-color: #ffffff;
   position: sticky;
   z-index: 2;
   left: 0;
 }
-.PlaygroundEditorTheme__tableFrozenColumn tr > th:first-child {
+.PlaygroundviewerTheme__tableFrozenColumn tr > th:first-child {
   background-color: #f2f3f5;
   position: sticky;
   z-index: 2;
   left: 0;
 }
-.PlaygroundEditorTheme__tableFrozenColumn tr > :first-child::after {
+.PlaygroundviewerTheme__tableFrozenColumn tr > :first-child::after {
   content: '';
   position: absolute;
   left: 0;
@@ -361,20 +358,20 @@ h1, h2, h3, h4, h5, h6, p {
   height: 100%;
   border-right: 1px solid #bbb;
 }
-.PlaygroundEditorTheme__tableRowStriping tr:nth-child(even),
-.PlaygroundEditorTheme__tableFrozenColumn
-  .PlaygroundEditorTheme__table.PlaygroundEditorTheme__tableRowStriping
+.PlaygroundviewerTheme__tableRowStriping tr:nth-child(even),
+.PlaygroundviewerTheme__tableFrozenColumn
+  .PlaygroundviewerTheme__table.PlaygroundviewerTheme__tableRowStriping
   tr:nth-child(even)
   > td:first-child {
   background-color: #f2f5fb;
 }
-.PlaygroundEditorTheme__tableSelection *::selection {
+.PlaygroundviewerTheme__tableSelection *::selection {
   background-color: transparent;
 }
-.PlaygroundEditorTheme__tableSelected {
+.PlaygroundviewerTheme__tableSelected {
   outline: 2px solid rgb(60, 132, 244);
 }
-.PlaygroundEditorTheme__tableCell {
+.PlaygroundviewerTheme__tableCell {
   border: 1px solid #bbb;
   width: 75px;
   vertical-align: top;
@@ -388,10 +385,10 @@ h1, h2, h3, h4, h5, h6, p {
   A firefox workaround to allow scrolling of overflowing table cell
   ref: https://bugzilla.mozilla.org/show_bug.cgi?id=1904159
 */
-.PlaygroundEditorTheme__tableCell > * {
+.PlaygroundviewerTheme__tableCell > * {
   overflow: inherit;
 }
-.PlaygroundEditorTheme__tableCellResizer {
+.PlaygroundviewerTheme__tableCellResizer {
   position: absolute;
   right: -4px;
   height: 100%;
@@ -400,14 +397,14 @@ h1, h2, h3, h4, h5, h6, p {
   z-index: 10;
   top: 0;
 }
-.PlaygroundEditorTheme__tableCellHeader {
+.PlaygroundviewerTheme__tableCellHeader {
   background-color: #f2f3f5;
   text-align: start;
 }
-.PlaygroundEditorTheme__tableCellSelected {
+.PlaygroundviewerTheme__tableCellSelected {
   caret-color: transparent;
 }
-.PlaygroundEditorTheme__tableCellSelected::after {
+.PlaygroundviewerTheme__tableCellSelected::after {
   position: absolute;
   left: 0;
   right: 0;
@@ -418,7 +415,7 @@ h1, h2, h3, h4, h5, h6, p {
   content: '';
   pointer-events: none;
 }
-.PlaygroundEditorTheme__tableAddColumns {
+.PlaygroundviewerTheme__tableAddColumns {
   position: absolute;
   background-color: #eee;
   height: 100%;
@@ -426,7 +423,7 @@ h1, h2, h3, h4, h5, h6, p {
   border: 0;
   cursor: pointer;
 }
-.PlaygroundEditorTheme__tableAddColumns:after {
+.PlaygroundviewerTheme__tableAddColumns:after {
   background-image: url(../images/icons/plus.svg);
   background-size: contain;
   background-position: center;
@@ -440,11 +437,11 @@ h1, h2, h3, h4, h5, h6, p {
   height: 100%;
   opacity: 0.4;
 }
-.PlaygroundEditorTheme__tableAddColumns:hover,
-.PlaygroundEditorTheme__tableAddRows:hover {
+.PlaygroundviewerTheme__tableAddColumns:hover,
+.PlaygroundviewerTheme__tableAddRows:hover {
   background-color: #c9dbf0;
 }
-.PlaygroundEditorTheme__tableAddRows {
+.PlaygroundviewerTheme__tableAddRows {
   position: absolute;
   width: calc(100% - 25px);
   background-color: #eee;
@@ -452,7 +449,7 @@ h1, h2, h3, h4, h5, h6, p {
   border: 0;
   cursor: pointer;
 }
-.PlaygroundEditorTheme__tableAddRows:after {
+.PlaygroundviewerTheme__tableAddRows:after {
   background-image: url(../images/icons/plus.svg);
   background-size: contain;
   background-position: center;
@@ -474,7 +471,7 @@ h1, h2, h3, h4, h5, h6, p {
     opacity: 1;
   }
 }
-.PlaygroundEditorTheme__tableCellResizeRuler {
+.PlaygroundviewerTheme__tableCellResizeRuler {
   display: block;
   position: absolute;
   width: 1px;
@@ -482,7 +479,7 @@ h1, h2, h3, h4, h5, h6, p {
   height: 100%;
   top: 0;
 }
-.PlaygroundEditorTheme__tableCellActionButtonContainer {
+.PlaygroundviewerTheme__tableCellActionButtonContainer {
   display: block;
   right: 5px;
   top: 6px;
@@ -491,7 +488,7 @@ h1, h2, h3, h4, h5, h6, p {
   width: 20px;
   height: 20px;
 }
-.PlaygroundEditorTheme__tableCellActionButton {
+.PlaygroundviewerTheme__tableCellActionButton {
   background-color: #eee;
   display: block;
   border: 0;
@@ -501,28 +498,28 @@ h1, h2, h3, h4, h5, h6, p {
   color: #222;
   cursor: pointer;
 }
-.PlaygroundEditorTheme__tableCellActionButton:hover {
+.PlaygroundviewerTheme__tableCellActionButton:hover {
   background-color: #ddd;
 }
 
-.PlaygroundEditorTheme__contextMenu {
+.PlaygroundviewerTheme__contextMenu {
   outline: 0;
   background: #fff;
   border: 1px solid #ddd;
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
   border-radius: 8px;
 }
-.PlaygroundEditorTheme__contextMenu button:first-child {
+.PlaygroundviewerTheme__contextMenu button:first-child {
   border-radius: 8px 8px 0px 0px;
 }
-.PlaygroundEditorTheme__contextMenu button:last-child {
+.PlaygroundviewerTheme__contextMenu button:last-child {
   border-radius: 0px 0px 8px 8px;
 }
-.PlaygroundEditorTheme__contextMenuItem {
+.PlaygroundviewerTheme__contextMenuItem {
   width: 100%;
   display: block;
 }
-.PlaygroundEditorTheme__contextMenuItem {
+.PlaygroundviewerTheme__contextMenuItem {
   display: flex;
   justify-content: left;
   width: 100%;
@@ -538,19 +535,19 @@ h1, h2, h3, h4, h5, h6, p {
   outline: 0;
   cursor: pointer;
 }
-.PlaygroundEditorTheme__contextMenuItem.open {
+.PlaygroundviewerTheme__contextMenuItem.open {
   background: #ddd;
 }
-.PlaygroundEditorTheme__contextMenuItem:focus,
-.PlaygroundEditorTheme__contextMenuItem:not([disabled]):active {
+.PlaygroundviewerTheme__contextMenuItem:focus,
+.PlaygroundviewerTheme__contextMenuItem:not([disabled]):active {
   background: #eee;
 }
-.PlaygroundEditorTheme__contextMenuItem:disabled {
+.PlaygroundviewerTheme__contextMenuItem:disabled {
   background: #fff;
   color: #aaa;
   cursor: not-allowed;
 }
-.PlaygroundEditorTheme__contextMenuItemIcon {
+.PlaygroundviewerTheme__contextMenuItemIcon {
   width: 20px;
   margin-right: 8px;
   background-repeat: no-repeat;

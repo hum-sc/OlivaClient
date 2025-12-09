@@ -74,6 +74,7 @@ const INITIAL_TOOLBAR_STATE = {
   isLowercase: false,
   isUppercase: false,
   isCapitalize: false,
+  isFilePanelOpen: false,
   rootType: 'root' as keyof typeof rootTypeToRootName,
   listStartNumber: null as number | null,
 };

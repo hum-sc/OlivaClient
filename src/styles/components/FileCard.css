@@ -1,4 +1,4 @@
-.notebookCard {
+.fileCard {
     display: flex;
     box-sizing: border-box;
     position: relative;
@@ -15,28 +15,28 @@
     height: 160px;
     overflow: hidden;
 }
-.notebookCard .notebookCover {
+.fileCard .fileCover {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
     height: 80px;
     margin-bottom: 8px;
-    background-color: rgb(var(--md-sys-color-secondary));
-    color: rgb(var(--md-sys-color-on-secondary));
+    background-color: rgb(var(--md-sys-color-error-container));
+    color: rgb(var(--md-sys-color-on-error-container));
     border-radius: 4px;
 }
-.notebookCard .notebookData {
+.fileCard .fileData {
     display: flex;
     flex-direction: row;
     gap: 8px;
     width: 100%;
     max-width: 100%;
     overflow: hidden;
-    font-size: 7pt;
+    font-size: 8pt;
 }
 
-.notebookCard .notebookInfo {
+.fileCard .fileInfo {
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -44,14 +44,14 @@
     overflow: hidden;
 }
 
-.notebookCard .titleSmall {
+.fileCard .titleSmall {
     /* add ... on overflow */
     max-width: 1fr;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
-.notebookCard .stateLayer{
+.fileCard .stateLayer{
     position: absolute;
     top: 0;
     right: 0;
@@ -59,20 +59,20 @@
     height: 100%;
 }
 
-.notebookCard:hover .stateLayer:not(.notebookCard:hover * .stateLayer){
+.fileCard:hover .stateLayer:not(.fileCard:hover * .stateLayer){
     background-color: rgb(var(--md-sys-color-primary));
     opacity: var(--md-state-alpha-opacity-08);
 }
-.notebookCard:active .stateLayer:not(.notebookCard:active * .stateLayer){
+.fileCard:active .stateLayer:not(.fileCard:active * .stateLayer){
     background-color: rgb(var(--md-sys-color-primary));
     opacity: var(--md-state-alpha-opacity-16);
 }
 
-.notebookCard .delete {
+.fileCard .delete {
     z-index: 2;
     color: rgb(var(--md-sys-color-error)); 
 }
-.notebookCard:hover .coverIcon {
+.fileCard:hover .coverIcon {
     font-size: 30px;
 }
 
@@ -80,20 +80,20 @@
     transition: font-size 0.2s ease-in-out;
 }
 
-.notebookCard .delete:hover {
+.fileCard .delete:hover {
     cursor: pointer;
     color: rgb(var(--md-sys-color-on-error-container));
     background-color: rgb(var(--md-sys-color-error-container));
 }
 
 @media (min-width: 600px) {
-    .notebookCard {
+    .fileCard {
         width: 230px;
     }
 }
 
 @media (min-width: 1024px) {
-    .notebookCard {
+    .fileCard {
         width: 225px;
     }
 }

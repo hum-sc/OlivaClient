@@ -4,9 +4,11 @@ import { $getSelection, $isRangeSelection, CAN_REDO_COMMAND, CAN_UNDO_COMMAND, C
 import { useCallback, useEffect, useRef, useState } from "react";
 import '../styles/components/Toolbar.css';
 import IconButton from "./IconButton";
+import { useToolbarState } from "./Editor/context/ToolbarContext";
 
 export default function ToolbarPlugin(){
     const [editor] = useLexicalComposerContext();
+    const toolbarContext = useToolbarState();
     const toolbarRef = useRef(null);
     const [canUndo, setCanUndo] = useState(false);
     const [canRedo, setCanRedo] = useState(false);
@@ -14,7 +16,7 @@ export default function ToolbarPlugin(){
     const [isItalic, setIsItalic] = useState(false);
     const [isUnderline, setIsUnderline] = useState(false);
     const [isStrikethrough, setIsStrikethrough] = useState(false);
-    
+    const [isFilePanelOpen, setIsFilePanelOpen] = useState(false);
 
     const $updateToolbar = useCallback(()=>{
         const selection = $getSelection();
@@ -33,6 +35,10 @@ export default function ToolbarPlugin(){
         // Reload the original contents after printing
         window.location.reload();
     },[]);
+    const onOpenFile = ()=>{
+        toolbarContext.updateToolbarState('isFilePanelOpen', !toolbarContext.toolbarState.isFilePanelOpen);
+        console.log("Toggled file panel to ", toolbarContext.toolbarState.isFilePanelOpen);
+    };
     useEffect(()=>{
         return mergeRegister(
             editor.registerUpdateListener(({editorState}) => {
@@ -81,5 +87,6 @@ export default function ToolbarPlugin(){
         <IconButton onClick={()=>{editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'right')}} icon="format_align_right" label="align right"/>
         <IconButton onClick={()=>{editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, 'justify')}} icon="format_align_justify" label="align justify"/>
         <IconButton onClick={()=>{onDownloadPDF()}} icon="download" label="Descargar PDF"/>
+        <IconButton onClick={()=>{onOpenFile()}} icon={toolbarContext.toolbarState.isFilePanelOpen? "right_panel_close" : "right_panel_open"} label="Abrir pdf"/>
     </div>
 }

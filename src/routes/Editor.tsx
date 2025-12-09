@@ -19,6 +19,9 @@ import type { RootState } from "../store";
 import '../styles/routes/Editor.css';
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { collapseSidebar, expandSidebar } from "../features/sidebar/sidebarSlice";
+import { useToolbarState } from "../components/Editor/context/ToolbarContext";
+import FileViewer from "../components/FileViewerPanel";
+import { set } from "lodash-es";
 
 export const cornellLayout:LayoutTemplate = {
     columns: '25% 75%', 
@@ -31,11 +34,12 @@ export const cornellLayout:LayoutTemplate = {
 };
 const placeholder = "Escribe aquí...";
 
-const PointMM = 0.35;
+const PointMM = 0.34;
 
 
 export default function Editor() {
     const notebookId = useParams().notebookId;
+    const [isFilePanelOpen, setIsFilePanelOpen] = useState(false);
     const app = useMemo(
         ()=> 
             defineExtension({
@@ -83,8 +87,9 @@ export default function Editor() {
 
     const fontSize = useMemo(()=>{
         let pt = metadata?.baseFontSize || 12;
-        if (!metadata || !notebookPixelsWidth) return 16;
-        return Math.trunc(pt*PointMM/metadata.paper!.dimensions.width!*notebookPixelsWidth!);
+        console.log("Calculating font size:", pt, "notebookPixelsWidth:", notebookPixelsWidth);
+        if (!metadata || !notebookPixelsWidth) return 12;
+        return pt*PointMM/metadata.paper!.dimensions.width!*notebookPixelsWidth!;
     },[metadata,notebookPixelsWidth!]);
 
     const onChangeTitle = useCallback((e:React.ChangeEvent<HTMLInputElement>)=>{
@@ -139,7 +144,13 @@ export default function Editor() {
         dispatch(collapseSidebar());
         return ()=>{dispatch(expandSidebar());}
     }, []);
-    return metadata !==undefined ? (
+    const panelOpen = useToolbarState().toolbarState.isFilePanelOpen;
+    useEffect(()=>{
+        console.log("File panel open state changed to ", panelOpen);
+        setIsFilePanelOpen(panelOpen);
+        
+    },[panelOpen]);
+    return <>{metadata !==undefined ? (
     <ErrorBoundary>
         <LexicalCollaboration>
             <LexicalExtensionComposer extension={app} contentEditable={null}>   
@@ -158,12 +169,17 @@ export default function Editor() {
                             shouldBootstrap={true}
                         />
                     </div>
+                    
                 </SharedHistoryContext>
             </LexicalExtensionComposer>
         </LexicalCollaboration>
     </ErrorBoundary>
-        
-    ):(<div>Loading...</div>);
+    
+    
+):(<div>Loading...</div>)}
+    {(isFilePanelOpen) && <FileViewer/>}
+    </>;
+
 }
 
 class ErrorBoundary extends React.Component<React.PropsWithChildren> {

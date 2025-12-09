@@ -14,7 +14,7 @@ export default function FAB({types = 'baseline', color = 'primary', icon, text, 
             <span className="material-symbols-outlined">
                 {icon}
             </span>
-            <p>{text}</p>
+            {text && <p>{text}</p>}
             <div className="stateLayer"/>
         </button>
     );

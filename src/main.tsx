@@ -38,9 +38,19 @@ function Root(){
       if(isValidAutomergeUrl(locationHash)) {
         window.handle= await repo.find<MetadataList>(locationHash);
       } else {
+        console.log("Creating new MetadataList document");
         window.handle = await repo.create<MetadataList>(initMetadataList());
         appStore.dispatch(setDocUrl(window.handle.url));
       }
+      // Ferify if metadata and files arrays exist
+      window.handle.change(doc => {
+        if (!doc.metadata) {
+          doc.metadata = [];
+        }
+        if (!doc.files) {
+          doc.files = [];
+        }
+      });
     }
     initRepo();
   }, []);

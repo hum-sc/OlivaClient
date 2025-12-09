@@ -52,7 +52,7 @@ export default function LexicalEditor( { placeholder, template, aspectRatio, use
 
     return (!id ? <></>:
     <>
-    <ToolbarContext>
+    
         <ToolbarPlugin />
         <div className="editor-container">
             <RichTextPlugin
@@ -82,7 +82,6 @@ export default function LexicalEditor( { placeholder, template, aspectRatio, use
               hasNestedTables={false}
             />
         </div>
-        </ToolbarContext>
     </>    
     );
 }
