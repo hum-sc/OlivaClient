@@ -38,7 +38,7 @@ export function createWebRTCProvider(
 
 export function createSyncronizationProvider(id:string, yjsDocMap: Map<string, Y.Doc>): Provider {
   const doc = getDocFromMap(id, yjsDocMap);
-  const syncProvider = new SyncronizationProvider("ws://localhost:1234", doc, id);
+  const syncProvider = new SyncronizationProvider(import.meta.env.VITE_WS_Y, doc, id);
   return syncProvider;
 }
 

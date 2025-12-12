@@ -2,7 +2,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Outlet, useNavigate } from "react-router";
 
 import { enableDarkMode, disableDarkMode, ThemeMode } from "../features/theme/themeSlice";
-import { handleIsOfflineByUser, setConnected, setDisconnected } from "../features/online/onlineSlice";
+import { handleIsOfflineByUser, setConnected } from "../features/online/onlineSlice";
 import IconButton from "../components/IconButton";
 import { type RootState } from "../store";
 import "../styles/routes/Layout.css";
@@ -97,10 +97,10 @@ export default function Layout() {
                 appStore.dispatch(setConnected());
             }
             adapter.onError = ()=>{
-                appStore.dispatch(setDisconnected());
+                //appStore.dispatch(setDisconnected());
             }
             adapter.onClose = ()=>{
-                appStore.dispatch(setDisconnected());
+                //appStore.dispatch(setDisconnected());
             }
             adapter.onMessage = ( event)=>{
                 console.log("Message received from peer:", event);

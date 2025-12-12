@@ -4,7 +4,7 @@ import { appStore } from "./useStoredContext";
 import { type Metadata as MetadataStore } from '../features/dataSync/MetadataStore.ts';
 import type { UUID } from "crypto";
 import type { LayoutTemplate } from "../components/Editor/LayoutPlugin/LayoutContainerNode.tsx";
-export const apiBaseUrl = 'http://localhost:8080';
+export const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 export const loginUrl = `${apiBaseUrl}/auth/login`;
 
 export const totalNumberofColumns = 3;

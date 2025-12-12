@@ -2,8 +2,6 @@ import type { Provider, ProviderAwareness } from '@lexical/yjs';
 import { IndexeddbPersistence } from 'y-indexeddb';
 import { WebsocketProvider } from 'y-websocket';
 import * as Y from 'yjs';
-import { appStore } from '../../hooks/useStoredContext';
-import { setConnected, setDisconnected } from '../../features/online/onlineSlice';
 export default class SyncronizationProvider implements Provider{
     awareness: ProviderAwareness;
     wsProvider: WebsocketProvider;
@@ -40,11 +38,11 @@ export default class SyncronizationProvider implements Provider{
         if( event === 'status'){
             this.wsProvider.on('status', (status: {status:'connected' | 'disconnected' | 'connecting'}) => {
                 if (status.status === 'connected'){
-                    appStore.dispatch(setConnected());
+                    //appStore.dispatch(setConnected());
                 } else if (status.status === 'disconnected'){
-                    appStore.dispatch(setDisconnected());
+                    //appStore.dispatch(setDisconnected());
                 } else if (status.status === 'connecting'){
-                    appStore.dispatch(setDisconnected());
+                    //appStore.dispatch(setDisconnected());
                 }
                 callback(status);
             });

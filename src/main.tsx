@@ -16,7 +16,7 @@ import { Suspense, useEffect } from 'react'
 import { setDocUrl } from './features/dataSync/dataSyncSlice.ts'
 
 const repo = new Repo({
-  network: [new WebSocketClientAdapter('ws://localhost:8081'),],
+  network: [new WebSocketClientAdapter(import.meta.env.VITE_WS_AUTOMERGE),],
   storage: new IndexedDBStorageAdapter(),
 })
 

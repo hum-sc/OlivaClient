@@ -30,7 +30,7 @@ export default function Home() {
             <h2 className="headlineMedium">
                 Mis notas
             </h2>
-            { doc.metadata.filter(meta => meta.type !== 'deleted').length === 0 ? <p className="bodyMedium">No tienes libretas creadas aún.</p> :
+            { doc&&doc.metadata.filter(meta => meta.type !== 'deleted').length === 0 ? <p className="bodyMedium">No tienes libretas creadas aún.</p> :
                 <div className="notebooksContainer">
                     {doc && doc.metadata.filter(meta => meta.type !== 'deleted').map((metadata)=>{
                         return <NotebookCard key={metadata.notebookID} metadata={metadata} />
