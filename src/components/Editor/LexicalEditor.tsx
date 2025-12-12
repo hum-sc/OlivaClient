@@ -14,17 +14,10 @@ import { CollaborationPlugin } from "./LayoutPlugin/ColaborationPlugin";
 import { createSyncronizationProvider } from "./collaborator/providers";
 import { LayoutPlugin } from "./LayoutPlugin/LayoutPlugin";
 import type { InitialEditorStateType } from "@lexical/react/LexicalComposer";
-import type { Metadata, MetadataList } from "../../features/dataSync/MetadataStore";
+import type { MetadataList } from "../../features/dataSync/MetadataStore";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { useDocument } from "@automerge/react";
-import { useCollaborationContext } from "@lexical/react/LexicalCollaborationContext";
-import TableHoverActionsPlugin from "./TablePlugin/TableHoverActionsPlugin";
-import TableCellResizerPlugin from "./TablePlugin/TableCellResizer";
-import TableActionMenuPlugin from "./TablePlugin/TableActionMenuPlugin";
 import { TablePlugin } from "./TablePlugin";
-import ContextMenuPlugin from "./ContextMenuPlugin";
-import ShortcutsPlugin from "./ShorcutsPlugin";
-import { ToolbarContext } from "./context/ToolbarContext";
 
 
 
@@ -41,7 +34,7 @@ export default function LexicalEditor( { placeholder, template, aspectRatio, use
 
     const [editor] = useLexicalComposerContext();
         useEffect(()=>{
-            editor.registerTextContentListener((textContent)=>{
+            editor.registerTextContentListener(()=>{
                 changeDoc(doc => {
                     doc.metadata.find(
                         (meta) => meta.notebookID === id
@@ -76,6 +69,7 @@ export default function LexicalEditor( { placeholder, template, aspectRatio, use
             <MarkdownPlugin />
             <EquationsPlugin />
             <TablePlugin
+            //@ts-ignore
               hasCellMerge={true}
               hasCellBackgroundColor={true}
               hasHorizontalScroll={true}

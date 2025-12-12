@@ -20,7 +20,7 @@ import {
   type Provider,
 type SyncCursorPositionsFn,
 } from '@lexical/yjs';
-import {$getRoot, type LexicalEditor} from 'lexical';
+import { type LexicalEditor} from 'lexical';
 import {useEffect, useRef, useState} from 'react';
 import {Doc} from 'yjs';
 
@@ -155,7 +155,6 @@ function YjsCollaborationCursors({
   cursorsContainerRef,
   initialEditorState,
   awarenessData,
-  collabContext,
   binding,
   setDoc,
   syncCursorPositionsFn,

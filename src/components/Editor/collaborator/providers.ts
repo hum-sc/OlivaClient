@@ -6,14 +6,10 @@
  *
  */
 
-import {type Provider} from '@lexical/yjs';
-import { IndexeddbPersistence } from 'y-indexeddb';
-import {WebrtcProvider} from 'y-webrtc';
-import {WebsocketProvider} from 'y-websocket';
+import { type Provider } from '@lexical/yjs';
+import { WebrtcProvider } from 'y-webrtc';
 import * as Y from 'yjs';
 import SyncronizationProvider from '../SyncronizationProvider';
-import { appStore } from '../../../hooks/useStoredContext';
-import { setDisconnected } from '../../../features/online/onlineSlice';
 
 let idSuffix = 0; // In React Strict mode "new WebrtcProvider" may be called twice
 

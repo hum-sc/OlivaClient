@@ -1,4 +1,4 @@
-import { $addUpdateTag, $createRangeSelection, $getRoot, $isElementNode, $setSelection, $splitAtPointCaretNext, COMMAND_PRIORITY_HIGH, DELETE_CHARACTER_COMMAND, ElementNode, HISTORY_MERGE_TAG, KEY_ENTER_COMMAND, ParagraphNode, TextNode, type CommandListener, type LexicalCommand, type LexicalNode, type NodeKey, type RangeSelection, type UpdateListenerPayload } from "lexical";
+import { $addUpdateTag, $isElementNode, COMMAND_PRIORITY_HIGH, DELETE_CHARACTER_COMMAND, ElementNode, HISTORY_MERGE_TAG, KEY_ENTER_COMMAND, TextNode, type CommandListener, type LexicalCommand, type LexicalNode, type NodeKey, type RangeSelection, type UpdateListenerPayload } from "lexical";
 
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 
@@ -93,7 +93,7 @@ function moveChildrenToNext(editor: any, layoutItem: LayoutItemNode, nextLayoutI
                 child.selectEnd();
                 } else {
                     const offset = Math.min(selection.anchor.offset, child.getTextContentSize());
-                    const newSelection = $createRangeSelection();
+                    
                     const textNode = child.getFirstChild<TextNode>();
                     if (textNode) {
                         textNode.select(offset, offset);
@@ -106,7 +106,7 @@ function moveChildrenToNext(editor: any, layoutItem: LayoutItemNode, nextLayoutI
     }
 }
 
-export function LayoutPlugin({aspectRatio, template}: {aspectRatio: number, template: LayoutTemplate}): null {
+export function LayoutPlugin({aspectRatio}: {aspectRatio: number, template: LayoutTemplate}): null {
     const [editor] = useLexicalComposerContext();
     const collabContext = useCollaborationContext();
     const {yjsDocMap} = collabContext;

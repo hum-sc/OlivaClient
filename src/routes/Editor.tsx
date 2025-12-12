@@ -17,11 +17,9 @@ import { SharedHistoryContext } from '../components/Editor/context/SharedHistory
 import type { MetadataList } from "../features/dataSync/MetadataStore";
 import type { RootState } from "../store";
 import '../styles/routes/Editor.css';
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { collapseSidebar, expandSidebar } from "../features/sidebar/sidebarSlice";
 import { useToolbarState } from "../components/Editor/context/ToolbarContext";
 import FileViewer from "../components/FileViewerPanel";
-import { set } from "lodash-es";
 
 export const cornellLayout:LayoutTemplate = {
     columns: '25% 75%', 

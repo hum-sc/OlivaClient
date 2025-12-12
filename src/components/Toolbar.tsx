@@ -16,7 +16,6 @@ export default function ToolbarPlugin(){
     const [isItalic, setIsItalic] = useState(false);
     const [isUnderline, setIsUnderline] = useState(false);
     const [isStrikethrough, setIsStrikethrough] = useState(false);
-    const [isFilePanelOpen, setIsFilePanelOpen] = useState(false);
 
     const $updateToolbar = useCallback(()=>{
         const selection = $getSelection();

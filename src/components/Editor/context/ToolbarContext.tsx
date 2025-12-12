@@ -6,10 +6,10 @@
  *
  */
 
-import type {JSX} from 'react';
+import type { JSX } from 'react';
 
-import { type ElementFormatType} from 'lexical';
-import React, {
+import { type ElementFormatType } from 'lexical';
+import {
   createContext,
   type ReactNode,
   useCallback,

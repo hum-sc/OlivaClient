@@ -5,9 +5,7 @@ import { Provider } from 'react-redux'
 import { appStore } from './hooks/useStoredContext.ts'
 
 import {
-  Repo,
-  BroadcastChannelNetworkAdapter,
-  IndexedDBStorageAdapter,
+  Repo, IndexedDBStorageAdapter,
   DocHandle,
   isValidAutomergeUrl,
   RepoContext,

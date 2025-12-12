@@ -8,7 +8,7 @@ import { type RootState } from "../store";
 import "../styles/routes/Layout.css";
 import Avatar from "../components/Avatar";
 import { createDefaultNotebookMetadata } from "../hooks/useApi";
-import { useDocument, useRepo, WebSocketClientAdapter, type PeerCandidatePayload } from "@automerge/react";
+import { useDocument, useRepo, WebSocketClientAdapter } from "@automerge/react";
 import type { FileMetadata, MetadataList } from "../features/dataSync/MetadataStore";
 import type { UUID } from "crypto";
 import SideBar from "../components/SideBar";
@@ -96,7 +96,7 @@ export default function Layout() {
             adapter.onOpen = ()=>{
                 appStore.dispatch(setConnected());
             }
-            adapter.onError = (error:Event)=>{
+            adapter.onError = ()=>{
                 appStore.dispatch(setDisconnected());
             }
             adapter.onClose = ()=>{

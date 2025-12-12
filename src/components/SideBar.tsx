@@ -8,7 +8,7 @@ import type { RootState } from "../store";
 export default function SideBar({ navFAB, handleFABClick }: { navFAB: NavFab; handleFABClick: () => Promise<void>; }) {
     // Media query for set as not expanded
     const collapsed = useSelector((selector:RootState) => selector.sidebar.collapsed);
-    let [width, setWidth] = useState(window.innerWidth);
+    let [, setWidth] = useState(window.innerWidth);
     const isCollapsed =useMemo(()=>{
         return window.matchMedia("(max-width: 1023px)").matches || collapsed;
     }, [window.innerWidth, collapsed]);

@@ -1,12 +1,11 @@
 import { login } from "../features/auth/authSlice";
-import type { Oli } from "../OlivaFormat/oli";
-import NotebookOliva, { type Metadata } from "../OlivaFormat/src/Oliva";
+import { type Metadata } from "../OlivaFormat/src/Oliva";
 import { appStore } from "./useStoredContext";
-export const apiBaseUrl = 'http://localhost:8080';
-export const loginUrl = `${apiBaseUrl}/auth/login`;
-import {type Metadata as MetadataStore} from '../features/dataSync/MetadataStore.ts';
+import { type Metadata as MetadataStore } from '../features/dataSync/MetadataStore.ts';
 import type { UUID } from "crypto";
 import type { LayoutTemplate } from "../components/Editor/LayoutPlugin/LayoutContainerNode.tsx";
+export const apiBaseUrl = 'http://localhost:8080';
+export const loginUrl = `${apiBaseUrl}/auth/login`;
 
 export const totalNumberofColumns = 3;
 export const totalNumberofRows = 5;

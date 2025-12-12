@@ -1,11 +1,7 @@
 import type { FileMetadata } from "../features/dataSync/MetadataStore";
-import IconButton from "./IconButton";
-import '../styles/components/FileRow.css'
-import { useNavigate } from "react-router";
+import '../styles/components/FileRow.css';
 export default function FileRow({fileMetadata, onClick}:{fileMetadata:FileMetadata, onClick: (fileMetadata: FileMetadata) => void}) {
-    const navigate = useNavigate();
-    const handleDeleteFile = (fileID: string) => {
-    };
+    
     return <div key={fileMetadata.fileID} 
         className="fileRow" 
         onClick={() => onClick(fileMetadata)}>

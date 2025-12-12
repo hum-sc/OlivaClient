@@ -1,5 +1,4 @@
-import type { Oli } from "../OlivaFormat/oli";
-import { appStore } from "./useStoredContext";
+
 
 function openIndexedDB(): Promise<IDBDatabase> {
     let db: IDBDatabase;

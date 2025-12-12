@@ -40,10 +40,12 @@ import {
 } from '../context/ToolbarContext';
 
 
-export enum UpdateFontSizeType {
-  increment = 1,
-  decrement,
-}
+export const UpdateFontSizeType = {
+  increment: 1,
+  decrement: 2,
+} as const;
+
+export type UpdateFontSizeType = typeof UpdateFontSizeType[keyof typeof UpdateFontSizeType];
 
 /**
  * Calculates the new font size based on the update type.
