@@ -19,7 +19,7 @@ import { saveLocalFile } from "../hooks/indexeddb";
 export default function Layout() {
     const docUrl = useSelector((state: RootState) => state.dataSync.docUrl);
     const repo = useRepo();
-
+    console.log("Doc URL in Layout:", docUrl);
     const [, changeDoc] = useDocument<MetadataList>(docUrl,{
             suspense: true
     });

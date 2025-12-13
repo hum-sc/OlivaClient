@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: olivaclient-ingress
+spec:
+  rules:
+  - host: olivaclient.local
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: olivaclient-service
+            port:
+              number: 80

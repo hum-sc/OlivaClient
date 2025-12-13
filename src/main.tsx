@@ -9,15 +9,24 @@ import {
   DocHandle,
   isValidAutomergeUrl,
   RepoContext,
-  WebSocketClientAdapter
+  WebSocketClientAdapter,
+  type RepoConfig
 } from '@automerge/react'
 import { initMetadataList, type MetadataList } from './features/dataSync/MetadataStore.ts'
 import { Suspense, useEffect } from 'react'
 import { setDocUrl } from './features/dataSync/dataSyncSlice.ts'
 
+const idFactory: RepoConfig['idFactory'] = () => {
+  return new Promise((resolve) => {
+    const id = appStore.getState().auth.user?.user_id;
+    const encoder = new TextEncoder();
+    resolve(id ? encoder.encode(id.toString()) : encoder.encode(""));
+  })
+}
 const repo = new Repo({
   network: [new WebSocketClientAdapter(import.meta.env.VITE_WS_AUTOMERGE),],
-  storage: new IndexedDBStorageAdapter(),
+  storage: new IndexedDBStorageAdapter('oliva-client-db', 'automerge-docs'),
+  idFactory
 })
 
 declare global {
@@ -33,12 +42,16 @@ function Root(){
   useEffect(()=>{
     const initRepo = async () => {
       const locationHash = appStore.getState().dataSync.docUrl;
+      console.log("Location hash:", locationHash);
       if(isValidAutomergeUrl(locationHash)) {
+        console.log("Finding existing MetadataList document");
         window.handle= await repo.find<MetadataList>(locationHash);
       } else {
         console.log("Creating new MetadataList document");
-        window.handle = await repo.create<MetadataList>(initMetadataList());
+        window.handle = await repo.create2<MetadataList>(initMetadataList());
+        if(appStore.getState().auth.user){
         appStore.dispatch(setDocUrl(window.handle.url));
+        }
       }
       // Ferify if metadata and files arrays exist
       window.handle.change(doc => {

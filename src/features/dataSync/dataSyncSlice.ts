@@ -19,7 +19,9 @@ const dataSyncSlice = createSlice({
             state.docUrl = action.payload;
         },
         userLoggedOut(state) {
-            state;
+            state.docUrl = undefined as unknown as AutomergeUrl;
+            state.handle = undefined as unknown as DocHandle<MetadataList>;
+            state.repo = undefined as unknown as Repo;
         },
         initAutomerge(state, action) {
             state.repo = action.payload.repo;
